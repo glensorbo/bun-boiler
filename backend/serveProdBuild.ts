@@ -1,8 +1,6 @@
 import { join } from 'path';
 
-export const serveProductionBuild = async (
-  pathname: string,
-): Promise<Response> => {
+export const serveProdBuild = async (pathname: string): Promise<Response> => {
   // Remove leading slash and handle root
   let filePath = pathname === '/' ? 'index.html' : pathname.slice(1);
 

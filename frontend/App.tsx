@@ -1,22 +1,11 @@
-import logo from '../public/logo.svg';
-import reactLogo from '../public/react.svg';
+import { useEffect, useState } from 'react';
 
-import './index.css';
+export const App = () => {
+  const [asd, setAsd] = useState(1);
 
-export function App() {
-  return (
-    <div className="app">
-      <div className="logo-container">
-        <img src={logo} alt="Bun Logo" className="logo bun-logo" />
-        <img src={reactLogo} alt="React Logo" className="logo react-logo" />
-      </div>
+  useEffect(() => {
+    setAsd(asd + 1);
+  }, [asd]);
 
-      <h1>Bun + React</h1>
-      <p>
-        Edit <code>src/App.tsx</code> and save to test HMR
-      </p>
-    </div>
-  );
-}
-
-export default App;
+  return <h1>Change me.. {asd}</h1>;
+};

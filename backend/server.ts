@@ -2,7 +2,7 @@ import { serve } from 'bun';
 
 import index from '../public/index.html';
 import { userController } from './controllers/userController';
-import { serveProductionBuild } from './serveProductionBuild';
+import { serveProdBuild } from './serveProdBuild.ts';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -23,7 +23,7 @@ const server = serve({
     },
 
     '/*': isProduction
-      ? async (req) => serveProductionBuild(new URL(req.url).pathname)
+      ? async (req) => serveProdBuild(new URL(req.url).pathname)
       : index,
   },
 

@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'bun:test';
 
-import { mockUsers, mockUserRepository } from '../../test-helpers/mockData';
 import { createUserService } from '../userService';
+import { mockUserRepository, mockUsers } from '@backend/test-helpers/mockData';
 
 // Create service instance with mock repository
 const userService = createUserService(mockUserRepository);
@@ -50,7 +50,7 @@ describe('UserService', () => {
       const firstUser = mockUsers[0];
       if (!firstUser) return;
 
-      const user = await userService.getUserById(firstUser.id);
+      const user = await userService.getUserById(firstUser.id!);
 
       expect(user).toBeDefined();
       expect(user).not.toHaveProperty('password');
@@ -60,7 +60,7 @@ describe('UserService', () => {
       const firstUser = mockUsers[0];
       if (!firstUser) return;
 
-      const user = await userService.getUserById(firstUser.id);
+      const user = await userService.getUserById(firstUser.id!);
 
       expect(user).toBeDefined();
       expect(user?.id).toBe(firstUser.id);

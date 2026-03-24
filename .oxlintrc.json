@@ -14,7 +14,8 @@
   "rules": {
     "typescript/no-floating-promises": "error",
     "typescript/no-unsafe-assignment": "warn",
-    "eslint/no-unused-vars": "error"
+    "eslint/no-unused-vars": "error",
+    "react/react-in-jsx-scope": "off"
   },
   "options": {
     "typeAware": true,
@@ -53,5 +54,5 @@
     "builtin": true
   },
   "globals": {},
-  "ignorePatterns": ["/dist"]
+  "ignorePatterns": ["/dist", "build.ts"]
 }

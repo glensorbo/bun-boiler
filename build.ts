@@ -65,7 +65,7 @@ Example:
 }
 
 const toCamelCase = (str: string): string =>
-  str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+  str.replace(/-([a-z])/g, (g) => g[1]!.toUpperCase());
 
 const parseValue = (value: string): any => {
   if (value === 'true') return true;

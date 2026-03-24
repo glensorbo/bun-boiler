@@ -1,4 +1,4 @@
-import type { ApiErrorResponse, FieldError } from '../types/errors';
+import type { ApiErrorResponse, FieldError } from '@backend/types/errors';
 
 /**
  * Error Response Helpers

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '../db/client';
 import { users } from '../db/schemas/users';
 
-import type { User } from '../types/user';
+import type { NewUser } from '@backend/types/users';
 
 /**
  * User Repository
@@ -15,7 +15,7 @@ export const userRepository = {
    * Get all users from the database
    * @returns Promise<User[]> - Array of all users including password field
    */
-  async getAll(): Promise<User[]> {
+  async getAll(): Promise<NewUser[]> {
     const db = getDb();
     return await db.select().from(users);
   },
@@ -25,7 +25,7 @@ export const userRepository = {
    * @param id - User ID (UUID)
    * @returns Promise<User | undefined> - User if found, undefined otherwise
    */
-  async getById(id: string): Promise<User | undefined> {
+  async getById(id: string): Promise<NewUser | undefined> {
     const db = getDb();
     const result = await db.select().from(users).where(eq(users.id, id));
     return result[0];
@@ -36,7 +36,7 @@ export const userRepository = {
    * @param email - User email address
    * @returns Promise<User | undefined> - User if found, undefined otherwise
    */
-  async getByEmail(email: string): Promise<User | undefined> {
+  async getByEmail(email: string): Promise<NewUser | undefined> {
     const db = getDb();
     const result = await db.select().from(users).where(eq(users.email, email));
     return result[0];

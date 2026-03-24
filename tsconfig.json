@@ -21,10 +21,10 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    "baseUrl": ".",
     "paths": {
       "@frontend/*": ["./frontend/*"],
-      "@backend/*": ["./backend/*"]
+      "@backend/*": ["./backend/*"],
+      "@type/*": ["./types/*"]
     },
 
     // Some stricter flags (disabled by default)

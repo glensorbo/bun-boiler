@@ -4,8 +4,8 @@ import { createUserService } from '../../services/userService';
 import { mockUsers, mockUserRepository } from '../../test-helpers/mockData';
 import { createUserController } from '../userController';
 
-import type { ApiErrorResponse } from '../../types/errors';
-import type { SafeUser } from '../../types/user';
+import type { ApiErrorResponse } from '@backend/types/errors';
+import type { User } from '@backend/types/users';
 
 // Create service and handler with mock repository
 const mockUserService = createUserService(mockUserRepository);
@@ -31,13 +31,13 @@ describe('UserController', () => {
 
     test('should return an array of users', async () => {
       const response = await userController.getUsers();
-      const data = (await response.json()) as SafeUser[];
+      const data = (await response.json()) as User[];
       expect(Array.isArray(data)).toBe(true);
     });
 
     test('should NOT include password field in response', async () => {
       const response = await userController.getUsers();
-      const data = (await response.json()) as SafeUser[];
+      const data = (await response.json()) as User[];
 
       expect(data.length).toBeGreaterThan(0);
       const user = data[0];
@@ -46,7 +46,7 @@ describe('UserController', () => {
 
     test('should return correct number of users', async () => {
       const response = await userController.getUsers();
-      const data = (await response.json()) as SafeUser[];
+      const data = (await response.json()) as User[];
       expect(data.length).toBe(mockUsers.length);
     });
   });
@@ -75,10 +75,10 @@ describe('UserController', () => {
       const existingUser = mockUsers[0];
       if (!existingUser) return;
 
-      const response = await userController.getUserById(existingUser.id);
+      const response = await userController.getUserById(existingUser.id!);
 
       expect(response.status).toBe(200);
-      const data = (await response.json()) as SafeUser;
+      const data = (await response.json()) as User;
       expect(data.id).toBe(existingUser.id);
     });
 
@@ -86,8 +86,8 @@ describe('UserController', () => {
       const existingUser = mockUsers[0];
       if (!existingUser) return;
 
-      const response = await userController.getUserById(existingUser.id);
-      const data = (await response.json()) as SafeUser;
+      const response = await userController.getUserById(existingUser.id!);
+      const data = (await response.json()) as User;
 
       expect(data).not.toHaveProperty('password');
     });

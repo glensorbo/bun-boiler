@@ -1,7 +1,7 @@
 import { userRepository } from '../repositories/userRepository';
 
 import type { userRepository as UserRepositoryType } from '../repositories/userRepository';
-import type { SafeUser } from '../types/user';
+import type { User } from '@backend/types/users';
 
 /**
  * User Service Factory
@@ -10,9 +10,9 @@ import type { SafeUser } from '../types/user';
 export const createUserService = (repo: typeof UserRepositoryType) => ({
   /**
    * Get all users with safe data (password omitted)
-   * @returns Promise<SafeUser[]> - Array of users without password field
+   * @returns Promise<User[]> - Array of users without password field
    */
-  async getAllUsers(): Promise<SafeUser[]> {
+  async getAllUsers(): Promise<User[]> {
     const users = await repo.getAll();
 
     // Transform User[] to SafeUser[] by omitting password
@@ -20,11 +20,11 @@ export const createUserService = (repo: typeof UserRepositoryType) => ({
   },
 
   /**
-   * Get a single user by ID with safe data (password omitted)
+   * Get a single user by ID
    * @param id - User ID (UUID)
-   * @returns Promise<SafeUser | undefined> - Safe user if found, undefined otherwise
+   * @returns Promise<User | undefined> - User if found, undefined otherwise
    */
-  async getUserById(id: string): Promise<SafeUser | undefined> {
+  async getUserById(id: string): Promise<User | undefined> {
     const user = await repo.getById(id);
 
     if (!user) {

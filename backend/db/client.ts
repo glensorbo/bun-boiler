@@ -50,5 +50,5 @@ export const getClient = () => {
     // Trigger db creation to initialize client
     getDb();
   }
-  return cachedClient!;
+  return cachedClient;
 };
