@@ -7,6 +7,21 @@
 - Use `Bun.file` instead of `fs.readFile`/`fs.writeFile`
 - Use `Bun.$\`cmd\``instead of`execa`
 
+## Style
+
+- Use emojis where appropriate in terminal output, commit messages, and documentation to keep things expressive and readable.
+
+## READMEs
+
+Every major directory has a README. **Before working in an area of the codebase, read its README** to understand the conventions and purpose of that layer. Key READMEs:
+
+- `backend/README.md` — overall backend architecture and request flow
+- `backend/db/README.md` — Drizzle ORM, schema conventions, migrations
+- `backend/controllers/README.md` — HTTP layer, factory pattern, error helpers
+- `backend/services/README.md` — business logic layer
+- `backend/repositories/README.md` — data access layer
+- `frontend/README.md` — React app, HMR, build process
+
 ## After Making Changes
 
 After adding or altering code, always run `bun cc` as the final step to verify everything is ok:
