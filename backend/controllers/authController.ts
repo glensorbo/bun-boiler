@@ -1,4 +1,4 @@
-import { authService, UserAlreadyExistsError } from '../services/authService';
+import { authService } from '../services/authService';
 import { createUserSchema, setPasswordSchema } from '@backend/schemas/auth';
 import { successResponse } from '@backend/utils/response/successResponse';
 import { validationError } from '@backend/utils/response/validationError';
@@ -25,20 +25,18 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
     );
     if (!parsed.success) return parsed.response;
 
-    try {
-      const result = await service.createUser(
-        parsed.data.email,
-        parsed.data.name,
-      );
-      return successResponse(result, 201);
-    } catch (err) {
-      if (err instanceof UserAlreadyExistsError) {
-        return validationError('Email already in use', [
-          { field: 'email', message: 'A user with this email already exists' },
-        ]);
-      }
-      throw err;
+    const result = await service.createUser(
+      parsed.data.email,
+      parsed.data.name,
+    );
+
+    if (!result.ok) {
+      return validationError('Email already in use', [
+        { field: 'email', message: 'A user with this email already exists' },
+      ]);
     }
+
+    return successResponse({ signupLink: result.signupLink }, 201);
   },
 
   /**
@@ -55,7 +53,14 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
 
     const { sub } = ctx.user as AppJwtPayload;
     const result = await service.setPassword(sub, parsed.data.password);
-    return successResponse(result);
+
+    if (!result.ok) {
+      return validationError('User not found', [
+        { field: 'token', message: 'The signup link is invalid or expired' },
+      ]);
+    }
+
+    return successResponse({ token: result.token });
   },
 });
 

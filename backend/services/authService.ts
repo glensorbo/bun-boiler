@@ -5,19 +5,13 @@ import { signSignupToken } from '../utils/auth/signSignupToken';
 
 import type { userRepository as UserRepositoryType } from '../repositories/userRepository';
 
-export class UserAlreadyExistsError extends Error {
-  constructor(email: string) {
-    super(`A user with email "${email}" already exists`);
-    this.name = 'UserAlreadyExistsError';
-  }
-}
+type CreateUserResult =
+  | { ok: true; signupLink: string }
+  | { ok: false; error: 'user_already_exists' };
 
-export class UserNotFoundError extends Error {
-  constructor(id: string) {
-    super(`No user found with ID: ${id}`);
-    this.name = 'UserNotFoundError';
-  }
-}
+type SetPasswordResult =
+  | { ok: true; token: string }
+  | { ok: false; error: 'user_not_found' };
 
 /**
  * Auth Service Factory
@@ -31,14 +25,11 @@ export const createAuthService = (repo: typeof UserRepositoryType) => ({
    *
    * @param email - New user's email address
    * @param name - New user's display name
-   * @returns Object containing the signup link
+   * @returns Discriminated union: ok with signupLink, or error string
    */
-  async createUser(
-    email: string,
-    name: string,
-  ): Promise<{ signupLink: string }> {
+  async createUser(email: string, name: string): Promise<CreateUserResult> {
     const existing = await repo.getByEmail(email);
-    if (existing) throw new UserAlreadyExistsError(email);
+    if (existing) return { ok: false, error: 'user_already_exists' };
 
     const passphrase = generatePassphrase();
     const hashedPassword = await Bun.password.hash(passphrase);
@@ -47,7 +38,7 @@ export const createAuthService = (repo: typeof UserRepositoryType) => ({
     const token = await signSignupToken(user.id!, email);
     const appUrl = Bun.env.APP_URL ?? 'http://localhost:3000';
 
-    return { signupLink: `${appUrl}/set-password?token=${token}` };
+    return { ok: true, signupLink: `${appUrl}/set-password?token=${token}` };
   },
 
   /**
@@ -56,20 +47,20 @@ export const createAuthService = (repo: typeof UserRepositoryType) => ({
    *
    * @param userId - ID of the user setting their password
    * @param password - Plain-text password chosen by the user
-   * @returns Object containing the signed auth token
+   * @returns Discriminated union: ok with token, or error string
    */
   async setPassword(
     userId: string,
     password: string,
-  ): Promise<{ token: string }> {
+  ): Promise<SetPasswordResult> {
     const user = await repo.getById(userId);
-    if (!user) throw new UserNotFoundError(userId);
+    if (!user) return { ok: false, error: 'user_not_found' };
 
     const hashedPassword = await Bun.password.hash(password);
     await repo.updatePassword(userId, hashedPassword);
 
     const token = await signAuthToken(userId, user.email);
-    return { token };
+    return { ok: true, token };
   },
 });
 

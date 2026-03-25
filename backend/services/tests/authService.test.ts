@@ -3,11 +3,7 @@ import { describe, test, expect } from 'bun:test';
 process.env.JWT_SECRET = 'test-secret';
 process.env.APP_URL = 'http://localhost:3000';
 
-import {
-  createAuthService,
-  UserAlreadyExistsError,
-  UserNotFoundError,
-} from '../authService';
+import { createAuthService } from '../authService';
 import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
 import { mockUsers } from '@backend/utils/test/mockUsers';
 
@@ -15,12 +11,13 @@ const authService = createAuthService(mockUserRepository);
 
 describe('AuthService', () => {
   describe('createUser', () => {
-    test('should return an object with signupLink', async () => {
+    test('should return ok with signupLink', async () => {
       const result = await authService.createUser(
         'new@example.com',
         'New User',
       );
-      expect(result).toHaveProperty('signupLink');
+      expect(result.ok).toBe(true);
+      if (result.ok) expect(result).toHaveProperty('signupLink');
     });
 
     test('signupLink should be a string containing a token query param', async () => {
@@ -28,8 +25,11 @@ describe('AuthService', () => {
         'new@example.com',
         'New User',
       );
-      expect(typeof result.signupLink).toBe('string');
-      expect(result.signupLink).toContain('token=');
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(typeof result.signupLink).toBe('string');
+        expect(result.signupLink).toContain('token=');
+      }
     });
 
     test('signupLink should contain /set-password path', async () => {
@@ -37,14 +37,18 @@ describe('AuthService', () => {
         'new@example.com',
         'New User',
       );
-      expect(result.signupLink).toContain('/set-password');
+      expect(result.ok).toBe(true);
+      if (result.ok) expect(result.signupLink).toContain('/set-password');
     });
 
-    test('should throw UserAlreadyExistsError for existing email', async () => {
+    test('should return user_already_exists for existing email', async () => {
       const existingUser = mockUsers[0]!;
-      expect(
-        authService.createUser(existingUser.email, 'Duplicate'),
-      ).rejects.toThrow(UserAlreadyExistsError);
+      const result = await authService.createUser(
+        existingUser.email,
+        'Duplicate',
+      );
+      expect(result.ok).toBe(false);
+      if (!result.ok) expect(result.error).toBe('user_already_exists');
     });
 
     test('should call repo.create with email and name', async () => {
@@ -72,13 +76,14 @@ describe('AuthService', () => {
   });
 
   describe('setPassword', () => {
-    test('should return an object with token', async () => {
+    test('should return ok with token', async () => {
       const existingUser = mockUsers[0]!;
       const result = await authService.setPassword(
         existingUser.id!,
         'newpassword123',
       );
-      expect(result).toHaveProperty('token');
+      expect(result.ok).toBe(true);
+      if (result.ok) expect(result).toHaveProperty('token');
     });
 
     test('token should be a non-empty string', async () => {
@@ -87,14 +92,20 @@ describe('AuthService', () => {
         existingUser.id!,
         'newpassword123',
       );
-      expect(typeof result.token).toBe('string');
-      expect(result.token.length).toBeGreaterThan(0);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(typeof result.token).toBe('string');
+        expect(result.token.length).toBeGreaterThan(0);
+      }
     });
 
-    test('should throw UserNotFoundError for non-existent user', async () => {
-      expect(
-        authService.setPassword('00000000-0000-0000-0000-000000000000', 'pass'),
-      ).rejects.toThrow(UserNotFoundError);
+    test('should return user_not_found for non-existent user', async () => {
+      const result = await authService.setPassword(
+        '00000000-0000-0000-0000-000000000000',
+        'pass',
+      );
+      expect(result.ok).toBe(false);
+      if (!result.ok) expect(result.error).toBe('user_not_found');
     });
 
     test('should call repo.updatePassword with userId', async () => {
