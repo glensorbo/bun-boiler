@@ -21,12 +21,22 @@ export const getDb = () => {
     return cachedDb;
   }
 
-  // Get connection string from environment
-  const connectionString = Bun.env.DATABASE_URL;
+  // Build connection string from individual environment variables
+  const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_SERVER, POSTGRES_DB } =
+    Bun.env;
 
-  if (!connectionString) {
-    throw new Error('DATABASE_URL environment variable is required');
+  if (
+    !POSTGRES_USER ||
+    !POSTGRES_PASSWORD ||
+    !POSTGRES_SERVER ||
+    !POSTGRES_DB
+  ) {
+    throw new Error(
+      'Missing required database environment variables: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_SERVER, POSTGRES_DB',
+    );
   }
+
+  const connectionString = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}/${POSTGRES_DB}`;
 
   // Create postgres connection
   cachedClient = postgres(connectionString);

@@ -14,13 +14,16 @@ backend/db/
 
 ## 🔌 Environment Setup
 
-Set `DATABASE_URL` in your `.env` file:
+The connection URL is built at runtime from individual environment variables. Set these in your `.env`:
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/your_db
+POSTGRES_SERVER=localhost:5432
+POSTGRES_DB=your_db
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
 ```
 
-Typed for `Bun.env.DATABASE_URL` via `bun-env.d.ts`.
+In Docker, `POSTGRES_SERVER` is set to `db:5432` (the compose service name) — all other vars come from the same `.env`.
 
 ## 🔑 Database Client
 
