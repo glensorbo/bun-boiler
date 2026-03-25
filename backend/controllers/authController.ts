@@ -1,10 +1,9 @@
 import { authService } from '../services/authService';
-import { notFoundError } from '@backend/utils/response/notFoundError';
+import { mapError } from '@backend/utils/response/mapError';
 import { successResponse } from '@backend/utils/response/successResponse';
-import { validationError } from '@backend/utils/response/validationError';
 import {
-  createUserSchema,
   setPasswordSchema,
+  createUserSchema,
 } from '@backend/validation/schemas/auth';
 import { parseBody } from '@backend/validation/utils/parseBody';
 
@@ -33,14 +32,9 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
       parsed.data.email,
       parsed.data.name,
     );
+    if (result.error) return mapError(result.error);
 
-    if (!result.ok) {
-      return validationError('Email already in use', [
-        { field: 'email', message: 'A user with this email already exists' },
-      ]);
-    }
-
-    return successResponse({ signupLink: result.signupLink }, 201);
+    return successResponse(result.data, 201);
   },
 
   /**
@@ -57,15 +51,9 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
 
     const { sub } = ctx.user as AppJwtPayload;
     const result = await service.setPassword(sub, parsed.data.password);
+    if (result.error) return mapError(result.error);
 
-    if (!result.ok) {
-      return notFoundError(
-        'User not found',
-        'The signup link references a user that no longer exists',
-      );
-    }
-
-    return successResponse({ token: result.token });
+    return successResponse(result.data);
   },
 });
 
