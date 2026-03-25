@@ -1,5 +1,8 @@
 import { describe, test, expect } from 'bun:test';
 
+process.env.JWT_SECRET = 'test-secret';
+process.env.APP_URL = 'http://localhost:3000';
+
 import { createAuthService } from '../../services/authService';
 import { createAuthController } from '../authController';
 import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
