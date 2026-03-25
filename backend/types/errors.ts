@@ -14,7 +14,7 @@ export type FieldError = {
 /**
  * Error types supported by the API
  */
-export type ErrorType = 'validation' | 'notFound';
+export type ErrorType = 'validation' | 'notFound' | 'unauthorized';
 
 /**
  * Standard API error response structure
