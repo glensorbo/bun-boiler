@@ -1,8 +1,12 @@
 import { authService } from '../services/authService';
-import { createUserSchema, setPasswordSchema } from '@backend/schemas/auth';
+import { notFoundError } from '@backend/utils/response/notFoundError';
 import { successResponse } from '@backend/utils/response/successResponse';
 import { validationError } from '@backend/utils/response/validationError';
-import { parseBody } from '@backend/utils/validation/parseBody';
+import {
+  createUserSchema,
+  setPasswordSchema,
+} from '@backend/validation/schemas/auth';
+import { parseBody } from '@backend/validation/utils/parseBody';
 
 import type { authService as AuthServiceType } from '../services/authService';
 import type { BunRequest, Ctx } from '@backend/middleware';
@@ -55,9 +59,10 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
     const result = await service.setPassword(sub, parsed.data.password);
 
     if (!result.ok) {
-      return validationError('User not found', [
-        { field: 'token', message: 'The signup link is invalid or expired' },
-      ]);
+      return notFoundError(
+        'User not found',
+        'The signup link references a user that no longer exists',
+      );
     }
 
     return successResponse({ token: result.token });

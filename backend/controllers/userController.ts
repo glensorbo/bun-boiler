@@ -1,8 +1,8 @@
 import { userService } from '../services/userService';
-import { uuidSchema } from '@backend/schemas/user';
 import { notFoundError } from '@backend/utils/response/notFoundError';
 import { successResponse } from '@backend/utils/response/successResponse';
-import { parseBody } from '@backend/utils/validation/parseBody';
+import { uuidSchema } from '@backend/validation/schemas/user';
+import { parseBody } from '@backend/validation/utils/parseBody';
 
 import type { userService as UserServiceType } from '../services/userService';
 
