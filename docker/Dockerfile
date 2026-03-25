@@ -32,8 +32,6 @@ COPY --from=build /app/backend ./backend
 
 EXPOSE 3000
 
-# CMD ["bun", "run", "start"]
-
-CMD ["bun", "backend/server.ts"]
+CMD ["bun", "run", "start"]
 
 # vim: set filetype=dockerfile :
