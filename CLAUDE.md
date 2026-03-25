@@ -7,6 +7,7 @@ Default to using Bun instead of Node.js.
 - Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
 - Use `bunx <package> <command>` instead of `npx <package> <command>`
 - Bun automatically loads .env, so don't use dotenv.
+- Whenever an env var is added, removed, or renamed — update **both** `.env.example` and `bun-env.d.ts` to keep types and documentation in sync.
 
 ## APIs
 

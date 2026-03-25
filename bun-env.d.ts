@@ -15,3 +15,24 @@ declare module '*.module.css' {
   const classes: { readonly [key: string]: string };
   export = classes;
 }
+
+/**
+ * Environment Variables
+ * Type-safe access to environment variables via Bun.env
+ *
+ * Keep this in sync with .env.example whenever env vars are added, removed, or renamed.
+ */
+declare module 'bun' {
+  interface Env {
+    NODE_ENV?: 'development' | 'production' | 'test';
+
+    // PostgreSQL — individual parts used to build the connection URL at runtime
+    POSTGRES_SERVER?: string;
+    POSTGRES_DB?: string;
+    POSTGRES_USER?: string;
+    POSTGRES_PASSWORD?: string;
+
+    // Auth
+    JWT_SECRET?: string;
+  }
+}
