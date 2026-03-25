@@ -41,4 +41,37 @@ export const userRepository = {
     const result = await db.select().from(users).where(eq(users.email, email));
     return result[0];
   },
+
+  /**
+   * Create a new user
+   * @param email - User email address
+   * @param name - Display name
+   * @param hashedPassword - Pre-hashed password
+   * @returns Promise<NewUser> - The created user
+   */
+  async create(
+    email: string,
+    name: string,
+    hashedPassword: string,
+  ): Promise<NewUser> {
+    const db = getDb();
+    const result = await db
+      .insert(users)
+      .values({ email, name, password: hashedPassword })
+      .returning();
+    return result[0]!;
+  },
+
+  /**
+   * Update a user's password
+   * @param id - User ID (UUID)
+   * @param hashedPassword - Pre-hashed new password
+   */
+  async updatePassword(id: string, hashedPassword: string): Promise<void> {
+    const db = getDb();
+    await db
+      .update(users)
+      .set({ password: hashedPassword, updatedAt: new Date() })
+      .where(eq(users.id, id));
+  },
 };

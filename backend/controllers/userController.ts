@@ -1,5 +1,8 @@
 import { userService } from '../services/userService';
-import { successResponse, notFoundError } from '../utils/errorHelpers';
+import { uuidSchema } from '@backend/schemas/user';
+import { notFoundError } from '@backend/utils/response/notFoundError';
+import { successResponse } from '@backend/utils/response/successResponse';
+import { parseBody } from '@backend/utils/validation/parseBody';
 
 import type { userService as UserServiceType } from '../services/userService';
 
@@ -23,7 +26,10 @@ export const createUserController = (service: typeof UserServiceType) => ({
    * @returns Response with safe user data or 404 if not found
    */
   async getUserById(id: string): Promise<Response> {
-    const user = await service.getUserById(id);
+    const parsed = parseBody(uuidSchema, id);
+    if (!parsed.success) return parsed.response;
+
+    const user = await service.getUserById(parsed.data);
 
     if (!user) {
       return notFoundError('User not found', `No user found with ID: ${id}`);

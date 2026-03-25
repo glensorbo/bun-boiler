@@ -1,6 +1,7 @@
 import { serve } from 'bun';
 
 import index from '../public/index.html';
+import { authRoutes } from './routes/authRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 
@@ -13,6 +14,7 @@ const server = serve({
     },
 
     ...userRoutes,
+    ...authRoutes,
 
     '/*': isProduction
       ? async (req) => serveProdBuild(new URL(req.url).pathname)

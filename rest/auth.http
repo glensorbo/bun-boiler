@@ -1,0 +1,26 @@
+### Create User
+# Creates a new user and returns a signup link containing a short-lived JWT.
+# The signup link should be sent to the new user so they can set their password.
+# Requires a valid Bearer JWT (auth token) in Authorization header.
+POST {{BASE_URL}}/api/auth/create-user
+Authorization: Bearer {{JWT_TOKEN}}
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "name": "New User"
+}
+
+###
+
+### Set Password
+# Sets the new user's password using the signup token from the signup link.
+# Returns a long-lived auth JWT on success.
+# Requires the signup token (from the signup link) in Authorization header.
+POST {{BASE_URL}}/api/auth/set-password
+Authorization: Bearer {{SIGNUP_TOKEN}}
+Content-Type: application/json
+
+{
+  "password": "mysecurepassword"
+}

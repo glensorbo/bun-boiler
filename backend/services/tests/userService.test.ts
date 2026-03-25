@@ -1,7 +1,8 @@
 import { describe, test, expect } from 'bun:test';
 
 import { createUserService } from '../userService';
-import { mockUserRepository, mockUsers } from '@backend/test-helpers/mockData';
+import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
+import { mockUsers } from '@backend/utils/test/mockUsers';
 
 // Create service instance with mock repository
 const userService = createUserService(mockUserRepository);

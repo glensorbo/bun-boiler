@@ -9,22 +9,22 @@ backend/
 ├── server.ts           # Entry point — Bun.serve() with healthcheck + HTML serving only
 ├── serveProdBuild.ts   # Serves the production frontend build from dist/
 ├── routes/             # Route definitions — one file per resource, spread into server.ts
-├── middleware/         # Composable middleware (auth, logging, etc.)
+├── middleware/         # Composable middleware (auth, signup token, etc.)
 ├── controllers/        # HTTP boundary — parse requests, return Responses
 ├── services/           # Business logic — data transformation, rules
 ├── repositories/       # Data access — Drizzle queries, no business logic
+├── schemas/            # Zod request schemas — one file per resource
 ├── db/                 # Database client and schema definitions
-├── types/              # TypeScript types derived from Drizzle schemas
-├── utils/              # Shared utilities (error/success response helpers)
-└── test-helpers/       # Mock data and repositories for unit tests
+├── types/              # Shared TypeScript types (derived from Drizzle or manually defined)
+└── utils/              # Utilities organised by concern (auth, response, validation, test)
 ```
 
 ## 🔄 Request Flow
 
 ```
 Bun.serve() route
-  → Middleware chain  (auth, rate-limit, logging…)
-  → Controller        (HTTP parsing, calls service, returns Response)
+  → Middleware chain  (auth, signup token, …)
+  → Controller        (HTTP parsing, Zod validation, calls service, returns Response)
   → Service           (business logic, strips sensitive fields, transforms data)
   → Repository        (Drizzle ORM query, returns raw DB types)
   → PostgreSQL
@@ -40,6 +40,7 @@ Bun.serve({
   routes: {
     '/healthcheck': { GET: () => new Response('OK') },
     ...userRoutes,
+    ...authRoutes,
     '/*': isProduction ? (req) => serveProdBuild(pathname) : index,
   },
   development: !isProduction && { hmr: true, console: true },
@@ -67,29 +68,33 @@ const testService = createUserService(mockUserRepository);
 
 ## 📐 Layer Responsibilities
 
-| Layer      | Does                                                  | Does NOT                  |
-| ---------- | ----------------------------------------------------- | ------------------------- |
-| Controller | Parse request params, call service, return `Response` | Business logic, DB access |
-| Service    | Transform data, apply rules, omit sensitive fields    | DB queries, HTTP concerns |
-| Repository | Run Drizzle queries, return raw DB types              | Any business logic        |
+| Layer      | Does                                               | Does NOT                  |
+| ---------- | -------------------------------------------------- | ------------------------- |
+| Controller | Parse request, validate with Zod, call service     | Business logic, DB access |
+| Service    | Transform data, apply rules, omit sensitive fields | DB queries, HTTP concerns |
+| Repository | Run Drizzle queries, return raw DB types           | Any business logic        |
 
 ## 🧪 Testing Without a Database
 
-Unit tests use `backend/test-helpers/mockData.ts` which provides a `mockUserRepository` and `mockUsers`. Injecting the mock via the factory means no database connection is needed:
+Unit tests use mock data and repositories from `@backend/utils/test/`. Injecting the mock via the factory means no database connection is needed:
 
 ```ts
+import { mockUsers } from '@backend/utils/test/mockUsers';
+import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
+
 const service = createUserService(mockUserRepository);
 const controller = createUserController(service);
 ```
 
 ## ➕ Adding a New Resource
 
-1. Add schema → `backend/db/schemas/myResource.ts`
+1. Add DB schema → `backend/db/schemas/myResource.ts`
 2. Add types → `backend/types/myResource.ts` (use `$inferSelect` / `$inferInsert`)
-3. Add repository → `backend/repositories/myResourceRepository.ts`
-4. Add service → `backend/services/myResourceService.ts` (factory pattern)
-5. Add controller → `backend/controllers/myResourceController.ts` (factory pattern)
-6. Add routes → `backend/routes/myResourceRoutes.ts` (see `routes/README.md`)
-7. Add HTTP tests → `rest/myResource.http` (see `rest/README.md`)
-8. Add mock data → `backend/test-helpers/mockData.ts`
-9. Add tests → `backend/controllers/tests/` and `backend/services/tests/`
+3. Add Zod schemas → `backend/schemas/myResource.ts`
+4. Add repository → `backend/repositories/myResourceRepository.ts`
+5. Add service → `backend/services/myResourceService.ts` (factory pattern)
+6. Add controller → `backend/controllers/myResourceController.ts` (factory pattern)
+7. Add routes → `backend/routes/myResourceRoutes.ts` (see `routes/README.md`)
+8. Add HTTP tests → `rest/myResource.http` (see `rest/README.md`)
+9. Add mock data → `backend/utils/test/`
+10. Add tests → `backend/controllers/tests/` and `backend/services/tests/`
