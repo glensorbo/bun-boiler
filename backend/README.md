@@ -6,8 +6,10 @@ The backend is a `Bun.serve()` HTTP server with a three-layer architecture: **Co
 
 ```
 backend/
-├── server.ts           # Entry point — Bun.serve() with all routes defined
+├── server.ts           # Entry point — Bun.serve() with healthcheck + HTML serving only
 ├── serveProdBuild.ts   # Serves the production frontend build from dist/
+├── routes/             # Route definitions — one file per resource, spread into server.ts
+├── middleware/         # Composable middleware (auth, logging, etc.)
 ├── controllers/        # HTTP boundary — parse requests, return Responses
 ├── services/           # Business logic — data transformation, rules
 ├── repositories/       # Data access — Drizzle queries, no business logic
@@ -21,23 +23,23 @@ backend/
 
 ```
 Bun.serve() route
-  → Controller   (HTTP parsing, calls service, returns Response)
-  → Service      (business logic, strips sensitive fields, transforms data)
-  → Repository   (Drizzle ORM query, returns raw DB types)
+  → Middleware chain  (auth, rate-limit, logging…)
+  → Controller        (HTTP parsing, calls service, returns Response)
+  → Service           (business logic, strips sensitive fields, transforms data)
+  → Repository        (Drizzle ORM query, returns raw DB types)
   → PostgreSQL
 ```
 
 ## 🔌 Server (`server.ts`)
 
-Routes are defined directly on `Bun.serve()`. Each route maps to a controller method:
+`server.ts` only handles infrastructure concerns: the healthcheck and HTML serving.
+All API routes live in `backend/routes/` and are spread in:
 
 ```ts
 Bun.serve({
   routes: {
-    '/api/user': { GET: () => userController.getUsers() },
-    '/api/user/:id': {
-      GET: (req) => userController.getUserById(req.params.id),
-    },
+    '/healthcheck': { GET: () => new Response('OK') },
+    ...userRoutes,
     '/*': isProduction ? (req) => serveProdBuild(pathname) : index,
   },
   development: !isProduction && { hmr: true, console: true },
@@ -45,6 +47,8 @@ Bun.serve({
 ```
 
 In **development**, the frontend HTML is served directly with HMR. In **production**, static files are served from `dist/` with SPA fallback to `index.html`.
+
+See [`routes/README.md`](./routes/README.md) and [`middleware/README.md`](./middleware/README.md) for how routes and middleware work.
 
 ## 🏭 Factory Pattern (Dependency Injection)
 
@@ -85,6 +89,7 @@ const controller = createUserController(service);
 3. Add repository → `backend/repositories/myResourceRepository.ts`
 4. Add service → `backend/services/myResourceService.ts` (factory pattern)
 5. Add controller → `backend/controllers/myResourceController.ts` (factory pattern)
-6. Register route → `backend/server.ts`
-7. Add mock data → `backend/test-helpers/mockData.ts`
-8. Add tests → `backend/controllers/tests/` and `backend/services/tests/`
+6. Add routes → `backend/routes/myResourceRoutes.ts` (see `routes/README.md`)
+7. Add HTTP tests → `rest/myResource.http` (see `rest/README.md`)
+8. Add mock data → `backend/test-helpers/mockData.ts`
+9. Add tests → `backend/controllers/tests/` and `backend/services/tests/`

@@ -46,6 +46,28 @@ export const notFoundError = (message: string, details?: string): Response => {
 };
 
 /**
+ * Create an unauthorized error response (401)
+ * @param message - User-friendly error message
+ * @param details - Optional additional details
+ * @returns Response with unauthorized error
+ */
+export const unauthorizedError = (
+  message: string,
+  details?: string,
+): Response => {
+  const body: ApiErrorResponse = {
+    message,
+    status: 401,
+    error: {
+      type: 'unauthorized',
+      errors: [],
+      details,
+    },
+  };
+  return Response.json(body, { status: 401 });
+};
+
+/**
  * Create a success response with data
  * @param data - Response data
  * @param status - HTTP status code (default: 200)

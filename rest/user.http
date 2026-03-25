@@ -1,0 +1,13 @@
+### Get All Users
+# Returns all users (passwords excluded).
+# Requires a valid Bearer JWT in Authorization header.
+GET {{BASE_URL}}/api/user
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+### Get User By ID
+# Returns a single user by their ID (passwords excluded).
+# Requires a valid Bearer JWT in Authorization header.
+GET {{BASE_URL}}/api/user/1
+Authorization: Bearer {{JWT_TOKEN}}
