@@ -1,36 +1,38 @@
 # ---- Builder stage ----
 # Installs all deps and builds the frontend into dist/
-FROM oven/bun:1 AS builder
+FROM oven/bun:1 AS deps
 
 WORKDIR /app
 
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
-COPY . .
+FROM deps AS build
 
+WORKDIR /app
+
+COPY . .
 RUN bun run build
 
 # ---- Runner stage ----
-# Lean production image — only what's needed to run the server
-FROM oven/bun:1-slim AS runner
+FROM oven/bun:1.3.10-alpine AS runtime
 
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV BUN_PORT=3000
 
-# Install production dependencies only
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production --ignore-scripts
 
-# Backend source (Bun runs TypeScript directly — no compile step needed)
-COPY tsconfig.json ./
-COPY backend/ ./backend/
-
-# Built frontend assets served from dist/ in production
-COPY --from=builder /app/dist ./dist
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/public ./public
+COPY --from=build /app/tsconfig.json ./tsconfig.json
+COPY --from=build /app/backend ./backend
 
 EXPOSE 3000
+
+# CMD ["bun", "run", "start"]
 
 CMD ["bun", "backend/server.ts"]
 
