@@ -22,5 +22,6 @@ Authorization: Bearer {{SIGNUP_TOKEN}}
 Content-Type: application/json
 
 {
-  "password": "mysecurepassword"
+  "password": "mysecurepassword",
+  "confirmPassword": "mysecurepassword"
 }

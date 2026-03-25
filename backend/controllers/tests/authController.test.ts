@@ -121,6 +121,7 @@ describe('AuthController', () => {
       const existingUser = mockUsers[0]!;
       const req = makeSetPasswordRequest({
         password: 'strongpass123',
+        confirmPassword: 'strongpass123',
       }) as never;
       const ctx = {
         user: {
@@ -141,6 +142,7 @@ describe('AuthController', () => {
       const existingUser = mockUsers[0]!;
       const req = makeSetPasswordRequest({
         password: 'strongpass123',
+        confirmPassword: 'strongpass123',
       }) as never;
       const ctx = {
         user: {
@@ -166,12 +168,14 @@ describe('AuthController', () => {
 
       expect(response.status).toBe(400);
       const data = (await response.json()) as ApiErrorResponse;
-      expect(data.error.errors.length).toBe(1);
-      expect(data.error.errors[0]?.field).toBe('password');
+      expect(data.error.errors.some((e) => e.field === 'password')).toBe(true);
     });
 
     test('should return 400 with password error when password is too short', async () => {
-      const req = makeSetPasswordRequest({ password: 'short' }) as never;
+      const req = makeSetPasswordRequest({
+        password: 'short',
+        confirmPassword: 'short',
+      }) as never;
       const ctx = {
         user: { sub: 'some-id', email: 'a@b.com', tokenType: 'signup' },
       };
@@ -180,8 +184,25 @@ describe('AuthController', () => {
 
       expect(response.status).toBe(400);
       const data = (await response.json()) as ApiErrorResponse;
-      expect(data.error.errors.length).toBe(1);
-      expect(data.error.errors[0]?.field).toBe('password');
+      expect(data.error.errors.some((e) => e.field === 'password')).toBe(true);
+    });
+
+    test('should return 400 with confirmPassword error when passwords do not match', async () => {
+      const req = makeSetPasswordRequest({
+        password: 'strongpass123',
+        confirmPassword: 'differentpass456',
+      }) as never;
+      const ctx = {
+        user: { sub: 'some-id', email: 'a@b.com', tokenType: 'signup' },
+      };
+
+      const response = await authController.setPassword(req, ctx);
+
+      expect(response.status).toBe(400);
+      const data = (await response.json()) as ApiErrorResponse;
+      expect(data.error.errors.some((e) => e.field === 'confirmPassword')).toBe(
+        true,
+      );
     });
   });
 });

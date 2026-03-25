@@ -5,6 +5,12 @@ export const createUserSchema = z.object({
   name: z.string().min(1, 'name is required'),
 });
 
-export const setPasswordSchema = z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+export const setPasswordSchema = z
+  .object({
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    error: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
