@@ -19,5 +19,6 @@
       "side_effect"
     ]
   },
+  "ignorePatterns": ["dist/", "coverage/", "backend/db/migrations"],
   "sortPackageJson": true
 }
