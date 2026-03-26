@@ -2,11 +2,11 @@
 
 Zod-based validation and error mapping.
 
-| File                 | Export            | Description                                                          |
-| -------------------- | ----------------- | -------------------------------------------------------------------- |
-| `mapValidationErrors.ts`    | `mapValidationErrors`    | Converts a `ZodError` into an array of `{ field, message }` objects  |
-| `validateRequest.ts` | `validateRequest` | Validates a JSON request body — async, reads `req.json()` internally |
-| `validateParam.ts`   | `validateParam`   | Validates a raw value (e.g. route param) against a Zod schema        |
+| File                     | Export                | Description                                                          |
+| ------------------------ | --------------------- | -------------------------------------------------------------------- |
+| `mapValidationErrors.ts` | `mapValidationErrors` | Converts a `ZodError` into an array of `{ field, message }` objects  |
+| `validateRequest.ts`     | `validateRequest`     | Validates a JSON request body — async, reads `req.json()` internally |
+| `validateParam.ts`       | `validateParam`       | Validates a raw value (e.g. route param) against a Zod schema        |
 
 Both `validateRequest` and `validateParam` return `ValidationResult<T>`:
 
