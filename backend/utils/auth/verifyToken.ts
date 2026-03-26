@@ -1,6 +1,6 @@
 import { jwtVerify } from 'jose';
 
-import type { AppJwtPayload, TokenType } from '@backend/types/auth';
+import type { AppJwtPayload, TokenType } from '@backend/types/appJwtPayload';
 
 const getSecret = () => new TextEncoder().encode(Bun.env.JWT_SECRET ?? '');
 
@@ -11,7 +11,9 @@ export const verifyToken = async (
     .then((r) => [r, null] as const)
     .catch((e: unknown) => [null, e] as const);
 
-  if (err !== null || result === null) return null;
+  if (err !== null || result === null) {
+    return null;
+  }
 
   const { payload } = result;
   if (

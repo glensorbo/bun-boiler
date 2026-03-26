@@ -57,7 +57,9 @@ export const withMiddleware =
 
     for (const middleware of middlewares) {
       const result = await middleware(req, ctx);
-      if (result !== null) return result;
+      if (result !== null) {
+        return result;
+      }
     }
 
     return handler(req, ctx);

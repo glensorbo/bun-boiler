@@ -1,8 +1,8 @@
 import { notFoundError } from './notFoundError';
 import { unauthorizedError } from './unauthorizedError';
-import { validationError } from './validationError';
+import { validationErrorResponse } from './validationErrorResponse';
 
-import type { AppError } from '@backend/types/errorOr';
+import type { AppError } from '@backend/types/appError';
 
 /**
  * Maps a list of AppErrors from the service layer into the appropriate HTTP Response.
@@ -12,10 +12,10 @@ import type { AppError } from '@backend/types/errorOr';
  *
  * @example
  * const result = await service.createUser(email, name);
- * if (result.error) return mapError(result.error);
+ * if (result.error) return serviceErrorResponse(result.error);
  * return successResponse(result.data, 201);
  */
-export const mapError = (errors: AppError[]): Response => {
+export const serviceErrorResponse = (errors: AppError[]): Response => {
   const first = errors[0];
 
   switch (first?.type) {
@@ -24,7 +24,7 @@ export const mapError = (errors: AppError[]): Response => {
 
     case 'conflict':
     case 'validation':
-      return validationError(
+      return validationErrorResponse(
         first.message,
         errors
           .filter((e) => e.field !== undefined)

@@ -15,21 +15,11 @@
  *
  * // In a controller:
  * const result = await service.getUser(id);
- * if (result.error) return mapError(result.error);
+ * if (result.error) return serviceErrorResponse(result.error);
  * return successResponse(result.data);
  */
 
-export type AppErrorType =
-  | 'not_found'
-  | 'validation'
-  | 'conflict'
-  | 'unauthorized';
-
-export type AppError = {
-  type: AppErrorType;
-  message: string;
-  field?: string;
-};
+import type { AppError } from './appError';
 
 export type ErrorOr<T> =
   | { data: T; error: null }

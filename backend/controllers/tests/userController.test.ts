@@ -5,8 +5,8 @@ import { createUserController } from '../userController';
 import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
 import { mockUsers } from '@backend/utils/test/mockUsers';
 
-import type { ApiErrorResponse } from '@backend/types/errors';
-import type { User } from '@backend/types/users';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
+import type { User } from '@backend/types/user';
 
 const mockUserService = createUserService(mockUserRepository);
 const userController = createUserController(mockUserService);
@@ -82,7 +82,9 @@ describe('UserController', () => {
 
     test('should return 200 and user data if user exists', async () => {
       const existingUser = mockUsers[0];
-      if (!existingUser) return;
+      if (!existingUser) {
+        return;
+      }
 
       const response = await userController.getUserById(existingUser.id!);
 
@@ -93,7 +95,9 @@ describe('UserController', () => {
 
     test('should NOT include password field when user exists', async () => {
       const existingUser = mockUsers[0];
-      if (!existingUser) return;
+      if (!existingUser) {
+        return;
+      }
 
       const response = await userController.getUserById(existingUser.id!);
       const data = (await response.json()) as User;

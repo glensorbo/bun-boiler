@@ -16,7 +16,7 @@ controllers/
 ## 📐 Responsibilities
 
 - Parse path params, query strings, and request bodies
-- Validate request bodies with Zod via `parseBody` — only failing fields appear in errors
+- Validate request bodies with Zod via `validateRequest` — only failing fields appear in errors
 - Call the appropriate service method
 - Return a `Response` using helpers from `@backend/utils/response/`
 
@@ -40,29 +40,38 @@ export const userController = createUserController(userService);
 
 ## ✅ Validation with Zod
 
-Use `parseBody` from `@backend/utils/validation/parseBody` with schemas from `@backend/schemas/`:
+Use `validateRequest` from `@backend/validation/utils/validateRequest` with schemas from `@backend/validation/schemas/`:
 
 ```ts
-import { parseBody } from '@backend/utils/validation/parseBody';
-import { createUserSchema } from '@backend/schemas/auth';
+import { validateRequest } from '@backend/validation/utils/validateRequest';
+import { validationErrorResponse } from '@backend/utils/response/validationErrorResponse';
+import { createUserSchema } from '@backend/validation/schemas/auth';
 
-const parsed = parseBody(createUserSchema, await req.json().catch(() => null));
-if (!parsed.success) return parsed.response; // 400 with only the failing fields
+const validation = validateRequest(
+  createUserSchema,
+  await req.json().catch(() => null),
+);
+if (validation.errors)
+  return validationErrorResponse('Validation failed', validation.errors); // 400 with only the failing fields
 
-// parsed.data is fully typed here
-const result = await service.createUser(parsed.data.email, parsed.data.name);
+// validation.data is fully typed here
+const result = await service.createUser(
+  validation.data.email,
+  validation.data.name,
+);
 ```
 
 ## 📤 Response Helpers
 
 Always use the helpers from `@backend/utils/response/` — never construct `Response` objects manually:
 
-| Helper                             | Status | Use when                |
-| ---------------------------------- | ------ | ----------------------- |
-| `successResponse(data, status?)`   | 200    | Request succeeded       |
-| `notFoundError(msg, details?)`     | 404    | Resource not found      |
-| `validationError(msg, errors[])`   | 400    | Input validation failed |
-| `unauthorizedError(msg, details?)` | 401    | Auth check failed       |
+| Helper                                   | Status | Use when                                |
+| ---------------------------------------- | ------ | --------------------------------------- |
+| `successResponse(data, status?)`         | 200    | Request succeeded                       |
+| `notFoundError(msg, details?)`           | 404    | Resource not found                      |
+| `validationErrorResponse(msg, errors[])` | 400    | Input validation failed                 |
+| `serviceErrorResponse(errors[])`         | varies | Maps service-layer `AppError[]` to HTTP |
+| `unauthorizedError(msg, details?)`       | 401    | Auth check failed                       |
 
 ## 🧪 Testing
 

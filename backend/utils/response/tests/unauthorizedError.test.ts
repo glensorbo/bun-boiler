@@ -2,7 +2,7 @@ import { describe, test, expect } from 'bun:test';
 
 import { unauthorizedError } from '../unauthorizedError';
 
-import type { ApiErrorResponse } from '@backend/types/errors';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('unauthorizedError', () => {
   test('returns a Response with status 401', () => {

@@ -1,13 +1,13 @@
 import { describe, test, expect } from 'bun:test';
 
-import { mapError } from '../mapError';
+import { serviceErrorResponse } from '../serviceErrorResponse';
 
-import type { AppError } from '@backend/types/errorOr';
+import type { AppError } from '@backend/types/appError';
 
-describe('mapError', () => {
+describe('serviceErrorResponse', () => {
   test('not_found error returns 404', async () => {
     const errors: AppError[] = [{ type: 'not_found', message: 'Not found' }];
-    const response = mapError(errors);
+    const response = serviceErrorResponse(errors);
     expect(response.status).toBe(404);
   });
 
@@ -15,7 +15,7 @@ describe('mapError', () => {
     const errors: AppError[] = [
       { type: 'conflict', message: 'Already exists', field: 'email' },
     ];
-    const response = mapError(errors);
+    const response = serviceErrorResponse(errors);
     expect(response.status).toBe(400);
     const body = (await response.json()) as {
       error: { errors: { field: string }[] };
@@ -28,7 +28,7 @@ describe('mapError', () => {
       { type: 'validation', message: 'Invalid', field: 'name' },
       { type: 'validation', message: 'Invalid', field: 'email' },
     ];
-    const response = mapError(errors);
+    const response = serviceErrorResponse(errors);
     expect(response.status).toBe(400);
     const body = (await response.json()) as {
       error: { errors: { field: string }[] };
@@ -40,7 +40,7 @@ describe('mapError', () => {
     const errors: AppError[] = [
       { type: 'unauthorized', message: 'Unauthorized' },
     ];
-    const response = mapError(errors);
+    const response = serviceErrorResponse(errors);
     expect(response.status).toBe(401);
   });
 
@@ -48,7 +48,7 @@ describe('mapError', () => {
     const errors: AppError[] = [
       { type: 'validation', message: 'General error' },
     ];
-    const response = mapError(errors);
+    const response = serviceErrorResponse(errors);
     expect(response.status).toBe(400);
     const body = (await response.json()) as { error: { errors: unknown[] } };
     expect(body.error.errors.length).toBe(0);

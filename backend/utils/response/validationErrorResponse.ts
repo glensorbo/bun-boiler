@@ -1,6 +1,7 @@
-import type { ApiErrorResponse, FieldError } from '@backend/types/errors';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
+import type { FieldError } from '@backend/types/fieldError';
 
-export const validationError = (
+export const validationErrorResponse = (
   message: string,
   errors: FieldError[],
 ): Response => {

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '../db/client';
 import { users } from '../db/schemas/users';
 
-import type { NewUser } from '@backend/types/users';
+import type { NewUser } from '@backend/types/newUser';
 
 /**
  * User Repository

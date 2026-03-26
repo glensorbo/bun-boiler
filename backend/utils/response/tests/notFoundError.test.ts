@@ -2,7 +2,7 @@ import { describe, test, expect } from 'bun:test';
 
 import { notFoundError } from '../notFoundError';
 
-import type { ApiErrorResponse } from '@backend/types/errors';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('notFoundError', () => {
   test('returns a Response with status 404', () => {

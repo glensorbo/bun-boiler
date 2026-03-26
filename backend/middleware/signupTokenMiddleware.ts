@@ -2,7 +2,7 @@ import { verifyToken } from '@backend/utils/auth/verifyToken';
 import { unauthorizedError } from '@backend/utils/response/unauthorizedError';
 
 import type { Ctx, MiddlewareFn } from '.';
-import type { AppJwtPayload } from '@backend/types/auth';
+import type { AppJwtPayload } from '@backend/types/appJwtPayload';
 
 export type SignupCtx = Ctx & { user: AppJwtPayload };
 

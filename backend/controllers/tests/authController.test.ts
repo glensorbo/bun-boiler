@@ -8,7 +8,7 @@ import { createAuthController } from '../authController';
 import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
 import { mockUsers } from '@backend/utils/test/mockUsers';
 
-import type { ApiErrorResponse } from '@backend/types/errors';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 const mockAuthService = createAuthService(mockUserRepository);
 const authController = createAuthController(mockAuthService);

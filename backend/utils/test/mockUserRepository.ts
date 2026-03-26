@@ -1,6 +1,6 @@
 import { mockUsers } from './mockUsers';
 
-import type { NewUser } from '@backend/types/users';
+import type { NewUser } from '@backend/types/newUser';
 
 export const mockUserRepository = {
   getAll: async (): Promise<NewUser[]> => {

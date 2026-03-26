@@ -49,7 +49,9 @@ describe('UserService', () => {
 
     test('should NOT include password field when user exists', async () => {
       const firstUser = mockUsers[0];
-      if (!firstUser) return;
+      if (!firstUser) {
+        return;
+      }
 
       const user = await userService.getUserById(firstUser.id!);
 
@@ -59,7 +61,9 @@ describe('UserService', () => {
 
     test('should return safe user data when user exists', async () => {
       const firstUser = mockUsers[0];
-      if (!firstUser) return;
+      if (!firstUser) {
+        return;
+      }
 
       const user = await userService.getUserById(firstUser.id!);
 

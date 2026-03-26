@@ -1,4 +1,4 @@
-import type { ApiErrorResponse } from '@backend/types/errors';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 export const notFoundError = (message: string, details?: string): Response => {
   const body: ApiErrorResponse = {
