@@ -18,10 +18,12 @@
     "prepare": "husky",
     "db:generate": "bunx --bun drizzle-kit generate",
     "db:migrate": "bunx --bun drizzle-kit migrate",
+    "db:seed": "bun backend/db/seed.ts",
     "db:push": "bunx --bun drizzle-kit check && bunx --bun drizzle-kit push",
     "db:studio": "bunx --bun drizzle-kit studio"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "dayjs": "^1.11.20",
     "drizzle-orm": "^0.45.1",
     "husky": "^9.1.7",
@@ -30,6 +32,7 @@
     "postgres": "^3.4.8",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-redux": "^9.2.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
