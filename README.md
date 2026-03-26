@@ -1,17 +1,20 @@
-# 🚀 bun-react-template
+# 🚀 bun-boiler
 
-A full-stack boilerplate built on [Bun](https://bun.sh) with a React 19 frontend, layered backend architecture, and PostgreSQL via Drizzle ORM. Everything — runtime, bundler, test runner, package manager — is Bun.
+A full-stack boilerplate built on [Bun](https://bun.sh) with a React 19 frontend, layered backend architecture, PostgreSQL via Drizzle ORM, and JWT authentication. Everything — runtime, bundler, test runner, package manager — is Bun.
 
 ## ✨ Features
 
 - ⚡ **Bun** as runtime, bundler, test runner, and package manager
 - ⚛️ **React 19** with HMR in development and optimized production builds
-- 🗄️ **Drizzle ORM** with PostgreSQL
-- 🏗️ **Layered backend** — Controller → Service → Repository
+- 🗄️ **Drizzle ORM** with PostgreSQL — migrations, typed schemas, string-mode timestamps
+- 🏗️ **Layered backend** — Controller → Service → Repository with factory-based dependency injection
+- 🔐 **JWT authentication** — login, invite-based user creation, and password setup flows
+- 🔴 **Redux Toolkit + RTK Query** — typed server state with `ApiErrorResponse`-typed errors
 - 🧪 **Unit tests** with dependency injection (no database required)
 - 🔍 **oxlint + oxfmt** for linting and formatting
 - ⚙️ **React Compiler** via ESLint plugin
 - 🐶 **Husky** pre-push hook that runs all checks before pushing
+- 🌐 **REST files** for testing every endpoint with [kulala.nvim](https://github.com/mistweaverco/kulala.nvim)
 
 ## 📋 Prerequisites
 
@@ -24,10 +27,33 @@ A full-stack boilerplate built on [Bun](https://bun.sh) with a React 19 frontend
 bun install
 ```
 
-Create a `.env` file in the project root:
+Copy the env example and fill in your values:
+
+```bash
+cp .env.example .env
+```
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/your_db
+# PostgreSQL
+POSTGRES_SERVER=localhost:5432
+POSTGRES_DB=bun_boiler
+POSTGRES_USER=bun_boiler_user
+POSTGRES_PASSWORD=bun_boiler_pass
+
+# Auth
+JWT_SECRET=your-secret-key-here
+APP_URL=http://localhost:3000
+
+# Seed
+SEED_ADMIN_EMAIL=admin@example.com
+SEED_ADMIN_PASSWORD=change-me-on-first-login
+```
+
+Run migrations and seed the initial admin user:
+
+```bash
+bun run db:migrate
+bun run db:seed
 ```
 
 ## 🧑‍💻 Development
@@ -47,7 +73,8 @@ bun start      # Start production server
 
 ```bash
 bun run db:generate  # Generate migrations from schema changes
-bun run db:migrate   # Apply migrations
+bun run db:migrate   # Apply migrations to the database
+bun run db:seed      # Seed the initial admin user (idempotent)
 bun run db:push      # Push schema directly (dev only)
 bun run db:studio    # Open Drizzle Studio
 ```
@@ -70,25 +97,70 @@ bun run format:check   # Check formatting only
 bun run cc             # Full check suite (test + lint + format)
 ```
 
+## 🔐 API Endpoints
+
+| Method | Path                     | Auth       | Description                            |
+| ------ | ------------------------ | ---------- | -------------------------------------- |
+| `POST` | `/api/auth/login`        | —          | Login, returns auth JWT                |
+| `POST` | `/api/auth/create-user`  | Auth JWT   | Invite a new user, returns signup link |
+| `POST` | `/api/auth/set-password` | Signup JWT | Set password, returns auth JWT         |
+| `GET`  | `/api/user`              | Auth JWT   | List all users                         |
+| `GET`  | `/api/user/:id`          | Auth JWT   | Get user by ID                         |
+
+**Token types:** `auth` (long-lived, for regular requests) and `signup` (short-lived, for the set-password flow). Each middleware validates the correct token type and rejects the other.
+
+## 🌐 REST Testing
+
+Every endpoint has a request in `rest/`. Copy the env example to get started:
+
+```bash
+cp rest/http-client.env.json.example rest/http-client.env.json
+```
+
+Open any `.http` file in Neovim with kulala and send requests with your kulala keybind. See `rest/README.md` for details.
+
 ## 🏗️ Architecture
 
 ```
-bun-react-template/
-├── backend/              # Server-side code
-│   ├── server.ts         # Bun.serve() entry point — defines all routes
-│   ├── controllers/      # HTTP layer — parse request, return Response
-│   ├── services/         # Business logic — data transformation
-│   ├── repositories/     # Data access — Drizzle queries only
-│   ├── db/               # Database client and schemas
-│   ├── types/            # Shared TypeScript types (derived from schemas)
-│   ├── utils/            # Shared utilities (error helpers)
-│   └── test-helpers/     # Mock data and repositories for unit tests
-├── frontend/             # React 19 app
-│   ├── main.tsx          # Entry point, HMR setup
-│   └── App.tsx           # Root component
-├── public/               # Static assets and HTML entrypoint (dev)
-├── build.ts              # Production build script
-└── drizzle.config.ts     # Drizzle Kit config
+bun-boiler/
+├── backend/
+│   ├── server.ts            # Bun.serve() entry point
+│   ├── routes/              # Route definitions — spread into Bun.serve()
+│   ├── controllers/         # HTTP layer — validate request, call service, return Response
+│   ├── services/            # Business logic — returns ErrorOr<T>
+│   ├── repositories/        # Data access — Drizzle queries only
+│   ├── middleware/          # Composable middleware (auth, signup token)
+│   ├── db/
+│   │   ├── client.ts        # Singleton Drizzle client
+│   │   ├── seed.ts          # Admin user seed script
+│   │   ├── schemas/         # Table definitions (source of truth for types)
+│   │   └── migrations/      # Auto-generated SQL migration files
+│   ├── types/               # Types derived from Drizzle schemas
+│   ├── utils/               # Response helpers, auth utilities
+│   └── validation/          # Zod schemas + validateRequest / validateParam
+├── frontend/
+│   ├── main.tsx             # Entry point, HMR setup, Redux Provider
+│   ├── App.tsx              # Root component
+│   └── redux/
+│       ├── store.ts         # Redux store
+│       └── api/             # RTK Query — one file per backend controller
+├── rest/                    # HTTP request files for API testing
+├── public/                  # Static assets and HTML entrypoint (dev)
+├── build.ts                 # Production build script
+└── drizzle.config.ts        # Drizzle Kit config
 ```
 
-See `backend/README.md` for a detailed breakdown of the backend architecture.
+### Request flow
+
+```
+Bun.serve() → withMiddleware(...) → Controller → Service → Repository → Drizzle → PostgreSQL
+```
+
+### Key patterns
+
+- **`ErrorOr<T>`** — services never throw; return `{ data: T, error: null }` or `{ data: null, error: AppError[] }`
+- **Factory functions** — controllers and services accept dependencies as arguments for testability
+- **Types from schema** — all types derived via `$inferSelect` / `$inferInsert`, never manually defined
+- **Typed API errors** — RTK Query `baseQuery` narrows errors to `ApiErrorResponse` across all hooks
+
+See the READMEs in each subdirectory for layer-specific conventions.
