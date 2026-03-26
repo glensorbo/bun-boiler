@@ -25,10 +25,10 @@ ENV BUN_PORT=3000
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile --production --ignore-scripts
 
+COPY . .
+
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/public ./public
-COPY --from=build /app/tsconfig.json ./tsconfig.json
-COPY --from=build /app/backend ./backend
 
 EXPOSE 3000
 

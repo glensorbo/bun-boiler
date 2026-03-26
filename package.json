@@ -25,6 +25,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
     "dayjs": "^1.11.20",
+    "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.1",
     "husky": "^9.1.7",
     "jose": "^6.2.2",
@@ -45,7 +46,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "drizzle-kit": "^0.31.10",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "oxfmt": "^0.42.0",
     "oxlint": "^1.57.0",
