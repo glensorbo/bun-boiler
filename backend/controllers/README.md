@@ -1,21 +1,24 @@
 # 🎮 Controllers
 
-The controller layer is the HTTP boundary of the application. Controllers receive requests from `Bun.serve()` routes, delegate to services, and return `Response` objects.
+The controller layer is the HTTP boundary of the application. Controllers receive requests from `Bun.serve()` routes, validate input with Zod, delegate to services, and return `Response` objects.
 
 ## 📁 Structure
 
 ```
 controllers/
-├── userController.ts   # User route handlers
+├── userController.ts   # GET /api/user, GET /api/user/:id
+├── authController.ts   # POST /api/auth/create-user, POST /api/auth/set-password
 └── tests/
-    └── userController.test.ts
+    ├── userController.test.ts
+    └── authController.test.ts
 ```
 
 ## 📐 Responsibilities
 
-- Extract parameters from request (path params, query, body)
+- Parse path params, query strings, and request bodies
+- Validate request bodies with Zod via `validateRequest` — only failing fields appear in errors
 - Call the appropriate service method
-- Return a `Response` using the helpers from `utils/errorHelpers.ts`
+- Return a `Response` using helpers from `@backend/utils/response/`
 
 Controllers contain **no business logic** and **no direct database access**.
 
@@ -35,21 +38,48 @@ export const createUserController = (service: typeof UserServiceType) => ({
 export const userController = createUserController(userService);
 ```
 
+## ✅ Validation with Zod
+
+Use `validateRequest` from `@backend/validation/utils/validateRequest` with schemas from `@backend/validation/schemas/`:
+
+```ts
+import { validateRequest } from '@backend/validation/utils/validateRequest';
+import { validationErrorResponse } from '@backend/utils/response/validationErrorResponse';
+import { createUserSchema } from '@backend/validation/schemas/auth';
+
+const validation = validateRequest(
+  createUserSchema,
+  await req.json().catch(() => null),
+);
+if (validation.errors)
+  return validationErrorResponse('Validation failed', validation.errors); // 400 with only the failing fields
+
+// validation.data is fully typed here
+const result = await service.createUser(
+  validation.data.email,
+  validation.data.name,
+);
+```
+
 ## 📤 Response Helpers
 
-Always use the helpers from `@backend/utils/errorHelpers.ts` — never construct `Response` objects manually:
+Always use the helpers from `@backend/utils/response/` — never construct `Response` objects manually:
 
-| Helper                           | Status | Use when                |
-| -------------------------------- | ------ | ----------------------- |
-| `successResponse(data)`          | 200    | Request succeeded       |
-| `notFoundError(msg, details?)`   | 404    | Resource not found      |
-| `validationError(msg, errors[])` | 400    | Input validation failed |
+| Helper                                   | Status | Use when                                |
+| ---------------------------------------- | ------ | --------------------------------------- |
+| `successResponse(data, status?)`         | 200    | Request succeeded                       |
+| `notFoundError(msg, details?)`           | 404    | Resource not found                      |
+| `validationErrorResponse(msg, errors[])` | 400    | Input validation failed                 |
+| `serviceErrorResponse(errors[])`         | varies | Maps service-layer `AppError[]` to HTTP |
+| `unauthorizedError(msg, details?)`       | 401    | Auth check failed                       |
 
 ## 🧪 Testing
 
 Tests inject a mock service via the factory — no HTTP server or database required:
 
 ```ts
+import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
+
 const mockService = createUserService(mockUserRepository);
 const controller = createUserController(mockService);
 

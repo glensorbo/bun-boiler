@@ -4,10 +4,11 @@ HTTP request files for testing the API with [kulala.nvim](https://github.com/mis
 
 ## 📁 Files
 
-| File          | Routes                               |
-| ------------- | ------------------------------------ |
-| `health.http` | `GET /healthcheck`                   |
-| `user.http`   | `GET /api/user`, `GET /api/user/:id` |
+| File          | Routes                                                      |
+| ------------- | ----------------------------------------------------------- |
+| `health.http` | `GET /healthcheck`                                          |
+| `user.http`   | `GET /api/user`, `GET /api/user/:id`                        |
+| `auth.http`   | `POST /api/auth/create-user`, `POST /api/auth/set-password` |
 
 ## ⚙️ Environment
 
@@ -19,12 +20,13 @@ cp rest/http-client.env.json.example rest/http-client.env.json
 
 Then fill in your values. Switch environments in Neovim with kulala's env switcher.
 
-| Variable    | Description                           |
-| ----------- | ------------------------------------- |
-| `BASE_URL`  | Server base URL                       |
-| `JWT_TOKEN` | Bearer token for authenticated routes |
+| Variable       | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| `BASE_URL`     | Server base URL                                              |
+| `JWT_TOKEN`    | Bearer auth token for authenticated routes                   |
+| `SIGNUP_TOKEN` | Short-lived signup token returned by `/api/auth/create-user` |
 
-To get a JWT for local dev, generate one signed with your `JWT_SECRET` env var and paste it into `http-client.env.json` under the `dev` key.
+To get a JWT for local dev, call `POST /api/auth/create-user` with a valid auth token, then use the `token` from the signup link query param in `http-client.env.json`.
 
 ## 🚀 Usage
 

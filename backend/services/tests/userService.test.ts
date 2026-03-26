@@ -1,7 +1,8 @@
 import { describe, test, expect } from 'bun:test';
 
 import { createUserService } from '../userService';
-import { mockUserRepository, mockUsers } from '@backend/test-helpers/mockData';
+import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
+import { mockUsers } from '@backend/utils/test/mockUsers';
 
 // Create service instance with mock repository
 const userService = createUserService(mockUserRepository);
@@ -48,7 +49,9 @@ describe('UserService', () => {
 
     test('should NOT include password field when user exists', async () => {
       const firstUser = mockUsers[0];
-      if (!firstUser) return;
+      if (!firstUser) {
+        return;
+      }
 
       const user = await userService.getUserById(firstUser.id!);
 
@@ -58,7 +61,9 @@ describe('UserService', () => {
 
     test('should return safe user data when user exists', async () => {
       const firstUser = mockUsers[0];
-      if (!firstUser) return;
+      if (!firstUser) {
+        return;
+      }
 
       const user = await userService.getUserById(firstUser.id!);
 

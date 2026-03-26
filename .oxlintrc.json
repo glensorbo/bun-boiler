@@ -15,6 +15,7 @@
     "typescript/no-floating-promises": "error",
     "typescript/no-unsafe-assignment": "warn",
     "eslint/no-unused-vars": "error",
+    "eslint/curly": ["error", "all"],
     "react/react-in-jsx-scope": "off"
   },
   "options": {

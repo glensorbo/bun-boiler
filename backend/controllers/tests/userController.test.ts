@@ -1,13 +1,13 @@
 import { describe, test, expect } from 'bun:test';
 
 import { createUserService } from '../../services/userService';
-import { mockUsers, mockUserRepository } from '../../test-helpers/mockData';
 import { createUserController } from '../userController';
+import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
+import { mockUsers } from '@backend/utils/test/mockUsers';
 
-import type { ApiErrorResponse } from '@backend/types/errors';
-import type { User } from '@backend/types/users';
+import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
+import type { User } from '@backend/types/user';
 
-// Create service and handler with mock repository
 const mockUserService = createUserService(mockUserRepository);
 const userController = createUserController(mockUserService);
 
@@ -52,6 +52,15 @@ describe('UserController', () => {
   });
 
   describe('getUserById', () => {
+    test('should return 400 for invalid UUID format', async () => {
+      const response = await userController.getUserById('not-a-uuid');
+
+      expect(response.status).toBe(400);
+      const data = (await response.json()) as ApiErrorResponse;
+      expect(data.error.type).toBe('validation');
+      expect(data.error.errors.length).toBe(1);
+    });
+
     test('should return 404 for non-existent user', async () => {
       const nonExistentId = '00000000-0000-0000-0000-000000000000';
       const response = await userController.getUserById(nonExistentId);
@@ -73,7 +82,9 @@ describe('UserController', () => {
 
     test('should return 200 and user data if user exists', async () => {
       const existingUser = mockUsers[0];
-      if (!existingUser) return;
+      if (!existingUser) {
+        return;
+      }
 
       const response = await userController.getUserById(existingUser.id!);
 
@@ -84,7 +95,9 @@ describe('UserController', () => {
 
     test('should NOT include password field when user exists', async () => {
       const existingUser = mockUsers[0];
-      if (!existingUser) return;
+      if (!existingUser) {
+        return;
+      }
 
       const response = await userController.getUserById(existingUser.id!);
       const data = (await response.json()) as User;

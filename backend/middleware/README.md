@@ -45,8 +45,8 @@ withMiddleware(
   rateLimitMiddleware,
   loggingMiddleware,
 )((req, ctx) => {
-  const user = ctx.user as JWTPayload;
-  return controller.getProfile(user.sub);
+  const { sub } = (ctx as AuthCtx).user;
+  return controller.getProfile(sub);
 });
 ```
 
@@ -54,23 +54,46 @@ Middleware runs left to right. The first one to return a `Response` short-circui
 
 ## `authMiddleware`
 
-Extracts and verifies a Bearer JWT from the `Authorization` header.
+Extracts and verifies a Bearer JWT from the `Authorization` header. **Rejects signup tokens** — those are only valid on `/api/auth/set-password`.
 
-**On success:** attaches the decoded `JWTPayload` to `ctx.user` and returns `null` (chain continues).  
-**On failure:** returns a `401 Unauthorized` response (chain stops).
+**On success:** attaches the decoded `AppJwtPayload` to `ctx.user` and returns `null` (chain continues).  
+**On failure:** returns `401 Unauthorized` (chain stops).
 
 ```ts
 import { authMiddleware } from '@backend/middleware/authMiddleware';
 import type { AuthCtx } from '@backend/middleware/authMiddleware';
-import type { JWTPayload } from 'jose';
+import type { AppJwtPayload } from '@backend/types/auth';
 
 withMiddleware(authMiddleware)((req, ctx) => {
-  const { sub, email } = ctx.user as JWTPayload;
+  const { sub, email } = (ctx as AuthCtx).user;
   return controller.getProfile(sub);
 });
 ```
 
 **Requires:** `JWT_SECRET` environment variable.
+
+## `signupTokenMiddleware`
+
+Same structure as `authMiddleware` but **only accepts signup tokens** (`tokenType: 'signup'`). Used exclusively on the `/api/auth/set-password` route. Regular auth tokens are rejected.
+
+```ts
+import { signupTokenMiddleware } from '@backend/middleware/signupTokenMiddleware';
+import type { SignupCtx } from '@backend/middleware/signupTokenMiddleware';
+
+withMiddleware(signupTokenMiddleware)((req, ctx) => {
+  const { sub } = (ctx as SignupCtx).user;
+  return authController.setPassword(req, ctx);
+});
+```
+
+## Token Types
+
+| Token type | Issued by         | Lifetime | Accepted by             |
+| ---------- | ----------------- | -------- | ----------------------- |
+| `auth`     | `signAuthToken`   | 7 days   | `authMiddleware`        |
+| `signup`   | `signSignupToken` | 1 hour   | `signupTokenMiddleware` |
+
+See `@backend/types/auth` for `AppJwtPayload` and `TokenType`.
 
 ## Adding a New Middleware
 

@@ -34,5 +34,6 @@ declare module 'bun' {
 
     // Auth
     JWT_SECRET?: string;
+    APP_URL?: string;
   }
 }

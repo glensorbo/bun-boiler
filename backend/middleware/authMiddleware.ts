@@ -1,11 +1,10 @@
-import { jwtVerify } from 'jose';
-
-import { unauthorizedError } from '@backend/utils/errorHelpers';
+import { verifyToken } from '@backend/utils/auth/verifyToken';
+import { unauthorizedError } from '@backend/utils/response/unauthorizedError';
 
 import type { Ctx, MiddlewareFn } from '.';
-import type { JWTPayload } from 'jose';
+import type { AppJwtPayload } from '@backend/types/appJwtPayload';
 
-export type AuthCtx = Ctx & { user: JWTPayload };
+export type AuthCtx = Ctx & { user: AppJwtPayload };
 
 /**
  * Auth Middleware
@@ -14,11 +13,13 @@ export type AuthCtx = Ctx & { user: JWTPayload };
  * On success, attaches the decoded payload to ctx.user for downstream use.
  * On failure, returns a 401 Unauthorized response — short-circuiting the chain.
  *
+ * Rejects signup tokens — those are only valid for /api/auth/set-password.
+ *
  * Requires JWT_SECRET env var to be set.
  *
  * @example
  * withMiddleware(authMiddleware)((req, ctx) => {
- *   const { sub } = ctx.user as JWTPayload;
+ *   const { sub } = (ctx as AuthCtx).user;
  *   return controller.getProfile(sub);
  * })
  */
@@ -29,17 +30,16 @@ export const authMiddleware: MiddlewareFn = async (req, ctx) => {
     return unauthorizedError('Missing or invalid Authorization header');
   }
 
-  const token = authHeader.slice(7);
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? '');
+  const result = await verifyToken(authHeader.slice(7));
 
-  const [payload, err] = await jwtVerify(token, secret)
-    .then((result) => [result.payload, null] as const)
-    .catch((error: unknown) => [null, error] as const);
-
-  if (err !== null || payload === null) {
+  if (result.error) {
     return unauthorizedError('Invalid or expired token');
   }
 
-  ctx.user = payload;
+  if (result.data.tokenType === 'signup') {
+    return unauthorizedError('Signup tokens cannot be used here');
+  }
+
+  ctx.user = result.data;
   return null;
 };

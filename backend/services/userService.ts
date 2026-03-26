@@ -1,7 +1,7 @@
 import { userRepository } from '../repositories/userRepository';
 
 import type { userRepository as UserRepositoryType } from '../repositories/userRepository';
-import type { User } from '@backend/types/users';
+import type { User } from '@backend/types/user';
 
 /**
  * User Service Factory
