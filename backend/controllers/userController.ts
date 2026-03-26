@@ -3,7 +3,7 @@ import { notFoundError } from '@backend/utils/response/notFoundError';
 import { successResponse } from '@backend/utils/response/successResponse';
 import { validationErrorResponse } from '@backend/utils/response/validationErrorResponse';
 import { uuidSchema } from '@backend/validation/schemas/user';
-import { mapZodErrors } from '@backend/validation/utils/mapZodErrors';
+import { validateParam } from '@backend/validation/utils/validateParam';
 
 import type { userService as UserServiceType } from '../services/userService';
 
@@ -27,15 +27,12 @@ export const createUserController = (service: typeof UserServiceType) => ({
    * @returns Response with safe user data or 404 if not found
    */
   async getUserById(id: string): Promise<Response> {
-    const parsed = uuidSchema.safeParse(id);
-    if (!parsed.success) {
-      return validationErrorResponse(
-        'Validation failed',
-        mapZodErrors(parsed.error),
-      );
+    const validation = validateParam(uuidSchema, id);
+    if (validation.errors) {
+      return validationErrorResponse('Validation failed', validation.errors);
     }
 
-    const user = await service.getUserById(parsed.data);
+    const user = await service.getUserById(validation.data);
 
     if (!user) {
       return notFoundError('User not found', `No user found with ID: ${id}`);
