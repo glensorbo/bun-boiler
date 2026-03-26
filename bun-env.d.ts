@@ -35,5 +35,10 @@ declare module 'bun' {
     // Auth
     JWT_SECRET?: string;
     APP_URL?: string;
+
+    // Seed
+    SEED_ADMIN_EMAIL?: string;
+    SEED_ADMIN_PASSWORD?: string;
+    SEED_ADMIN_NAME?: string;
   }
 }

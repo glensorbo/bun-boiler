@@ -7,6 +7,7 @@ All database-related code using [Drizzle ORM](https://orm.drizzle.team/) with Po
 ```
 backend/db/
 ├── client.ts        # Database client — singleton pattern
+├── seed.ts          # Seed script — creates the initial admin user
 ├── schemas/         # Table definitions (source of truth for all types)
 │   └── users.ts
 └── migrations/      # Auto-generated SQL migration files
@@ -120,3 +121,21 @@ Run `bun run db:migrate` during deployment. **Never use `db:push` in production*
 ```bash
 bun run db:studio   # Visual browser for your database at https://local.drizzle.studio
 ```
+
+## 🌱 Seeding
+
+Run the seed script once after initial setup to create the admin user:
+
+```bash
+bun run db:seed
+```
+
+The script reads credentials from env vars — set these in your `.env`:
+
+```env
+SEED_ADMIN_EMAIL=admin@example.com
+SEED_ADMIN_PASSWORD=change-me-on-first-login
+SEED_ADMIN_NAME=Admin         # optional, defaults to "Admin"
+```
+
+The script is **idempotent** — if the email already exists it exits cleanly without error. The admin user can then use `POST /api/auth/create-user` to invite other users.
