@@ -9,6 +9,22 @@ import { mockUsers } from '@backend/utils/test/mockUsers';
 
 const authService = createAuthService(mockUserRepository);
 
+const VALID_PASSWORD = 'correctpass123';
+
+const repoWithHashedPassword = async () => {
+  const hashedPassword = await Bun.password.hash(VALID_PASSWORD);
+  return {
+    ...mockUserRepository,
+    getByEmail: async (email: string) => {
+      const user = mockUsers.find((u) => u.email === email);
+      if (!user) {
+        return undefined;
+      }
+      return { ...user, password: hashedPassword };
+    },
+  };
+};
+
 describe('AuthService', () => {
   describe('createUser', () => {
     test('should return data with signupLink on success', async () => {
@@ -111,6 +127,48 @@ describe('AuthService', () => {
 
       expect(updatedIds.length).toBe(1);
       expect(updatedIds[0]).toBe(existingUser.id);
+    });
+  });
+
+  describe('login', () => {
+    test('should return token on valid credentials', async () => {
+      const repo = await repoWithHashedPassword();
+      const svc = createAuthService(repo);
+      const result = await svc.login(mockUsers[0]!.email, VALID_PASSWORD);
+      expect(result.error).toBeNull();
+      expect(result.data).toHaveProperty('token');
+    });
+
+    test('token should be a non-empty string', async () => {
+      const repo = await repoWithHashedPassword();
+      const svc = createAuthService(repo);
+      const result = await svc.login(mockUsers[0]!.email, VALID_PASSWORD);
+      expect(typeof result.data?.token).toBe('string');
+      expect(result.data?.token.length).toBeGreaterThan(0);
+    });
+
+    test('should return unauthorized for wrong password', async () => {
+      const repo = await repoWithHashedPassword();
+      const svc = createAuthService(repo);
+      const result = await svc.login(mockUsers[0]!.email, 'wrongpassword');
+      expect(result.data).toBeNull();
+      expect(result.error?.[0]?.type).toBe('unauthorized');
+    });
+
+    test('should return unauthorized for non-existent email', async () => {
+      const result = await authService.login('nobody@example.com', 'anypass');
+      expect(result.data).toBeNull();
+      expect(result.error?.[0]?.type).toBe('unauthorized');
+    });
+
+    test('wrong email and wrong password return the same error message', async () => {
+      const repo = await repoWithHashedPassword();
+      const svc = createAuthService(repo);
+      const badEmail = await svc.login('nobody@example.com', 'anypass');
+      const badPassword = await svc.login(mockUsers[0]!.email, 'wrongpass');
+      expect(badEmail.error?.[0]?.message).toBe(
+        badPassword.error?.[0]?.message,
+      );
     });
   });
 });

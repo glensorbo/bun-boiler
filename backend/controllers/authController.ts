@@ -5,6 +5,7 @@ import { validationErrorResponse } from '@backend/utils/response/validationError
 import {
   setPasswordSchema,
   createUserSchema,
+  loginSchema,
 } from '@backend/validation/schemas/auth';
 import { validateRequest } from '@backend/validation/utils/validateRequest';
 
@@ -38,6 +39,28 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
     }
 
     return successResponse(result.data, 201);
+  },
+
+  /**
+   * POST /api/auth/login
+   * Public endpoint — verifies email + password and returns an auth JWT.
+   */
+  async login(req: BunRequest): Promise<Response> {
+    const validation = await validateRequest(loginSchema, req);
+    if (validation.errors) {
+      return validationErrorResponse('Validation failed', validation.errors);
+    }
+
+    const result = await service.login(
+      validation.data.email,
+      validation.data.password,
+    );
+
+    if (result.error) {
+      return serviceErrorResponse(result.error);
+    }
+
+    return successResponse(result.data);
   },
 
   /**

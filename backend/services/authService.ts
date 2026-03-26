@@ -43,6 +43,33 @@ export const createAuthService = (repo: typeof UserRepositoryType) => ({
   },
 
   /**
+   * Verify email + password and return a long-lived auth JWT.
+   * Returns the same error for both wrong email and wrong password
+   * to prevent user enumeration.
+   */
+  async login(
+    email: string,
+    password: string,
+  ): Promise<ErrorOr<{ token: string }>> {
+    const invalidError = failure<{ token: string }>([
+      { type: 'unauthorized', message: 'Invalid email or password' },
+    ]);
+
+    const user = await repo.getByEmail(email);
+    if (!user) {
+      return invalidError;
+    }
+
+    const passwordMatch = await Bun.password.verify(password, user.password);
+    if (!passwordMatch) {
+      return invalidError;
+    }
+
+    const token = await signAuthToken(user.id!, user.email);
+    return success({ token });
+  },
+
+  /**
    * Set a new password for a user (used during onboarding via signup link).
    * Hashes the password and issues a full-length auth JWT on success.
    */
