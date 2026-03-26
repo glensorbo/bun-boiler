@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 
 import { getDb } from '../db/client';
@@ -71,7 +72,7 @@ export const userRepository = {
     const db = getDb();
     await db
       .update(users)
-      .set({ password: hashedPassword, updatedAt: new Date() })
+      .set({ password: hashedPassword, updatedAt: dayjs().toISOString() })
       .where(eq(users.id, id));
   },
 };

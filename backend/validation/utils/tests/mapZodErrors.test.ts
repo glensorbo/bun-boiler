@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'bun:test';
 import { z } from 'zod';
 
-import { mapZodErrors } from '../mapZodErrors';
+import { mapValidationErrors } from '../mapZodErrors';
 
 describe('mapZodErrors', () => {
   test('maps a single field error to correct shape', () => {
@@ -10,7 +10,7 @@ describe('mapZodErrors', () => {
     if (result.success) {
       throw new Error('expected failure');
     }
-    const errors = mapZodErrors(result.error);
+    const errors = mapValidationErrors(result.error);
     expect(errors.length).toBe(1);
     expect(errors[0]).toHaveProperty('field');
     expect(errors[0]).toHaveProperty('message');
@@ -22,7 +22,7 @@ describe('mapZodErrors', () => {
     if (result.success) {
       throw new Error('expected failure');
     }
-    const errors = mapZodErrors(result.error);
+    const errors = mapValidationErrors(result.error);
     expect(errors.length).toBeGreaterThan(1);
   });
 
@@ -32,7 +32,7 @@ describe('mapZodErrors', () => {
     if (result.success) {
       throw new Error('expected failure');
     }
-    const errors = mapZodErrors(result.error);
+    const errors = mapValidationErrors(result.error);
     expect(errors[0]?.field).toBe('email');
   });
 
@@ -42,7 +42,7 @@ describe('mapZodErrors', () => {
     if (result.success) {
       throw new Error('expected failure');
     }
-    const errors = mapZodErrors(result.error);
+    const errors = mapValidationErrors(result.error);
     expect(typeof errors[0]?.message).toBe('string');
     expect(errors[0]!.message.length).toBeGreaterThan(0);
   });

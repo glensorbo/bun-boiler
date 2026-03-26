@@ -7,7 +7,7 @@ Centralised validation logic for the backend. All request validation, schemas, a
 | Path       | Description                                              |
 | ---------- | -------------------------------------------------------- |
 | `schemas/` | Zod schemas for each request body (grouped by domain)    |
-| `utils/`   | Zod helper utilities (`validateRequest`, `mapZodErrors`) |
+| `utils/`   | Zod helper utilities (`validateRequest`, `mapValidationErrors`) |
 
 ## Usage
 

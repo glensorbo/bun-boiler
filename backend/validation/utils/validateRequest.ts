@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { mapZodErrors } from './mapZodErrors';
+import { mapValidationErrors } from './mapZodErrors';
 
 import type { ValidationResult } from '@backend/types/validationResult';
 
@@ -13,5 +13,5 @@ export const validateRequest = async <T>(
   if (result.success) {
     return { data: result.data, errors: null };
   }
-  return { data: null, errors: mapZodErrors(result.error) };
+  return { data: null, errors: mapValidationErrors(result.error) };
 };

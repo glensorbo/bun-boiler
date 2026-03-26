@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { mockUsers } from './mockUsers';
 
 import type { NewUser } from '@backend/types/newUser';
@@ -25,8 +27,8 @@ export const mockUserRepository = {
       email,
       name,
       password: 'hashed_password_new',
-      createdAt: new Date('2024-01-03T00:00:00Z'),
-      updatedAt: new Date('2024-01-03T00:00:00Z'),
+      createdAt: dayjs('2024-01-03T00:00:00Z').toISOString(),
+      updatedAt: dayjs('2024-01-03T00:00:00Z').toISOString(),
     };
   },
 

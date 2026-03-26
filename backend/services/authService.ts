@@ -22,6 +22,7 @@ export const createAuthService = (repo: typeof UserRepositoryType) => ({
     name: string,
   ): Promise<ErrorOr<{ signupLink: string }>> {
     const existing = await repo.getByEmail(email);
+
     if (existing) {
       return failure([
         {

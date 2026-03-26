@@ -22,6 +22,7 @@
     "db:studio": "bunx --bun drizzle-kit studio"
   },
   "dependencies": {
+    "dayjs": "^1.11.20",
     "drizzle-orm": "^0.45.1",
     "husky": "^9.1.7",
     "jose": "^6.2.2",

@@ -32,6 +32,7 @@ export const createAuthController = (service: typeof AuthServiceType) => ({
       validation.data.email,
       validation.data.name,
     );
+
     if (result.error) {
       return serviceErrorResponse(result.error);
     }

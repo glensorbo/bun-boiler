@@ -14,20 +14,20 @@ describe('signAuthToken', () => {
 
   test('returned JWT can be decoded by verifyToken', async () => {
     const token = await signAuthToken('user-1', 'test@example.com');
-    const payload = await verifyToken(token);
-    expect(payload).not.toBeNull();
+    const result = await verifyToken(token);
+    expect(result.data).not.toBeNull();
   });
 
   test('decoded payload has tokenType: auth', async () => {
     const token = await signAuthToken('user-1', 'test@example.com');
-    const payload = await verifyToken(token);
-    expect(payload?.tokenType).toBe('auth');
+    const result = await verifyToken(token);
+    expect(result.data?.tokenType).toBe('auth');
   });
 
   test('decoded payload has correct sub and email', async () => {
     const token = await signAuthToken('user-99', 'auth@example.com');
-    const payload = await verifyToken(token);
-    expect(payload?.sub).toBe('user-99');
-    expect(payload?.email).toBe('auth@example.com');
+    const result = await verifyToken(token);
+    expect(result.data?.sub).toBe('user-99');
+    expect(result.data?.email).toBe('auth@example.com');
   });
 });

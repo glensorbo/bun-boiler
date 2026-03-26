@@ -30,16 +30,16 @@ export const authMiddleware: MiddlewareFn = async (req, ctx) => {
     return unauthorizedError('Missing or invalid Authorization header');
   }
 
-  const payload = await verifyToken(authHeader.slice(7));
+  const result = await verifyToken(authHeader.slice(7));
 
-  if (!payload) {
+  if (result.error) {
     return unauthorizedError('Invalid or expired token');
   }
 
-  if (payload.tokenType === 'signup') {
+  if (result.data.tokenType === 'signup') {
     return unauthorizedError('Signup tokens cannot be used here');
   }
 
-  ctx.user = payload;
+  ctx.user = result.data;
   return null;
 };
