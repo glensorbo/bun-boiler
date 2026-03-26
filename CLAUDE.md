@@ -8,6 +8,7 @@ Default to using Bun instead of Node.js.
 - Use `bunx <package> <command>` instead of `npx <package> <command>`
 - Bun automatically loads .env, so don't use dotenv.
 - Whenever an env var is added, removed, or renamed — update **both** `.env.example` and `bun-env.d.ts` to keep types and documentation in sync.
+- Whenever a route or controller is added, changed, or removed — update the corresponding file in `rest/` so every endpoint is always testable. Update `rest/README.md` if the file table changes.
 
 ## APIs
 

@@ -1,3 +1,17 @@
+### Login
+# Authenticates a user and returns a long-lived auth JWT.
+# Public endpoint — no Authorization header required.
+# Use the returned token as JWT_TOKEN in your env for authenticated requests.
+POST {{BASE_URL}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "change-me-on-first-login"
+}
+
+###
+
 ### Create User
 # Creates a new user and returns a signup link containing a short-lived JWT.
 # The signup link should be sent to the new user so they can set their password.

@@ -4,6 +4,9 @@ import { authMiddleware } from '../middleware/authMiddleware';
 import { signupTokenMiddleware } from '../middleware/signupTokenMiddleware';
 
 export const authRoutes = {
+  '/api/auth/login': {
+    POST: (req: Request) => authController.login(req as never),
+  },
   '/api/auth/create-user': {
     POST: withMiddleware(authMiddleware)((req) =>
       authController.createUser(req),

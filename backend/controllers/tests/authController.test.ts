@@ -10,6 +10,23 @@ import { mockUsers } from '@backend/utils/test/mockUsers';
 
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
+const VALID_PASSWORD = 'correctpass123';
+
+const makeAuthController = async () => {
+  const hashedPassword = await Bun.password.hash(VALID_PASSWORD);
+  const repo = {
+    ...mockUserRepository,
+    getByEmail: async (email: string) => {
+      const user = mockUsers.find((u) => u.email === email);
+      if (!user) {
+        return undefined;
+      }
+      return { ...user, password: hashedPassword };
+    },
+  };
+  return createAuthController(createAuthService(repo));
+};
+
 const mockAuthService = createAuthService(mockUserRepository);
 const authController = createAuthController(mockAuthService);
 
@@ -202,6 +219,87 @@ describe('AuthController', () => {
       const data = (await response.json()) as ApiErrorResponse;
       expect(data.error.errors.some((e) => e.field === 'confirmPassword')).toBe(
         true,
+      );
+    });
+  });
+
+  describe('login', () => {
+    const makeLoginRequest = (body: unknown): Request =>
+      new Request('http://localhost/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+    test('should return 200 with token on valid credentials', async () => {
+      const controller = await makeAuthController();
+      const req = makeLoginRequest({
+        email: mockUsers[0]!.email,
+        password: VALID_PASSWORD,
+      }) as never;
+      const response = await controller.login(req);
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data).toHaveProperty('token');
+    });
+
+    test('token should be a non-empty string', async () => {
+      const controller = await makeAuthController();
+      const req = makeLoginRequest({
+        email: mockUsers[0]!.email,
+        password: VALID_PASSWORD,
+      }) as never;
+      const response = await controller.login(req);
+      const data = (await response.json()) as { token: string };
+      expect(typeof data.token).toBe('string');
+      expect(data.token.length).toBeGreaterThan(0);
+    });
+
+    test('should return 401 for wrong password', async () => {
+      const controller = await makeAuthController();
+      const req = makeLoginRequest({
+        email: mockUsers[0]!.email,
+        password: 'wrongpassword',
+      }) as never;
+      const response = await controller.login(req);
+      expect(response.status).toBe(401);
+    });
+
+    test('should return 401 for non-existent email', async () => {
+      const controller = await makeAuthController();
+      const req = makeLoginRequest({
+        email: 'nobody@example.com',
+        password: 'anypass',
+      }) as never;
+      const response = await controller.login(req);
+      expect(response.status).toBe(401);
+    });
+
+    test('should return 400 when email is missing', async () => {
+      const req = makeLoginRequest({ password: 'somepass' }) as never;
+      const response = await authController.login(req);
+      expect(response.status).toBe(400);
+      const data = (await response.json()) as ApiErrorResponse;
+      expect(data.error.errors.some((e) => e.field === 'email')).toBe(true);
+    });
+
+    test('should return 400 when password is missing', async () => {
+      const req = makeLoginRequest({ email: 'test@example.com' }) as never;
+      const response = await authController.login(req);
+      expect(response.status).toBe(400);
+      const data = (await response.json()) as ApiErrorResponse;
+      expect(data.error.errors.some((e) => e.field === 'password')).toBe(true);
+    });
+
+    test('should return JSON content type', async () => {
+      const controller = await makeAuthController();
+      const req = makeLoginRequest({
+        email: mockUsers[0]!.email,
+        password: VALID_PASSWORD,
+      }) as never;
+      const response = await controller.login(req);
+      expect(response.headers.get('content-type')).toContain(
+        'application/json',
       );
     });
   });
