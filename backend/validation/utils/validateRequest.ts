@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { mapValidationErrors } from './mapZodErrors';
+import { mapValidationErrors } from './mapValidationErrors';
 
 import type { ValidationResult } from '@backend/types/validationResult';
 

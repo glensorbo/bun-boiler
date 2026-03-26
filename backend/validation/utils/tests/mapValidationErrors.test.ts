@@ -1,9 +1,9 @@
 import { describe, test, expect } from 'bun:test';
 import { z } from 'zod';
 
-import { mapValidationErrors } from '../mapZodErrors';
+import { mapValidationErrors } from '../mapValidationErrors';
 
-describe('mapZodErrors', () => {
+describe('mapValidatioErrors', () => {
   test('maps a single field error to correct shape', () => {
     const schema = z.object({ name: z.string() });
     const result = schema.safeParse({ name: 123 });
