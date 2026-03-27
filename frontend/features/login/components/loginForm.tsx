@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useLogin } from '../hooks/useLogin';
 import { validateLoginForm } from '../logic/validateLoginForm';
-import { setLoginFormField } from '../state/loginFormSlice';
+import { setLoginFormField, setLoginFormErrors } from '../state/loginFormSlice';
 
 import type { LoginFormFields } from '../state/loginFormSlice';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
@@ -42,6 +42,9 @@ export const LoginForm = () => {
             e.target.type === 'checkbox' ? e.target.checked : e.target.value,
         }),
       );
+      if (errors[field]) {
+        dispatch(setLoginFormErrors({ ...errors, [field]: undefined }));
+      }
     };
 
   const handleSubmit = async (e: FormEvent) => {
