@@ -56,7 +56,6 @@ export const LoginForm = () => {
         label="Email"
         type="email"
         autoComplete="email"
-        autoFocus={!rememberedEmail}
         error={showError('email')}
         helperText={showError('email') ? errors.email?.message : undefined}
         fullWidth
@@ -67,7 +66,6 @@ export const LoginForm = () => {
         label="Password"
         type="password"
         autoComplete="current-password"
-        autoFocus={!!rememberedEmail}
         error={showError('password')}
         helperText={
           showError('password') ? errors.password?.message : undefined
