@@ -23,15 +23,16 @@ export const useLogin = () => {
       }),
     );
 
-    if (result.data) {
-      dispatch(setToken(result.data.token));
-      dispatch(setRememberedEmail(values.rememberMe ? values.email : null));
-      dispatch(clearLoginForm());
-      toast.success('Welcome back! 👋');
-      void navigate('/');
-    } else {
+    if (!result.data) {
       toast.error(result.error.message);
+      return;
     }
+
+    dispatch(setToken(result.data.token));
+    dispatch(setRememberedEmail(values.rememberMe ? values.email : null));
+    dispatch(clearLoginForm());
+    toast.success('Welcome back! 👋');
+    void navigate('/');
   };
 
   return { submit, isLoading };
