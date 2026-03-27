@@ -6,18 +6,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema } from '../logic/loginSchema';
+import { useFormFocus } from '@frontend/shared/hooks/useFormFocus';
 
 import type { LoginFormValues } from '../logic/loginSchema';
 import type { RootState } from '@frontend/redux/store';
-import type { FocusEvent } from 'react';
-
-type TextField = 'email' | 'password';
 
 export const LoginForm = () => {
   const rememberedEmail = useSelector(
@@ -26,53 +23,23 @@ export const LoginForm = () => {
 
   const { submit, isLoading } = useLogin();
 
-  // Tracks which field is currently focused so errors are hidden while editing.
-  const [focusedField, setFocusedField] = useState<TextField | null>(null);
+  const { register, handleSubmit, control, formState } =
+    useForm<LoginFormValues>({
+      resolver: zodResolver(loginSchema),
+      mode: 'onBlur',
+      reValidateMode: 'onChange',
+      defaultValues: {
+        email: rememberedEmail ?? '',
+        password: '',
+        rememberMe: !!rememberedEmail,
+      },
+    });
 
-  const {
+  const { errors } = formState;
+  const { field, showError } = useFormFocus<LoginFormValues>({
+    formState,
     register,
-    handleSubmit,
-    control,
-    formState: { errors, dirtyFields, touchedFields, isSubmitted },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
-    defaultValues: {
-      email: rememberedEmail ?? '',
-      password: '',
-      rememberMe: !!rememberedEmail,
-    },
   });
-
-  /**
-   * Wraps register() to inject focus tracking without losing RHF's onBlur.
-   * Errors are hidden while the field is focused (user is actively editing).
-   */
-  const field = (name: TextField) => {
-    const { onBlur, ...rest } = register(name);
-    return {
-      ...rest,
-      onFocus: () => {
-        setFocusedField(name);
-      },
-      onBlur: (e: FocusEvent<HTMLInputElement>) => {
-        setFocusedField(null);
-        void onBlur(e);
-      },
-    };
-  };
-
-  /**
-   * An error is visible only when:
-   * - the field is not currently focused, AND
-   * - the field has an error, AND
-   * - either the form was submitted OR the field was dirtied then blurred
-   */
-  const showError = (name: TextField) =>
-    focusedField !== name &&
-    !!errors[name] &&
-    (isSubmitted || (!!dirtyFields[name] && !!touchedFields[name]));
 
   return (
     <Box
@@ -119,7 +86,7 @@ export const LoginForm = () => {
                   checked={rememberMeField.value}
                   onChange={rememberMeField.onChange}
                   onBlur={rememberMeField.onBlur}
-                  inputRef={rememberMeField.ref}
+                  slotProps={{ input: { ref: rememberMeField.ref } }}
                 />
               }
               label="Remember me"
