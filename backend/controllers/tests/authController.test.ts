@@ -54,8 +54,8 @@ describe('AuthController', () => {
       const response = await authController.createUser(req);
 
       expect(response.status).toBe(201);
-      const data = await response.json();
-      expect(data).toHaveProperty('signupLink');
+      const body = await response.json();
+      expect(body).toHaveProperty('data.signupLink');
     });
 
     test('should return JSON content type', async () => {
@@ -151,8 +151,8 @@ describe('AuthController', () => {
       const response = await authController.setPassword(req, ctx);
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data).toHaveProperty('token');
+      const body = await response.json();
+      expect(body).toHaveProperty('data.token');
     });
 
     test('token should be a non-empty string', async () => {
@@ -170,9 +170,9 @@ describe('AuthController', () => {
       };
 
       const response = await authController.setPassword(req, ctx);
-      const data = (await response.json()) as { token: string };
-      expect(typeof data.token).toBe('string');
-      expect(data.token.length).toBeGreaterThan(0);
+      const body = (await response.json()) as { data: { token: string } };
+      expect(typeof body.data.token).toBe('string');
+      expect(body.data.token.length).toBeGreaterThan(0);
     });
 
     test('should return 400 with password error when password is missing', async () => {
@@ -239,8 +239,8 @@ describe('AuthController', () => {
       }) as never;
       const response = await controller.login(req);
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data).toHaveProperty('token');
+      const body = await response.json();
+      expect(body).toHaveProperty('data.token');
     });
 
     test('token should be a non-empty string', async () => {
@@ -250,9 +250,9 @@ describe('AuthController', () => {
         password: VALID_PASSWORD,
       }) as never;
       const response = await controller.login(req);
-      const data = (await response.json()) as { token: string };
-      expect(typeof data.token).toBe('string');
-      expect(data.token.length).toBeGreaterThan(0);
+      const body = (await response.json()) as { data: { token: string } };
+      expect(typeof body.data.token).toBe('string');
+      expect(body.data.token.length).toBeGreaterThan(0);
     });
 
     test('should return 401 for wrong password', async () => {

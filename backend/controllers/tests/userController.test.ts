@@ -31,23 +31,23 @@ describe('UserController', () => {
 
     test('should return an array of users', async () => {
       const response = await userController.getUsers();
-      const data = (await response.json()) as User[];
-      expect(Array.isArray(data)).toBe(true);
+      const body = (await response.json()) as { data: User[] };
+      expect(Array.isArray(body.data)).toBe(true);
     });
 
     test('should NOT include password field in response', async () => {
       const response = await userController.getUsers();
-      const data = (await response.json()) as User[];
+      const body = (await response.json()) as { data: User[] };
 
-      expect(data.length).toBeGreaterThan(0);
-      const user = data[0];
+      expect(body.data.length).toBeGreaterThan(0);
+      const user = body.data[0];
       expect(user).not.toHaveProperty('password');
     });
 
     test('should return correct number of users', async () => {
       const response = await userController.getUsers();
-      const data = (await response.json()) as User[];
-      expect(data.length).toBe(mockUsers.length);
+      const body = (await response.json()) as { data: User[] };
+      expect(body.data.length).toBe(mockUsers.length);
     });
   });
 
@@ -89,8 +89,8 @@ describe('UserController', () => {
       const response = await userController.getUserById(existingUser.id!);
 
       expect(response.status).toBe(200);
-      const data = (await response.json()) as User;
-      expect(data.id).toBe(existingUser.id);
+      const body = (await response.json()) as { data: User };
+      expect(body.data.id).toBe(existingUser.id);
     });
 
     test('should NOT include password field when user exists', async () => {
@@ -100,9 +100,9 @@ describe('UserController', () => {
       }
 
       const response = await userController.getUserById(existingUser.id!);
-      const data = (await response.json()) as User;
+      const body = (await response.json()) as { data: User };
 
-      expect(data).not.toHaveProperty('password');
+      expect(body.data).not.toHaveProperty('password');
     });
   });
 });
