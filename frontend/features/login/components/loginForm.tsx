@@ -6,16 +6,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema } from '../logic/loginSchema';
-import { setLoginFormValues, clearLoginForm } from '../state/loginFormSlice';
+import { clearLoginForm, setLoginFormValues } from '../state/loginFormSlice';
 
 import type { LoginFormValues } from '../logic/loginSchema';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
+import type { FocusEvent } from 'react';
+
+type TextField = 'email' | 'password';
 
 export const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,12 +28,15 @@ export const LoginForm = () => {
 
   const { submit, isLoading } = useLogin();
 
+  // Tracks which field is currently focused so errors are hidden while editing.
+  const [focusedField, setFocusedField] = useState<TextField | null>(null);
+
   const {
     register,
     handleSubmit,
     watch,
     control,
-    formState: { errors, dirtyFields },
+    formState: { errors, dirtyFields, touchedFields, isSubmitted },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: 'onBlur',
@@ -62,6 +68,35 @@ export const LoginForm = () => {
     };
   }, [dispatch]);
 
+  /**
+   * Wraps register() to inject focus tracking without losing RHF's onBlur.
+   * Errors are hidden while the field is focused (user is actively editing).
+   */
+  const field = (name: TextField) => {
+    const { onBlur, ...rest } = register(name);
+    return {
+      ...rest,
+      onFocus: () => {
+        setFocusedField(name);
+      },
+      onBlur: (e: FocusEvent<HTMLInputElement>) => {
+        setFocusedField(null);
+        void onBlur(e);
+      },
+    };
+  };
+
+  /**
+   * An error is visible only when:
+   * - the field is not currently focused, AND
+   * - the field has an error, AND
+   * - either the form was submitted OR the field was dirtied then blurred
+   */
+  const showError = (name: TextField) =>
+    focusedField !== name &&
+    !!errors[name] &&
+    (isSubmitted || (!!dirtyFields[name] && !!touchedFields[name]));
+
   return (
     <Box
       component="form"
@@ -73,24 +108,26 @@ export const LoginForm = () => {
       </Typography>
 
       <TextField
-        {...register('email')}
+        {...field('email')}
         label="Email"
         type="email"
         autoComplete="email"
         autoFocus={!rememberedEmail}
-        error={!!errors.email && !!dirtyFields.email}
-        helperText={dirtyFields.email ? errors.email?.message : undefined}
+        error={showError('email')}
+        helperText={showError('email') ? errors.email?.message : undefined}
         fullWidth
       />
 
       <TextField
-        {...register('password')}
+        {...field('password')}
         label="Password"
         type="password"
         autoComplete="current-password"
         autoFocus={!!rememberedEmail}
-        error={!!errors.password && !!dirtyFields.password}
-        helperText={dirtyFields.password ? errors.password?.message : undefined}
+        error={showError('password')}
+        helperText={
+          showError('password') ? errors.password?.message : undefined
+        }
         fullWidth
       />
 
@@ -98,14 +135,14 @@ export const LoginForm = () => {
         <Controller
           name="rememberMe"
           control={control}
-          render={({ field }) => (
+          render={({ field: rememberMeField }) => (
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={field.value}
-                  onChange={field.onChange}
-                  onBlur={field.onBlur}
-                  inputRef={field.ref}
+                  checked={rememberMeField.value}
+                  onChange={rememberMeField.onChange}
+                  onBlur={rememberMeField.onBlur}
+                  inputRef={rememberMeField.ref}
                 />
               }
               label="Remember me"
