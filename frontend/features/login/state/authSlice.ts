@@ -4,7 +4,7 @@ import { loadSliceState } from '@frontend/redux/middleware/localStorageMiddlewar
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface AuthState {
+interface AuthState {
   token: string | null;
   rememberedEmail: string | null;
 }

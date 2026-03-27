@@ -34,7 +34,7 @@ export const LoginForm = () => {
     }
   }, [dispatch, rememberedEmail]);
 
-  const handleChange =
+  const onChangeHandler =
     (field: keyof LoginFormFields) => (e: ChangeEvent<HTMLInputElement>) => {
       dispatch(
         setLoginFormField({
@@ -68,7 +68,7 @@ export const LoginForm = () => {
         type="email"
         autoComplete="email"
         value={email}
-        onChange={handleChange('email')}
+        onChange={onChangeHandler('email')}
         error={!!errors.email}
         helperText={errors.email}
         fullWidth
@@ -79,7 +79,7 @@ export const LoginForm = () => {
         type="password"
         autoComplete="current-password"
         value={password}
-        onChange={handleChange('password')}
+        onChange={onChangeHandler('password')}
         error={!!errors.password}
         helperText={errors.password}
         fullWidth
@@ -90,7 +90,7 @@ export const LoginForm = () => {
           control={
             <Checkbox
               checked={rememberMe}
-              onChange={handleChange('rememberMe')}
+              onChange={onChangeHandler('rememberMe')}
             />
           }
           label="Remember me"

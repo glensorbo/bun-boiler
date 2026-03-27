@@ -10,7 +10,7 @@ export type LoginFormFields = {
 
 export type LoginFormErrors = Partial<Record<keyof LoginFormFields, string>>;
 
-export interface LoginFormState extends LoginFormFields {
+interface LoginFormState extends LoginFormFields {
   errors: LoginFormErrors;
 }
 
