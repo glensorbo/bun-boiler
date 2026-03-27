@@ -6,22 +6,20 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema } from '../logic/loginSchema';
-import { clearLoginForm, setLoginFormValues } from '../state/loginFormSlice';
 
 import type { LoginFormValues } from '../logic/loginSchema';
-import type { AppDispatch, RootState } from '@frontend/redux/store';
+import type { RootState } from '@frontend/redux/store';
 import type { FocusEvent } from 'react';
 
 type TextField = 'email' | 'password';
 
 export const LoginForm = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const rememberedEmail = useSelector(
     (state: RootState) => state.auth.rememberedEmail,
   );
@@ -34,7 +32,6 @@ export const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     control,
     formState: { errors, dirtyFields, touchedFields, isSubmitted },
   } = useForm<LoginFormValues>({
@@ -47,26 +44,6 @@ export const LoginForm = () => {
       rememberMe: !!rememberedEmail,
     },
   });
-
-  // Sync live form values to Redux as the user types.
-  useEffect(() => {
-    const subscription = watch((values) => {
-      dispatch(
-        setLoginFormValues({
-          email: values.email ?? '',
-          password: values.password ?? '',
-        }),
-      );
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, dispatch]);
-
-  // Clear ephemeral form state from Redux on unmount.
-  useEffect(() => {
-    return () => {
-      dispatch(clearLoginForm());
-    };
-  }, [dispatch]);
 
   /**
    * Wraps register() to inject focus tracking without losing RHF's onBlur.

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 
 import { setRememberedEmail, setToken } from '../state/authSlice';
-import { clearLoginForm } from '../state/loginFormSlice';
+import { clearLoginForm, setLoginFormValues } from '../state/loginFormSlice';
 import { useLoginMutation } from '@frontend/redux/api/authApi';
 
 import type { LoginFormValues } from '../logic/loginSchema';
@@ -15,6 +15,11 @@ export const useLogin = () => {
   const [loginMutation, { isLoading }] = useLoginMutation();
 
   const submit = async (values: LoginFormValues) => {
+    // Store the submitted values in Redux once on submit (not synced while typing).
+    dispatch(
+      setLoginFormValues({ email: values.email, password: values.password }),
+    );
+
     const result = await loginMutation({
       email: values.email,
       password: values.password,
