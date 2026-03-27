@@ -4,7 +4,7 @@ Handles user authentication: the login form, auth state (JWT token), and route p
 
 ## Structure
 
-- `components/loginForm.tsx` — email/password form with error display
+- `components/loginForm.tsx` — email/password form with `onSubmitHandler`, error display, and validation
 - `components/protectedRoute.tsx` — redirects unauthenticated users to `/login`
 - `hooks/useLogin.ts` — wraps the login mutation, dispatches token on success
 - `types/loginTypes.ts` — `LoginCredentials` and related types

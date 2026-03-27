@@ -6,6 +6,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useEffect, useRef } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useLogin } from '../hooks/useLogin';
@@ -14,7 +15,7 @@ import { setLoginFormField, setLoginFormErrors } from '../state/loginFormSlice';
 
 import type { LoginFormFields } from '../state/loginFormSlice';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent } from 'react';
 
 export const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,7 +48,7 @@ export const LoginForm = () => {
       }
     };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const values = { email, password, rememberMe };
     if (!validateLoginForm(dispatch, values)) {
@@ -59,7 +60,7 @@ export const LoginForm = () => {
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit}
+      onSubmit={onSubmitHandler}
       sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}
     >
       <Typography variant="h5" component="h1" fontWeight={600}>
