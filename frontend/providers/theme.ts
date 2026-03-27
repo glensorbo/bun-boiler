@@ -34,6 +34,18 @@ export const buildTheme = (mode: PaletteMode) =>
       ].join(','),
     },
     components: {
+      MuiInputBase: {
+        styleOverrides: {
+          input: ({ theme }: { theme: Theme }) => ({
+            '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus':
+              {
+                WebkitBoxShadow: `0 0 0 100px ${theme.palette.background.paper} inset`,
+                WebkitTextFillColor: theme.palette.text.primary,
+                caretColor: theme.palette.text.primary,
+              },
+          }),
+        },
+      },
       MuiInputLabel: {
         styleOverrides: {
           // When the label is shrunk (field has a value) but NOT focused,
