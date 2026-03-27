@@ -30,7 +30,7 @@ export const LoginForm = () => {
     handleSubmit,
     watch,
     control,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: 'onBlur',
@@ -78,8 +78,8 @@ export const LoginForm = () => {
         type="email"
         autoComplete="email"
         autoFocus={!rememberedEmail}
-        error={!!errors.email}
-        helperText={errors.email?.message}
+        error={!!errors.email && !!dirtyFields.email}
+        helperText={dirtyFields.email ? errors.email?.message : undefined}
         fullWidth
       />
 
@@ -89,8 +89,8 @@ export const LoginForm = () => {
         type="password"
         autoComplete="current-password"
         autoFocus={!!rememberedEmail}
-        error={!!errors.password}
-        helperText={errors.password?.message}
+        error={!!errors.password && !!dirtyFields.password}
+        helperText={dirtyFields.password ? errors.password?.message : undefined}
         fullWidth
       />
 
