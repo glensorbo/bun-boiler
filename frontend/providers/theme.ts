@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material';
 
-import type { PaletteMode } from '@mui/material';
+import type { PaletteMode, Theme } from '@mui/material';
 
 /**
  * Builds a MUI theme for a resolved light/dark mode.
@@ -32,5 +32,19 @@ export const buildTheme = (mode: PaletteMode) =>
         'Roboto',
         'sans-serif',
       ].join(','),
+    },
+    components: {
+      MuiInputLabel: {
+        styleOverrides: {
+          // When the label is shrunk (field has a value) but NOT focused,
+          // use a neutral colour instead of primary (blue).
+          shrink: ({ theme }: { theme: Theme }) => ({
+            color: theme.palette.text.secondary,
+            '&.Mui-focused': {
+              color: theme.palette.primary.main,
+            },
+          }),
+        },
+      },
     },
   });
