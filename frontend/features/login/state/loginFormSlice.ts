@@ -2,33 +2,35 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-interface LoginFormState {
+export interface LoginFormState {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 const initialState: LoginFormState = {
   email: '',
   password: '',
+  rememberMe: false,
 };
 
 /**
- * Ephemeral form state — synced from react-hook-form via watch().
+ * Ephemeral form state — controlled inputs dispatch here on every onChange.
  * NOT persisted to localStorage (intentionally omitted from PERSISTED_KEYS).
  */
 export const loginFormSlice = createSlice({
   name: 'loginForm',
   initialState,
   reducers: {
-    setLoginFormValues(state, action: PayloadAction<LoginFormState>) {
-      state.email = action.payload.email;
-      state.password = action.payload.password;
+    setLoginFormField(state, action: PayloadAction<Partial<LoginFormState>>) {
+      Object.assign(state, action.payload);
     },
     clearLoginForm(state) {
       state.email = '';
       state.password = '';
+      state.rememberMe = false;
     },
   },
 });
 
-export const { setLoginFormValues, clearLoginForm } = loginFormSlice.actions;
+export const { setLoginFormField, clearLoginForm } = loginFormSlice.actions;

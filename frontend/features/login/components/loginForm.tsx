@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -6,45 +5,73 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Controller, useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useLogin } from '../hooks/useLogin';
 import { loginSchema } from '../logic/loginSchema';
-import { useFormFocus } from '@frontend/shared/hooks/useFormFocus';
+import { setLoginFormField } from '../state/loginFormSlice';
 
 import type { LoginFormValues } from '../logic/loginSchema';
-import type { RootState } from '@frontend/redux/store';
+import type { AppDispatch, RootState } from '@frontend/redux/store';
+import type { FormEvent } from 'react';
 
 export const LoginForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const rememberedEmail = useSelector(
     (state: RootState) => state.auth.rememberedEmail,
   );
-
+  const formValues = useSelector((state: RootState) => state.loginForm);
   const { submit, isLoading } = useLogin();
 
-  const { register, handleSubmit, control, formState } =
-    useForm<LoginFormValues>({
-      resolver: zodResolver(loginSchema),
-      mode: 'onBlur',
-      reValidateMode: 'onChange',
-      defaultValues: {
-        email: rememberedEmail ?? '',
-        password: '',
-        rememberMe: !!rememberedEmail,
-      },
-    });
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current && rememberedEmail) {
+      dispatch(setLoginFormField({ email: rememberedEmail, rememberMe: true }));
+      initialized.current = true;
+    }
+  }, [dispatch, rememberedEmail]);
 
-  const { errors } = formState;
-  const { field, showError } = useFormFocus<LoginFormValues>({
-    formState,
-    register,
-  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof LoginFormValues, string>>
+  >({});
+  const [touched, setTouched] = useState<
+    Partial<Record<keyof LoginFormValues, boolean>>
+  >({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const showError = (name: keyof LoginFormValues) =>
+    !!errors[name] && (submitted || !!touched[name]);
+
+  const handleBlur = (name: keyof LoginFormValues) => {
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    const result = loginSchema.safeParse(formValues);
+    if (!result.success) {
+      const fieldErrors: Partial<Record<keyof LoginFormValues, string>> = {};
+      for (const issue of result.error.issues) {
+        const field = issue.path[0] as keyof LoginFormValues;
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
+      }
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+    await submit(result.data);
+  };
 
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit(submit)}
+      onSubmit={handleSubmit}
       sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}
     >
       <Typography variant="h5" component="h1" fontWeight={600}>
@@ -52,47 +79,45 @@ export const LoginForm = () => {
       </Typography>
 
       <TextField
-        {...field('email')}
         label="Email"
         type="email"
         autoComplete="email"
+        value={formValues.email}
+        onChange={(e) => dispatch(setLoginFormField({ email: e.target.value }))}
+        onBlur={() => handleBlur('email')}
         error={showError('email')}
-        helperText={showError('email') ? errors.email?.message : undefined}
+        helperText={showError('email') ? errors.email : undefined}
         fullWidth
       />
 
       <TextField
-        {...field('password')}
         label="Password"
         type="password"
         autoComplete="current-password"
-        error={showError('password')}
-        helperText={
-          showError('password') ? errors.password?.message : undefined
+        value={formValues.password}
+        onChange={(e) =>
+          dispatch(setLoginFormField({ password: e.target.value }))
         }
+        onBlur={() => handleBlur('password')}
+        error={showError('password')}
+        helperText={showError('password') ? errors.password : undefined}
         fullWidth
       />
 
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Controller
-          name="rememberMe"
-          control={control}
-          render={({ field: rememberMeField }) => (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={rememberMeField.value}
-                  onChange={rememberMeField.onChange}
-                  onBlur={rememberMeField.onBlur}
-                  slotProps={{ input: { ref: rememberMeField.ref } }}
-                />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={formValues.rememberMe}
+              onChange={(e) =>
+                dispatch(setLoginFormField({ rememberMe: e.target.checked }))
               }
-              label="Remember me"
             />
-          )}
+          }
+          label="Remember me"
         />
-        {errors.rememberMe && (
-          <FormHelperText error>{errors.rememberMe.message}</FormHelperText>
+        {showError('rememberMe') && (
+          <FormHelperText error>{errors.rememberMe}</FormHelperText>
         )}
       </Box>
 
