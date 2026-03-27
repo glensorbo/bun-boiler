@@ -2,16 +2,23 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface LoginFormState {
+export type LoginFormFields = {
   email: string;
   password: string;
   rememberMe: boolean;
+};
+
+export type LoginFormErrors = Partial<Record<keyof LoginFormFields, string>>;
+
+export interface LoginFormState extends LoginFormFields {
+  errors: LoginFormErrors;
 }
 
 const initialState: LoginFormState = {
   email: '',
   password: '',
   rememberMe: false,
+  errors: {},
 };
 
 /**
@@ -22,15 +29,17 @@ export const loginFormSlice = createSlice({
   name: 'loginForm',
   initialState,
   reducers: {
-    setLoginFormField(state, action: PayloadAction<Partial<LoginFormState>>) {
+    setLoginFormField(state, action: PayloadAction<Partial<LoginFormFields>>) {
       Object.assign(state, action.payload);
     },
-    clearLoginForm(state) {
-      state.email = '';
-      state.password = '';
-      state.rememberMe = false;
+    setLoginFormErrors(state, action: PayloadAction<LoginFormErrors>) {
+      state.errors = action.payload;
+    },
+    clearLoginForm() {
+      return initialState;
     },
   },
 });
 
-export const { setLoginFormField, clearLoginForm } = loginFormSlice.actions;
+export const { setLoginFormField, setLoginFormErrors, clearLoginForm } =
+  loginFormSlice.actions;
