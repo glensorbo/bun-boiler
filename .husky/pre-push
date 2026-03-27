@@ -30,4 +30,11 @@ bun run test || {
   exit 1
 }
 
+# Run knip unused exports check
+echo "→ Checking for unused exports..."
+if ! bun run knip; then
+  echo "❌ Unused exports found. Clean them up before pushing."
+  exit 1
+fi
+
 echo "✅ All checks passed! Pushing..."

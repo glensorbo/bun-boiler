@@ -18,11 +18,18 @@ describe('successResponse', () => {
     expect(res.status).toBe(201);
   });
 
-  test('body is valid JSON matching the input data', async () => {
+  test('body is valid JSON wrapped in ApiSuccessResponse shape', async () => {
     const data = { name: 'Alice', age: 30 };
     const res = successResponse(data);
     const body = await res.json();
-    expect(body).toEqual(data);
+    expect(body).toEqual({ data, status: 200 });
+  });
+
+  test('body includes correct status when custom status code is given', async () => {
+    const data = { id: 1 };
+    const res = successResponse(data, 201);
+    const body = await res.json();
+    expect(body).toEqual({ data, status: 201 });
   });
 
   test('content-type is application/json', () => {

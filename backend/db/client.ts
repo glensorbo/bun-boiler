@@ -49,16 +49,3 @@ export const getDb = () => {
 
   return cachedDb;
 };
-
-/**
- * Get raw postgres client
- * Useful for transactions or direct queries
- * @returns Raw postgres client
- */
-export const getClient = () => {
-  if (!cachedClient) {
-    // Trigger db creation to initialize client
-    getDb();
-  }
-  return cachedClient;
-};

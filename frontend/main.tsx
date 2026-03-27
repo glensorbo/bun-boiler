@@ -1,22 +1,29 @@
 /**
- * This file is the entry point for the React app, it sets up the root
- * element and renders the App component to the DOM.
- *
- * It is included in `public/index.html`.
+ * Entry point for the React app. Sets up global providers and mounts the root.
+ * Included in `public/index.html`.
  */
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import { App } from './App';
+import { AuthProvider } from './providers/authProvider';
+import { ThemeProvider } from './providers/themeProvider';
+import { ToastProvider } from './providers/toastProvider';
 import { store } from './redux/store';
+import { AppRouter } from './router';
 
 const elem = document.getElementById('root')!;
 const app = (
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <ThemeProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <AppRouter />
+          </AuthProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </Provider>
   </StrictMode>
 );

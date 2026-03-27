@@ -1,0 +1,39 @@
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+
+import { setRememberedEmail, setToken } from '../state/authSlice';
+import { clearLoginForm } from '../state/loginFormSlice';
+import { useLoginMutation } from '@frontend/redux/api/authApi';
+import { unwrapResult } from '@frontend/shared/utils/unwrapResult';
+
+import type { LoginFormValues } from '../logic/loginSchema';
+import type { AppDispatch } from '@frontend/redux/store';
+
+export const useLogin = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [loginMutation, { isLoading }] = useLoginMutation();
+
+  const submit = async (values: LoginFormValues) => {
+    const result = unwrapResult(
+      await loginMutation({
+        email: values.email,
+        password: values.password,
+      }),
+    );
+
+    if (!result.data) {
+      toast.error(result.error.message);
+      return;
+    }
+
+    dispatch(setToken(result.data.token));
+    dispatch(setRememberedEmail(values.rememberMe ? values.email : null));
+    dispatch(clearLoginForm());
+    toast.success('Welcome back! 👋');
+    void navigate('/');
+  };
+
+  return { submit, isLoading };
+};

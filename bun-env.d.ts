@@ -16,6 +16,10 @@ declare module '*.module.css' {
   export = classes;
 }
 
+declare module '*.css' {
+  // Plain CSS side-effect imports (e.g. react-toastify)
+}
+
 /**
  * Environment Variables
  * Type-safe access to environment variables via Bun.env

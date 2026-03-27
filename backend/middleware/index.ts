@@ -29,15 +29,12 @@ export type MiddlewareFn = (
 /**
  * A route handler that receives the request and populated context.
  */
-export type HandlerFn = (
-  req: BunRequest,
-  ctx: Ctx,
-) => Response | Promise<Response>;
+type HandlerFn = (req: BunRequest, ctx: Ctx) => Response | Promise<Response>;
 
 /**
  * A standard Bun.serve() route handler (no ctx — compatible with routes object).
  */
-export type BunHandler = (req: BunRequest) => Response | Promise<Response>;
+type BunHandler = (req: BunRequest) => Response | Promise<Response>;
 
 /**
  * Compose middleware functions before a route handler.

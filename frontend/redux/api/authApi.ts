@@ -2,7 +2,7 @@ import { baseApi } from './baseApi';
 
 import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 
-export const authApi = baseApi.injectEndpoints({
+const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     login: build.mutation<
       { token: string },
@@ -46,8 +46,4 @@ export const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useLoginMutation,
-  useCreateUserMutation,
-  useSetPasswordMutation,
-} = authApi;
+export const { useLoginMutation } = authApi;
