@@ -36,6 +36,22 @@ if (import.meta.hot) {
 
 `bun run build` runs `build.ts`, which scans `frontend/` for all `.html` files, runs them through Bun's bundler with the React Compiler plugin, and outputs minified assets to `dist/`. The backend then serves from `dist/` with SPA fallback.
 
+## 🛡️ Error Handling
+
+`frontend/shared/components/errorBoundary.tsx` wraps the app root. If a component throws during render, the boundary catches it and displays a fallback UI with a **Reset** button. Import and use `<ErrorBoundary>` from `@frontend/shared/components/errorBoundary`.
+
+## 💀 Loading States
+
+Prefer **skeleton loaders** over spinners for content that maps to a known layout. Shared skeletons live in `frontend/shared/components/skeleton.tsx`:
+
+| Component       | Use case                           |
+| --------------- | ---------------------------------- |
+| `TableSkeleton` | Data tables while rows are loading |
+| `ListSkeleton`  | List items while data is fetching  |
+| `CardSkeleton`  | Card/panel content                 |
+
+Import from `@frontend/shared/components/skeleton`.
+
 ## 🧪 Testing
 
 Frontend tests use `happy-dom` for DOM APIs. It's registered globally via `frontend/test-setup.ts`, which is preloaded by Bun for all tests (configured in `bunfig.toml`):
