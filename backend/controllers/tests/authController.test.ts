@@ -3,8 +3,8 @@ import { describe, test, expect, beforeEach } from 'bun:test';
 process.env.JWT_SECRET = 'test-secret';
 process.env.APP_URL = 'http://localhost:3000';
 
-import { createAuthService } from '../../services/authService';
-import { createAuthController } from '../authController';
+import { createAuthController } from '@backend/controllers/authController';
+import { createAuthService } from '@backend/services/authService';
 import {
   mockRefreshTokenRepository,
   mockUserRepository,

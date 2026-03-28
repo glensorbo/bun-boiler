@@ -1,6 +1,6 @@
-import { userRepository } from '../repositories/userRepository';
+import { userRepository } from '@backend/repositories/userRepository';
 
-import type { userRepository as UserRepositoryType } from '../repositories/userRepository';
+import type { userRepository as UserRepositoryType } from '@backend/repositories/userRepository';
 import type { User } from '@backend/types/user';
 
 /**

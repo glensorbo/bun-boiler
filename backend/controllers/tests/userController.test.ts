@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'bun:test';
 
-import { createUserService } from '../../services/userService';
-import { createUserController } from '../userController';
+import { createUserController } from '@backend/controllers/userController';
+import { createUserService } from '@backend/services/userService';
 import { mockUserRepository, mockUsers } from '@backend/utils/test';
 
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';

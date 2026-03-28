@@ -1,4 +1,4 @@
-import { userService } from '../services/userService';
+import { userService } from '@backend/services/userService';
 import {
   notFoundError,
   successResponse,
@@ -7,7 +7,7 @@ import {
 import { uuidSchema } from '@backend/validation/schemas/user';
 import { validateParam } from '@backend/validation/utils/validateParam';
 
-import type { userService as UserServiceType } from '../services/userService';
+import type { userService as UserServiceType } from '@backend/services/userService';
 
 /**
  * User Controller Factory

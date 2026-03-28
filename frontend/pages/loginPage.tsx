@@ -4,10 +4,10 @@ import CardContent from '@mui/material/CardContent';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router';
 
-import { LoginForm } from '../features/login/components/loginForm';
-import { selectIsAuthenticated } from '../features/login/state/authSlice';
+import { LoginForm } from '@frontend/features/login/components/loginForm';
+import { selectIsAuthenticated } from '@frontend/features/login/state/authSlice';
 
-import type { RootState } from '../redux/store';
+import type { RootState } from '@frontend/redux/store';
 
 export const LoginPage = () => {
   const isAuthenticated = useSelector((state: RootState) =>

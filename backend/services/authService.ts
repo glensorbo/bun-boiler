@@ -1,17 +1,17 @@
-import { refreshTokenRepository } from '../repositories/refreshTokenRepository';
-import { userRepository } from '../repositories/userRepository';
-import { errorOr } from '../types/errorOr';
+import { refreshTokenRepository } from '@backend/repositories/refreshTokenRepository';
+import { userRepository } from '@backend/repositories/userRepository';
+import { errorOr } from '@backend/types/errorOr';
 import {
   generateRefreshToken,
   hashRefreshToken,
   generatePassphrase,
   signAuthToken,
   signSignupToken,
-} from '../utils/auth';
+} from '@backend/utils/auth';
 
-import type { refreshTokenRepository as RefreshTokenRepositoryType } from '../repositories/refreshTokenRepository';
-import type { userRepository as UserRepositoryType } from '../repositories/userRepository';
-import type { ErrorOr } from '../types/errorOr';
+import type { refreshTokenRepository as RefreshTokenRepositoryType } from '@backend/repositories/refreshTokenRepository';
+import type { userRepository as UserRepositoryType } from '@backend/repositories/userRepository';
+import type { ErrorOr } from '@backend/types/errorOr';
 
 /**
  * Auth Service Factory

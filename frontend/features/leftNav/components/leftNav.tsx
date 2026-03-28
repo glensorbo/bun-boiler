@@ -6,7 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 
-import { DRAWER_WIDTH } from '../../../layout/constants';
+import { DRAWER_WIDTH } from '@frontend/layout/constants';
 
 export const LeftNav = () => (
   <Drawer

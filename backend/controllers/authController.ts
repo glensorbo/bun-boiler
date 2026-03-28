@@ -1,4 +1,4 @@
-import { authService } from '../services/authService';
+import { authService } from '@backend/services/authService';
 import {
   buildRefreshCookie,
   clearRefreshCookie,
@@ -18,8 +18,8 @@ import {
 } from '@backend/validation/schemas/auth';
 import { validateRequest } from '@backend/validation/utils/validateRequest';
 
-import type { authService as AuthServiceType } from '../services/authService';
 import type { BunRequest, Ctx } from '@backend/middleware';
+import type { authService as AuthServiceType } from '@backend/services/authService';
 import type { AppJwtPayload } from '@backend/types/appJwtPayload';
 
 /**
