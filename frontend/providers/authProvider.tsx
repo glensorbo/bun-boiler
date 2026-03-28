@@ -52,20 +52,24 @@ export const AuthProvider = ({ children }: Props) => {
 
     hasAttemptedRefresh.current = true;
 
-    fetch('/api/auth/refresh', { method: 'POST', credentials: 'same-origin' })
-      .then(async (res) => {
+    void (async () => {
+      try {
+        const res = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          credentials: 'same-origin',
+        });
         if (!res.ok) {
           dispatch(clearToken());
-          return null;
+          return;
         }
         const body = (await res.json()) as ApiSuccessResponse<{
           token: string;
         }>;
         dispatch(setToken(body.data.token));
-      })
-      .catch(() => {
+      } catch {
         dispatch(clearToken());
-      });
+      }
+    })();
   }, [token, dispatch]);
 
   return <>{children}</>;
