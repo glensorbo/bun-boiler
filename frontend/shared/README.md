@@ -4,7 +4,9 @@ Generic, reusable code with **no business logic**. Safe to import from any featu
 
 ```
 shared/
-├── components/   # Reusable UI primitives (e.g. LoadingSpinner, EmptyState)
+├── components/   # Reusable UI primitives
+│   ├── errorBoundary.tsx  # App-level React error boundary with reset support
+│   └── skeleton.tsx       # Skeleton loaders: TableSkeleton, ListSkeleton, CardSkeleton
 ├── hooks/        # Generic hooks (e.g. useDebounce, useLocalStorage)
 ├── utils/        # Pure utility functions (e.g. formatDate, cn)
 └── types/        # Shared TypeScript types & utility types

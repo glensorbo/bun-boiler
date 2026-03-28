@@ -6,10 +6,10 @@ All database-related code using [Drizzle ORM](https://orm.drizzle.team/) with Po
 
 ```
 backend/db/
-├── client.ts        # Database client — singleton pattern
+├── client.ts        # Database client — singleton + pingDb() with retry logic
 ├── seed.ts          # Seed script — creates the initial admin user
 ├── schemas/         # Table definitions (source of truth for all types)
-│   └── users.ts
+│   └── users.ts     # users table with user_role enum (admin | user)
 └── migrations/      # Auto-generated SQL migration files
 ```
 
@@ -28,7 +28,7 @@ In Docker, `POSTGRES_SERVER` is set to `db:5432` (the compose service name) — 
 
 ## 🔑 Database Client
 
-Always access the database via `getDb()` from `@backend/db/client`. It creates the connection on first call and caches it — subsequent calls return the same instance:
+Always access the database via `getDb()` from `@backend/db/client`. It creates the connection on first call and caches it — subsequent calls return the same instance. The connection pool is configured with `max: 10`, `idle_timeout: 30s`, and `connect_timeout: 10s`.
 
 ```ts
 import { getDb } from '@backend/db/client';
@@ -36,6 +36,16 @@ import { users } from '@backend/db/schemas/users';
 
 const db = getDb();
 const allUsers = await db.select().from(users);
+```
+
+### `pingDb()`
+
+Use `pingDb()` at startup to verify the database is reachable before accepting traffic. It runs `SELECT 1` with exponential backoff — retrying up to 5 times (1s, 2s, 4s, 8s, 16s) before throwing.
+
+```ts
+import { pingDb } from '@backend/db/client';
+
+await pingDb(); // called in server.ts before Bun.serve()
 ```
 
 Register every new schema in the schema object inside `client.ts`:
@@ -53,6 +63,7 @@ cachedDb = drizzle(cachedClient, { schema: { users, blogPosts } });
 - **SQL table names**: `snake_case` (e.g., `users`, `blog_posts`)
 - **Primary keys**: UUID with `defaultRandom()`
 - **Timestamps**: Always include `createdAt` and `updatedAt`
+- **Enums**: Define with `pgEnum` and import in the schema file (e.g., `user_role`)
 - **Types**: Defined in `backend/types/` using `$inferSelect` / `$inferInsert` — never in the schema file itself
 
 ## ➕ Creating a New Schema

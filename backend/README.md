@@ -32,10 +32,18 @@ Bun.serve() route
 
 ## 🔌 Server (`server.ts`)
 
-`server.ts` only handles infrastructure concerns: the healthcheck and HTML serving.
+`server.ts` handles startup and infrastructure concerns. On boot it:
+
+1. Calls `validateEnv()` — exits immediately if any required env vars are missing
+2. Calls `await pingDb()` — verifies database connectivity with exponential backoff (5 attempts)
+3. Starts `Bun.serve()` with all routes and static file handling
+
 All API routes live in `backend/routes/` and are spread in:
 
 ```ts
+validateEnv();
+await pingDb();
+
 Bun.serve({
   routes: {
     '/healthcheck': { GET: () => new Response('OK') },
