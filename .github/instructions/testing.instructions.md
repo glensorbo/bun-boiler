@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.test.ts, **/*.test.tsx"
+applyTo: '**/*.test.ts, **/*.test.tsx'
 ---
 
 # 🧪 Testing
@@ -13,6 +13,7 @@ import { describe, test, expect, beforeEach } from 'bun:test';
 ```
 
 Run tests:
+
 ```sh
 bun test                    # all tests
 bun test ./backend          # backend only
@@ -42,6 +43,7 @@ describe('UserService', () => {
 ## Mock Data
 
 Shared mocks live in `backend/utils/test/`:
+
 - `mockUserRepository` — in-memory implementation of the user repository interface
 - `mockUsers` — array of seeded test user objects (with passwords)
 

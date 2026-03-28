@@ -1,5 +1,5 @@
 ---
-applyTo: "backend/db/**/*"
+applyTo: 'backend/db/**/*'
 ---
 
 # 🗄️ Database
@@ -13,9 +13,10 @@ This project uses **Drizzle ORM** with PostgreSQL. Schemas live in `backend/db/s
 ```ts
 import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
 
-export const things = pgTable('things', {          // snake_case table name
-  id:        uuid('id').primaryKey().defaultRandom(),
-  name:      varchar('name', { length: 255 }).notNull(),
+export const things = pgTable('things', {
+  // snake_case table name
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 255 }).notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -35,8 +36,8 @@ export const things = pgTable('things', {          // snake_case table name
 // backend/types/thing.ts
 import { things } from '@backend/db/schemas/things';
 
-export type Thing    = typeof things.$inferSelect;  // full row (with all fields)
-export type NewThing = typeof things.$inferInsert;  // insert shape (optional defaults)
+export type Thing = typeof things.$inferSelect; // full row (with all fields)
+export type NewThing = typeof things.$inferInsert; // insert shape (optional defaults)
 ```
 
 ## DB Client

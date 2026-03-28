@@ -1,5 +1,5 @@
 ---
-applyTo: "backend/**/*"
+applyTo: 'backend/**/*'
 ---
 
 # ⚙️ Backend Architecture
@@ -12,13 +12,13 @@ Bun.serve() → Middleware → Controller → Service → Repository → Drizzle
 
 ## Layer Contracts
 
-| Layer | Location | Responsibility | Must NOT |
-|---|---|---|---|
-| Routes | `backend/routes/` | Map HTTP routes to controller methods | Contain logic |
-| Controller | `backend/controllers/` | Parse request, validate input, call service, return `Response` | Contain business logic or DB queries |
-| Service | `backend/services/` | Business logic, data transformation, strip sensitive fields | Make HTTP `Response` objects or raw DB calls |
-| Repository | `backend/repositories/` | Drizzle queries only | Contain business logic |
-| Middleware | `backend/middleware/` | Auth/token verification before controller | Return data (only pass/reject) |
+| Layer      | Location                | Responsibility                                                 | Must NOT                                     |
+| ---------- | ----------------------- | -------------------------------------------------------------- | -------------------------------------------- |
+| Routes     | `backend/routes/`       | Map HTTP routes to controller methods                          | Contain logic                                |
+| Controller | `backend/controllers/`  | Parse request, validate input, call service, return `Response` | Contain business logic or DB queries         |
+| Service    | `backend/services/`     | Business logic, data transformation, strip sensitive fields    | Make HTTP `Response` objects or raw DB calls |
+| Repository | `backend/repositories/` | Drizzle queries only                                           | Contain business logic                       |
+| Middleware | `backend/middleware/`   | Auth/token verification before controller                      | Return data (only pass/reject)               |
 
 **Read the layer's README before working in it.**
 
@@ -76,6 +76,7 @@ unauthorizedError(msg?)            // 401
 ```
 
 The `ApiErrorResponse` shape:
+
 ```ts
 { message: string; status: number; error: { type: 'validation' | 'notFound'; errors: FieldError[]; details?: string } }
 ```

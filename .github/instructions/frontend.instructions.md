@@ -1,5 +1,5 @@
 ---
-applyTo: "frontend/**/*"
+applyTo: 'frontend/**/*'
 ---
 
 # ⚛️ Frontend
@@ -14,9 +14,9 @@ applyTo: "frontend/**/*"
 
 ## Dev vs Production
 
-| Mode | How it works |
-|---|---|
-| Dev | `public/index.html` served directly by `Bun.serve()` with HMR |
+| Mode       | How it works                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| Dev        | `public/index.html` served directly by `Bun.serve()` with HMR                              |
 | Production | `bun run build` scans `frontend/**/*.html` → bundles to `dist/` → served with SPA fallback |
 
 Never use Vite or webpack — Bun's bundler handles everything.

@@ -17,8 +17,8 @@ When adding a new resource (e.g. "add a posts feature"), always follow these ste
 import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
 
 export const things = pgTable('things', {
-  id:        uuid('id').primaryKey().defaultRandom(),
-  name:      varchar('name', { length: 255 }).notNull(),
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: varchar('name', { length: 255 }).notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -36,7 +36,7 @@ export const things = pgTable('things', {
 ```ts
 import { things } from '@backend/db/schemas/things';
 
-export type Thing    = typeof things.$inferSelect;
+export type Thing = typeof things.$inferSelect;
 export type NewThing = typeof things.$inferInsert;
 ```
 
@@ -100,7 +100,11 @@ HTTP boundary only. Validate input with Zod, call service, return `Response` via
 
 ```ts
 import { thingService } from '@backend/services/thingService';
-import { successResponse, notFoundError, validationErrorResponse } from '@backend/utils/response';
+import {
+  successResponse,
+  notFoundError,
+  validationErrorResponse,
+} from '@backend/utils/response';
 import { uuidSchema } from '@backend/validation/schemas/common';
 import { validateParam } from '@backend/validation/utils/validateParam';
 import type { thingService as ThingServiceType } from '@backend/services/thingService';
@@ -111,9 +115,11 @@ export const createThingController = (service: typeof ThingServiceType) => ({
   },
   async getThingById(id: string): Promise<Response> {
     const validation = validateParam(uuidSchema, id);
-    if (validation.errors) return validationErrorResponse('Validation failed', validation.errors);
+    if (validation.errors)
+      return validationErrorResponse('Validation failed', validation.errors);
     const thing = await service.getThingById(validation.data);
-    if (!thing) return notFoundError('Thing not found', `No thing with ID: ${id}`);
+    if (!thing)
+      return notFoundError('Thing not found', `No thing with ID: ${id}`);
     return successResponse(thing);
   },
 });

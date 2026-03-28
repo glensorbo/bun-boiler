@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.{ts,tsx}"
+applyTo: '**/*.{ts,tsx}'
 ---
 
 # 🎨 Code Style
@@ -18,15 +18,15 @@ applyTo: "**/*.{ts,tsx}"
 
 ## Naming
 
-| Thing | Convention | Example |
-|---|---|---|
-| Files | camelCase | `userService.ts` |
-| DB tables | snake_case | `refresh_tokens` |
-| DB columns | snake_case | `created_at` |
-| TS variables/functions | camelCase | `getUserById` |
-| TS types/interfaces | PascalCase | `UserService` |
-| React components | PascalCase | `LoginForm` |
-| Constants | SCREAMING_SNAKE | `MAX_RETRY_COUNT` |
+| Thing                  | Convention      | Example           |
+| ---------------------- | --------------- | ----------------- |
+| Files                  | camelCase       | `userService.ts`  |
+| DB tables              | snake_case      | `refresh_tokens`  |
+| DB columns             | snake_case      | `created_at`      |
+| TS variables/functions | camelCase       | `getUserById`     |
+| TS types/interfaces    | PascalCase      | `UserService`     |
+| React components       | PascalCase      | `LoginForm`       |
+| Constants              | SCREAMING_SNAKE | `MAX_RETRY_COUNT` |
 
 ## Imports
 
