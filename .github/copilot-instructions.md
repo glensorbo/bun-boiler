@@ -1,140 +1,57 @@
 # Copilot Instructions
 
-## Runtime & Tooling
+This is a full-stack Bun app: React 19 frontend + layered backend (Controller → Service → Repository) → Drizzle ORM → PostgreSQL.
 
-- Use `bun` everywhere — not `node`, `npm`, `npx`, `ts-node`, or `yarn`
-- Bun automatically loads `.env`; never use `dotenv`
+## ⚡ Runtime — Bun Only
+
+- Use `bun` everywhere — never `node`, `npm`, `npx`, `ts-node`, or `yarn`
+- Bun auto-loads `.env` — never use `dotenv`
 - Use `Bun.file` instead of `fs.readFile`/`fs.writeFile`
 - Use `Bun.$\`cmd\``instead of`execa`
 
-## Style
+## 🎨 Style
 
-- Use emojis where appropriate in terminal output, commit messages, and documentation to keep things expressive and readable.
+- Use emojis where appropriate in terminal output, commit messages, and docs
+- Only comment code that genuinely needs clarification — no redundant comments
 
-## READMEs
+## 📚 READMEs
 
-Every major directory has a README. **Before working in an area of the codebase, read its README** to understand the conventions and purpose of that layer. Key READMEs:
+Every major directory has a README. **Read it before working in that layer.**
 
-- `backend/README.md` — overall backend architecture and request flow
-- `backend/db/README.md` — Drizzle ORM, schema conventions, migrations
-- `backend/controllers/README.md` — HTTP layer, factory pattern, error helpers
-- `backend/services/README.md` — business logic layer
-- `backend/repositories/README.md` — data access layer
-- `frontend/README.md` — React app, HMR, build process
+## ✅ After Every Change
 
-## After Making Changes
-
-After adding or altering code, always run `bun cc` as the final step to verify everything is ok:
+Always run as the final step:
 
 ```sh
-bun run cc
+bun run cc   # test + lint + compiler check + format check + knip
 ```
 
-If formatting fails, fix it by running `bun run format`. All other errors should be understood and corrected at the source.
+If formatting fails: `bun run format`. Fix all other errors at source.
 
-## Commands
+## 🔑 Key Commands
 
 ```sh
-bun dev                  # Start dev server with HMR (bun --hot backend/server.ts)
-bun start                # Production server (NODE_ENV=production)
-bun run build            # Build frontend to dist/ (processes frontend/**/*.html)
-bun test                 # Run all tests
-bun test <path>          # Run a single test file
-bun test --watch         # Watch mode
-bun run lint             # oxlint (type-aware)
-bun run lint:fix         # Auto-fix lint issues
-bun run format           # oxfmt formatter
-bun run format:check     # Check formatting
-bun run cc               # Full check: test + lint + compiler + format check
-bun run db:generate      # Generate Drizzle migrations
-bun run db:push          # Push schema changes to DB
-bun run db:studio        # Open Drizzle Studio
+bun dev              # Dev server with HMR
+bun run build        # Bundle frontend to dist/
+bun test             # Run all unit tests
+bun run cc           # Full check suite
+bun run db:generate  # Generate Drizzle migrations
+bun run db:migrate   # Apply migrations
+bun run db:studio    # Open Drizzle Studio
 ```
 
-## Architecture
+## 🔗 Path Aliases
 
-This is a full-stack Bun app with a React frontend and a layered backend.
-
-**Request flow:** `Bun.serve()` routes → Controller → Service → Repository → Drizzle ORM → PostgreSQL
-
-**Backend layers** (`backend/`):
-
-- `server.ts` — `Bun.serve()` entry point; routes map directly to controller methods
-- `controllers/` — HTTP boundary; parse request, call service, return `Response`
-- `services/` — business logic; data transformation (e.g., stripping password fields)
-- `repositories/` — data access only; raw Drizzle queries, no business logic
-- `db/schemas/` — Drizzle table definitions (source of truth for types)
-- `db/client.ts` — singleton `getDb()` using cached postgres connection
-- `utils/errorHelpers.ts` — shared `successResponse`, `notFoundError`, `validationError` helpers
-- `types/` — types derived from Drizzle schemas via `$inferSelect` / `$inferInsert`
-- `test-helpers/mockData.ts` — mock repository and mock data for unit tests (no DB required)
-
-**Frontend** (`frontend/`):
-
-- `main.tsx` → `App.tsx` — React 19 with StrictMode and HMR support
-- HTML files in `frontend/` are the build entrypoints; `bun run build` scans them automatically
-- In dev, `public/index.html` is served directly by `Bun.serve()` with HMR
-- In production, `serveProdBuild.ts` serves from `dist/` with SPA fallback to `index.html`
-
-**Env var required:** `DATABASE_URL` (PostgreSQL connection string)
-
-## Key Conventions
-
-### Factory Functions for Dependency Injection
-
-Controllers and services are created via factory functions to enable testability without mocking modules:
-
-```ts
-// Define
-export const createUserService = (repo: typeof UserRepositoryType) => ({ ... });
-export const userService = createUserService(userRepository); // default export
-
-// In tests — inject mock repo
-const mockService = createUserService(mockUserRepository);
-const controller = createUserController(mockService);
-```
-
-### Types Derived from Schema
-
-Types are derived from Drizzle schema definitions — never defined manually:
-
-```ts
-// backend/db/schemas/users.ts
-export const users = pgTable('users', { ... });
-
-// backend/types/users.ts
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
-```
-
-### Path Aliases
-
-Use these instead of relative imports when crossing layer boundaries:
+Use these when crossing layer boundaries — never use `../../` relative imports:
 
 - `@backend/*` → `./backend/*`
 - `@frontend/*` → `./frontend/*`
 - `@type/*` → `./types/*`
 
-### Error Responses
+## 🔐 Env Vars
 
-All API errors use the helpers in `backend/utils/errorHelpers.ts`. The `ApiErrorResponse` shape is:
+Whenever an env var is added, removed, or renamed — update **both** `.env.example` and `bun-env.d.ts`.
 
-```ts
-{ message: string; status: number; error: { type: 'validation' | 'notFound'; errors: FieldError[]; details?: string } }
-```
+## 🌐 Routes
 
-### Testing
-
-- Tests use `bun:test` (`describe`, `test`, `expect`) — no jest/vitest
-- `bunfig.toml` preloads `frontend/test-setup.ts` which registers `happy-dom` globally for DOM tests
-- Unit tests inject mock dependencies via factory functions; no DB required
-- `backend/test-helpers/mockData.ts` contains shared mock data and a `mockUserRepository`
-
-### Adding New Routes
-
-1. Add schema to `backend/db/schemas/`
-2. Add type to `backend/types/`
-3. Add repository in `backend/repositories/`
-4. Add service in `backend/services/` (use factory pattern)
-5. Add controller in `backend/controllers/` (use factory pattern)
-6. Register route in `backend/server.ts`
+Whenever a route or controller is added, changed, or removed — update the corresponding file in `rest/` and `rest/README.md` if the file table changes.
