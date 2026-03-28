@@ -2,7 +2,8 @@ export type AppErrorType =
   | 'not_found'
   | 'validation'
   | 'conflict'
-  | 'unauthorized';
+  | 'unauthorized'
+  | 'forbidden';
 
 export type AppError = {
   type: AppErrorType;

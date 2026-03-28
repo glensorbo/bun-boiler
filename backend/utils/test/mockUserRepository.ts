@@ -21,12 +21,14 @@ export const mockUserRepository = {
     email: string,
     name: string,
     _hashedPassword: string,
+    _role: 'admin' | 'user' = 'user',
   ): Promise<NewUser> => {
     return {
       id: '123e4567-e89b-12d3-a456-426614174002',
       email,
       name,
       password: 'hashed_password_new',
+      role: 'user',
       createdAt: dayjs('2024-01-03T00:00:00Z').toISOString(),
       updatedAt: dayjs('2024-01-03T00:00:00Z').toISOString(),
     };

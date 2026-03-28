@@ -48,17 +48,19 @@ export const userRepository = {
    * @param email - User email address
    * @param name - Display name
    * @param hashedPassword - Pre-hashed password
+   * @param role - User role (defaults to 'user')
    * @returns Promise<NewUser> - The created user
    */
   async create(
     email: string,
     name: string,
     hashedPassword: string,
+    role: 'admin' | 'user' = 'user',
   ): Promise<NewUser> {
     const db = getDb();
     const result = await db
       .insert(users)
-      .values({ email, name, password: hashedPassword })
+      .values({ email, name, password: hashedPassword, role })
       .returning();
     return result[0]!;
   },

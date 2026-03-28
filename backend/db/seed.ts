@@ -28,7 +28,7 @@ if (existing) {
 }
 
 const hashedPassword = await Bun.password.hash(password);
-await userRepository.create(email, name, hashedPassword);
+await userRepository.create(email, name, hashedPassword, 'admin');
 
 console.log(`🌱 Admin user seeded: ${email}`);
 process.exit(0);
