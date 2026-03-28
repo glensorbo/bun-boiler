@@ -2,8 +2,7 @@ import { describe, test, expect } from 'bun:test';
 
 import { createUserService } from '../../services/userService';
 import { createUserController } from '../userController';
-import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
-import { mockUsers } from '@backend/utils/test/mockUsers';
+import { mockUserRepository, mockUsers } from '@backend/utils/test';
 
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 import type { User } from '@backend/types/user';

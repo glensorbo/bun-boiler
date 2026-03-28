@@ -33,3 +33,8 @@ http-client.env.json
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Playwright auth state
+.auth/
+# Test results
+test-results/

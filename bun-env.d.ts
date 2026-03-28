@@ -44,5 +44,10 @@ declare module 'bun' {
     SEED_ADMIN_EMAIL?: string;
     SEED_ADMIN_PASSWORD?: string;
     SEED_ADMIN_NAME?: string;
+
+    // E2E — Playwright test user (defaults baked into e2e/global-setup.ts)
+    E2E_TEST_EMAIL?: string;
+    E2E_TEST_PASSWORD?: string;
+    E2E_TEST_NAME?: string;
   }
 }

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 
 import { getDb } from '../db/client';
 import { refreshTokens } from '../db/schemas/refreshTokens';
-import { refreshTokenConfig } from '../utils/auth/refreshTokenConfig';
+import { refreshTokenConfig } from '../utils/auth';
 
 import type { RefreshToken } from '@backend/types/refreshToken';
 
