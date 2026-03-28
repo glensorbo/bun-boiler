@@ -1,11 +1,15 @@
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -26,6 +30,7 @@ export const LoginForm = () => {
     (state: RootState) => state.loginForm,
   );
   const { submit, isLoading } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const initialized = useRef(false);
   useEffect(() => {
@@ -80,13 +85,28 @@ export const LoginForm = () => {
 
       <TextField
         label="Password"
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         autoComplete="current-password"
         value={password}
         onChange={onChangeHandler('password')}
         error={!!errors.password}
         helperText={errors.password}
         fullWidth
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
+        }}
       />
 
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>

@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { setRememberedEmail, setToken } from '../state/authSlice';
 import { clearLoginForm } from '../state/loginFormSlice';
 import { useLoginMutation } from '@frontend/redux/api/authApi';
-import { errorOr } from '@frontend/shared/utils/errorOr';
 
 import type { LoginFormValues } from '../logic/loginSchema';
 import type { AppDispatch } from '@frontend/redux/store';
@@ -16,15 +15,13 @@ export const useLogin = () => {
   const [loginMutation, { isLoading }] = useLoginMutation();
 
   const submit = async (values: LoginFormValues) => {
-    const result = errorOr(
-      await loginMutation({
-        email: values.email,
-        password: values.password,
-      }),
-    );
+    const result = await loginMutation({
+      email: values.email,
+      password: values.password,
+    });
 
-    if (!result.data) {
-      toast.error(result.error.message);
+    if ('error' in result) {
+      toast.error(result.error?.message ?? 'Login failed. Please try again.');
       return;
     }
 
