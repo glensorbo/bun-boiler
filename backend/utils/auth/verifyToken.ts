@@ -2,7 +2,11 @@ import { jwtVerify } from 'jose';
 
 import { errorOr } from '@backend/types/errorOr';
 
-import type { AppJwtPayload, TokenType, UserRole } from '@backend/types/appJwtPayload';
+import type {
+  AppJwtPayload,
+  TokenType,
+  UserRole,
+} from '@backend/types/appJwtPayload';
 import type { ErrorOr } from '@backend/types/errorOr';
 
 const getSecret = () => new TextEncoder().encode(Bun.env.JWT_SECRET ?? '');
@@ -35,6 +39,8 @@ export const verifyToken = async (
     sub: payload.sub,
     email: payload.email,
     tokenType: payload.tokenType as TokenType,
-    role: (typeof payload.role === 'string' ? payload.role : 'user') as UserRole,
+    role: (typeof payload.role === 'string'
+      ? payload.role
+      : 'user') as UserRole,
   });
 };

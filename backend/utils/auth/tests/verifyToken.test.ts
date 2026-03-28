@@ -40,7 +40,11 @@ describe('verifyToken', () => {
   });
 
   test('returned payload has correct sub, email, tokenType for auth', async () => {
-    const token = await signAuthToken('user-8', 'auth-verify@example.com', 'admin');
+    const token = await signAuthToken(
+      'user-8',
+      'auth-verify@example.com',
+      'admin',
+    );
     const result = await verifyToken(token);
     expect(result.data?.sub).toBe('user-8');
     expect(result.data?.email).toBe('auth-verify@example.com');

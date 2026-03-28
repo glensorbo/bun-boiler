@@ -1,28 +1,18 @@
+import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
 import { refreshTokens } from './schemas/refreshTokens';
 import { users } from './schemas/users';
 
-/**
- * Database client singleton
- * Cached to avoid creating multiple connections
- */
 let cachedClient: postgres.Sql | null = null;
 let cachedDb: ReturnType<typeof drizzle> | null = null;
 
-/**
- * Get database client
- * Creates a new client if none exists, otherwise returns cached client
- * @returns Drizzle database instance
- */
 export const getDb = () => {
-  // Return cached instance if it exists
   if (cachedDb) {
     return cachedDb;
   }
 
-  // Build connection string from individual environment variables
   const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_SERVER, POSTGRES_DB } =
     Bun.env;
 
@@ -39,14 +29,50 @@ export const getDb = () => {
 
   const connectionString = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}/${POSTGRES_DB}`;
 
-  // Create postgres connection
-  cachedClient = postgres(connectionString);
+  cachedClient = postgres(connectionString, {
+    max: 10,
+    idle_timeout: 30,
+    connect_timeout: 10,
+    onnotice: () => {},
+  });
 
-  // Create drizzle instance with all schemas
   const schema = { users, refreshTokens };
   cachedDb = drizzle(cachedClient, { schema });
 
   console.log('🔌 Database connection established');
 
   return cachedDb;
+};
+
+const PING_RETRIES = 5;
+const PING_BASE_DELAY_MS = 1_000;
+
+/**
+ * Verifies the database is reachable by running SELECT 1.
+ * Retries with exponential backoff up to PING_RETRIES times.
+ * Throws if the database is unreachable after all attempts.
+ */
+export const pingDb = async (): Promise<void> => {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= PING_RETRIES; attempt++) {
+    try {
+      await getDb().execute(sql`SELECT 1`);
+      return;
+    } catch (err) {
+      lastError = err;
+      const delayMs = PING_BASE_DELAY_MS * 2 ** (attempt - 1);
+      console.warn(
+        `⚠️  DB connection attempt ${attempt}/${PING_RETRIES} failed. Retrying in ${delayMs}ms…`,
+      );
+      await Bun.sleep(delayMs);
+    }
+  }
+
+  console.error(
+    '❌ Failed to connect to the database after',
+    PING_RETRIES,
+    'attempts',
+  );
+  throw lastError;
 };

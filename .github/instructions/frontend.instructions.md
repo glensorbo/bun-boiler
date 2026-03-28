@@ -64,6 +64,36 @@ Never access server-side env vars from frontend code.
 - `ProtectedRoute` redirects unauthenticated users to `/login`
 - `AuthProvider` silently refreshes expired tokens via `POST /api/auth/refresh`
 
+## Loading States
+
+**Always prefer skeleton loaders over spinners for data loading states.**
+
+- Use MUI's `Skeleton` component from `@mui/material/Skeleton` — or the ready-made patterns in `frontend/shared/components/skeleton.tsx`:
+  - `TableSkeleton` — for tabular data
+  - `ListSkeleton` — for vertically stacked lists
+  - `CardSkeleton` — for card grids
+- Skeleton layouts should **match the shape** of the content they're replacing so the UI doesn't jump on load
+- Button loading states (via MUI's `loading` prop) are still appropriate for form submissions and mutations — skeletons are for data fetches
+
+```tsx
+// ✅ Use skeleton while data loads
+const { data, isLoading } = useGetUsersQuery();
+if (isLoading) return <TableSkeleton rows={5} cols={3} />;
+
+// ✅ Use button loading prop for mutations
+<Button loading={isSubmitting} type="submit">
+  Save
+</Button>;
+
+// ❌ Don't use a spinner for data fetches
+if (isLoading) return <CircularProgress />;
+```
+
+## Error Boundaries
+
+The app root is wrapped in `<ErrorBoundary>` (from `frontend/shared/components/errorBoundary.tsx`).
+For sections that should fail independently without crashing the whole page, wrap them in their own `<ErrorBoundary>`.
+
 ## Testing
 
 - Frontend tests use `bun:test` with **happy-dom** (registered globally via `bunfig.toml` preload of `frontend/test-setup.ts`)

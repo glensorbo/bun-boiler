@@ -3,6 +3,7 @@
 Composable middleware for `Bun.serve()` route handlers. Middleware runs before the route handler, can augment a shared `ctx` object, and can short-circuit the chain by returning a `Response`.
 
 All handlers wrapped with `withMiddleware` automatically receive:
+
 - **CORS headers** on every response (controlled by `CORS_ORIGIN` env var)
 - **OPTIONS preflight** handling (204 with correct Access-Control headers)
 - **Request/response logging** (`METHOD /path → STATUS (Xms)`)
@@ -76,7 +77,10 @@ Factory that returns a middleware requiring `ctx.user.role` to match one of the 
 **Must be used after `authMiddleware`** (relies on `ctx.user` being populated).
 
 ```ts
-withMiddleware(authMiddleware, requireRole('admin'))((req, ctx) => {
+withMiddleware(
+  authMiddleware,
+  requireRole('admin'),
+)((req, ctx) => {
   return controller.adminOnlyAction(req, ctx);
 });
 ```
@@ -93,7 +97,7 @@ In-memory rate limiter. `authRateLimit` allows 10 requests per minute per IP and
 const myLimit = createRateLimitMiddleware({ max: 20, windowMs: 60_000 });
 
 // Pre-configured for auth routes
-withMiddleware(authRateLimit)((req) => controller.login(req))
+withMiddleware(authRateLimit)((req) => controller.login(req));
 ```
 
 > ⚠️ In-memory only — single instance. For multi-instance deployments, replace the store with Redis.
@@ -127,7 +131,6 @@ Then compose it in your routes:
 ```ts
 withMiddleware(authMiddleware, myMiddleware)((req, ctx) => { ... })
 ```
-
 
 Composable middleware for `Bun.serve()` route handlers. Middleware runs before the route handler, can augment a shared `ctx` object, and can short-circuit the chain by returning a `Response`.
 
@@ -231,7 +234,10 @@ Factory that returns a middleware requiring the authenticated user to have one o
 ```ts
 import { requireRole } from '@backend/middleware/requireRole';
 
-withMiddleware(authMiddleware, requireRole('admin'))((req, ctx) => {
+withMiddleware(
+  authMiddleware,
+  requireRole('admin'),
+)((req, ctx) => {
   return adminController.doAdminThing(req, ctx);
 });
 ```

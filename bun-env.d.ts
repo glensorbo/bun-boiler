@@ -40,6 +40,9 @@ declare module 'bun' {
     JWT_SECRET?: string;
     APP_URL?: string;
 
+    // CORS — comma-separated list of allowed origins, or * to allow all
+    CORS_ORIGIN?: string;
+
     // Seed
     SEED_ADMIN_EMAIL?: string;
     SEED_ADMIN_PASSWORD?: string;

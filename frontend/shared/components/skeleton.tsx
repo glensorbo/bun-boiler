@@ -16,14 +16,24 @@ export const TableSkeleton = ({
     {/* Header row */}
     <Box sx={{ display: 'flex', gap: 2, pb: 1 }}>
       {Array.from({ length: cols }).map((_, i) => (
-        <MuiSkeleton key={i} variant="text" width={`${100 / cols}%`} height={24} />
+        <MuiSkeleton
+          key={i}
+          variant="text"
+          width={`${100 / cols}%`}
+          height={24}
+        />
       ))}
     </Box>
     {/* Data rows */}
     {Array.from({ length: rows }).map((_item, row) => (
       <Box key={row} sx={{ display: 'flex', gap: 2 }}>
         {Array.from({ length: cols }).map((_col, col) => (
-          <MuiSkeleton key={col} variant="text" width={`${100 / cols}%`} height={20} />
+          <MuiSkeleton
+            key={col}
+            variant="text"
+            width={`${100 / cols}%`}
+            height={20}
+          />
         ))}
       </Box>
     ))}
@@ -55,9 +65,19 @@ export const CardSkeleton = ({ count = 3 }: { count?: number }) => (
     {Array.from({ length: count }).map((_, i) => (
       <Box
         key={i}
-        sx={{ flex: '1 1 240px', p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}
+        sx={{
+          flex: '1 1 240px',
+          p: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 1,
+        }}
       >
-        <MuiSkeleton variant="rectangular" height={140} sx={{ mb: 1, borderRadius: 0.5 }} />
+        <MuiSkeleton
+          variant="rectangular"
+          height={140}
+          sx={{ mb: 1, borderRadius: 0.5 }}
+        />
         <MuiSkeleton variant="text" width="70%" height={24} />
         <MuiSkeleton variant="text" width="90%" height={16} />
         <MuiSkeleton variant="text" width="50%" height={16} />

@@ -12,19 +12,22 @@ import { ThemeProvider } from './providers/themeProvider';
 import { ToastProvider } from './providers/toastProvider';
 import { store } from './redux/store';
 import { AppRouter } from './router';
+import { ErrorBoundary } from './shared/components/errorBoundary';
 
 const elem = document.getElementById('root')!;
 const app = (
   <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <AppRouter />
-          </AuthProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <ThemeProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <AppRouter />
+            </AuthProvider>
+          </ToastProvider>
+        </ThemeProvider>
+      </Provider>
+    </ErrorBoundary>
   </StrictMode>
 );
 

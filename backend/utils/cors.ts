@@ -4,10 +4,7 @@ const CORS_MAX_AGE = '86400';
 
 const getAllowedOrigin = () => Bun.env.CORS_ORIGIN ?? '*';
 
-const setCorsOriginHeaders = (
-  origin: string,
-  headers: Headers,
-): void => {
+const setCorsOriginHeaders = (origin: string, headers: Headers): void => {
   const allowed = getAllowedOrigin();
 
   if (allowed === '*') {
@@ -25,9 +22,14 @@ const setCorsOriginHeaders = (
  * Clones the response and attaches Access-Control headers based on CORS_ORIGIN env var.
  * No-op if the request has no Origin header (e.g. same-origin or server-to-server).
  */
-export const applyCorsHeaders = (req: Request, response: Response): Response => {
+export const applyCorsHeaders = (
+  req: Request,
+  response: Response,
+): Response => {
   const origin = req.headers.get('Origin');
-  if (!origin) { return response; }
+  if (!origin) {
+    return response;
+  }
 
   const headers = new Headers(response.headers);
   setCorsOriginHeaders(origin, headers);
