@@ -4,11 +4,11 @@ HTTP request files for testing the API with [kulala.nvim](https://github.com/mis
 
 ## 📁 Files
 
-| File          | Routes                                                                              |
-| ------------- | ----------------------------------------------------------------------------------- |
-| `health.http` | `GET /healthcheck`                                                                  |
-| `user.http`   | `GET /api/user`, `GET /api/user/:id`                                                |
-| `auth.http`   | `POST /api/auth/login`, `POST /api/auth/create-user`, `POST /api/auth/set-password` |
+| File          | Routes                                                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `health.http` | `GET /healthcheck`                                                                                                                     |
+| `user.http`   | `GET /api/user`, `GET /api/user/:id`                                                                                                   |
+| `auth.http`   | `POST /api/auth/login`, `POST /api/auth/create-user`, `POST /api/auth/set-password`, `POST /api/auth/refresh`, `POST /api/auth/logout` |
 
 ## ⚙️ Environment
 

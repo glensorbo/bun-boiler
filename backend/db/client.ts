@@ -1,6 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
+import { refreshTokens } from './schemas/refreshTokens';
 import { users } from './schemas/users';
 
 /**
@@ -42,7 +43,7 @@ export const getDb = () => {
   cachedClient = postgres(connectionString);
 
   // Create drizzle instance with all schemas
-  const schema = { users };
+  const schema = { users, refreshTokens };
   cachedDb = drizzle(cachedClient, { schema });
 
   console.log('🔌 Database connection established');

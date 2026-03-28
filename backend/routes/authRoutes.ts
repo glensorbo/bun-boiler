@@ -17,4 +17,15 @@ export const authRoutes = {
       authController.setPassword(req, ctx),
     ),
   },
+  '/api/auth/change-password': {
+    POST: withMiddleware(authMiddleware)((req, ctx) =>
+      authController.changePassword(req, ctx),
+    ),
+  },
+  '/api/auth/refresh': {
+    POST: withMiddleware()((req) => authController.refresh(req)),
+  },
+  '/api/auth/logout': {
+    POST: withMiddleware()((req) => authController.logout(req)),
+  },
 };

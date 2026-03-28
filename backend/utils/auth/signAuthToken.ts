@@ -7,5 +7,5 @@ export const signAuthToken = (userId: string, email: string): Promise<string> =>
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(userId)
     .setIssuedAt()
-    .setExpirationTime('7d')
+    .setExpirationTime('15m')
     .sign(getSecret());

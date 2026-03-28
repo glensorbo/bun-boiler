@@ -1,6 +1,6 @@
 import { jwtVerify } from 'jose';
 
-import { success, failure } from '@backend/types/errorOr';
+import { errorOr } from '@backend/types/errorOr';
 
 import type { AppJwtPayload, TokenType } from '@backend/types/appJwtPayload';
 import type { ErrorOr } from '@backend/types/errorOr';
@@ -15,7 +15,7 @@ export const verifyToken = async (
     .catch((e: unknown) => [null, e] as const);
 
   if (err !== null || result === null) {
-    return failure([
+    return errorOr(null, [
       { type: 'unauthorized', message: 'Invalid or expired token' },
     ]);
   }
@@ -26,12 +26,12 @@ export const verifyToken = async (
     typeof payload.email !== 'string' ||
     typeof payload.tokenType !== 'string'
   ) {
-    return failure([
+    return errorOr(null, [
       { type: 'unauthorized', message: 'Invalid token payload' },
     ]);
   }
 
-  return success({
+  return errorOr({
     sub: payload.sub,
     email: payload.email,
     tokenType: payload.tokenType as TokenType,

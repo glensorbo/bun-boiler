@@ -6,12 +6,11 @@
  * with result.data.
  *
  * @example
- * // In a service:
- * async getUser(id: string): Promise<ErrorOr<User>> {
- *   const user = await repo.getById(id);
- *   if (!user) return failure([{ type: 'not_found', message: 'User not found' }]);
- *   return success(user);
- * }
+ * // In a service — success:
+ * return errorOr(user);
+ *
+ * // In a service — failure:
+ * return errorOr<User>(null, [{ type: 'not_found', message: 'User not found' }]);
  *
  * // In a controller:
  * const result = await service.getUser(id);
@@ -25,9 +24,11 @@ export type ErrorOr<T> =
   | { data: T; error: null }
   | { data: null; error: AppError[] };
 
-export const success = <T>(data: T): ErrorOr<T> => ({ data, error: null });
-
-export const failure = <T>(errors: AppError[]): ErrorOr<T> => ({
-  data: null,
-  error: errors,
-});
+export function errorOr<T>(data: T): ErrorOr<T>;
+export function errorOr<T>(data: null, errors: AppError[]): ErrorOr<T>;
+export function errorOr<T>(data: T | null, errors?: AppError[]): ErrorOr<T> {
+  if (errors !== undefined) {
+    return { data: null, error: errors };
+  }
+  return { data: data as T, error: null };
+}
