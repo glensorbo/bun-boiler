@@ -4,9 +4,11 @@ import index from '../public/index.html';
 import { authRoutes } from './routes/authRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
+import { pingDb } from './db/client';
 import { validateEnv } from './utils/env';
 
 validateEnv();
+await pingDb();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
