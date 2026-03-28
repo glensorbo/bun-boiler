@@ -1,9 +1,10 @@
 import { decodeJwt } from 'jose';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { clearToken } from '../features/login/state/authSlice';
+import { clearToken, setToken } from '../features/login/state/authSlice';
 
+import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
 import type { ReactNode } from 'react';
 
@@ -13,24 +14,58 @@ interface Props {
 
 /**
  * Validates the stored JWT on mount and whenever it changes.
- * Clears the token from Redux (and localStorage) if it is expired or malformed.
+ *
+ * - If the token is valid and not yet expired: do nothing.
+ * - If the token is expired (or malformed): attempt a silent refresh via the
+ *   HttpOnly refresh token cookie. On success the new access token replaces
+ *   the old one in Redux. On failure the token is cleared and the user is
+ *   redirected to login by the app's protected-route layer.
  */
 export const AuthProvider = ({ children }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.auth.token);
+  const hasAttemptedRefresh = useRef(false);
 
   useEffect(() => {
     if (!token) {
       return;
     }
+
+    let expired = false;
     try {
       const { exp } = decodeJwt(token);
-      if (exp !== undefined && Date.now() / 1000 > exp) {
-        dispatch(clearToken());
-      }
+      expired = exp !== undefined && Date.now() / 1000 > exp;
     } catch {
-      dispatch(clearToken());
+      expired = true;
     }
+
+    if (!expired) {
+      return;
+    }
+
+    // Token is expired — attempt a silent refresh using the HttpOnly cookie.
+    // Guard with a ref so we only try once per mount, not on every render.
+    if (hasAttemptedRefresh.current) {
+      dispatch(clearToken());
+      return;
+    }
+
+    hasAttemptedRefresh.current = true;
+
+    fetch('/api/auth/refresh', { method: 'POST', credentials: 'same-origin' })
+      .then(async (res) => {
+        if (!res.ok) {
+          dispatch(clearToken());
+          return null;
+        }
+        const body = (await res.json()) as ApiSuccessResponse<{
+          token: string;
+        }>;
+        dispatch(setToken(body.data.token));
+      })
+      .catch(() => {
+        dispatch(clearToken());
+      });
   }, [token, dispatch]);
 
   return <>{children}</>;

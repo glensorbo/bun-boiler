@@ -1,16 +1,21 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, test, expect, beforeEach } from 'bun:test';
 
 process.env.JWT_SECRET = 'test-secret';
 process.env.APP_URL = 'http://localhost:3000';
 
 import { createAuthService } from '../../services/authService';
 import { createAuthController } from '../authController';
+import { mockRefreshTokenRepository } from '@backend/utils/test/mockRefreshTokenRepository';
 import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
 import { mockUsers } from '@backend/utils/test/mockUsers';
 
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 const VALID_PASSWORD = 'correctpass123';
+
+beforeEach(() => {
+  mockRefreshTokenRepository._reset();
+});
 
 const makeAuthController = async () => {
   const hashedPassword = await Bun.password.hash(VALID_PASSWORD);
@@ -24,10 +29,15 @@ const makeAuthController = async () => {
       return { ...user, password: hashedPassword };
     },
   };
-  return createAuthController(createAuthService(repo));
+  return createAuthController(
+    createAuthService(repo, mockRefreshTokenRepository),
+  );
 };
 
-const mockAuthService = createAuthService(mockUserRepository);
+const mockAuthService = createAuthService(
+  mockUserRepository,
+  mockRefreshTokenRepository,
+);
 const authController = createAuthController(mockAuthService);
 
 const makeRequest = (body: unknown): Request =>

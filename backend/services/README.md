@@ -18,7 +18,7 @@ services/
 - Apply business rules and data transformations
 - Omit sensitive fields before returning data (e.g., strip `password`)
 - Orchestrate multiple repository calls when needed
-- Throw typed error classes for known failure cases
+- Return `ErrorOr<T>` for fallible operations — never throw for known failure cases
 - Return domain types — not raw DB types
 
 Services contain **no HTTP logic** (no `Request`/`Response`) and **no direct database access**.
@@ -48,24 +48,22 @@ const { password: _password, ...safeUser } = user;
 return safeUser;
 ```
 
-## 🚨 Typed Error Classes
+## 🚨 ErrorOr — Typed Results
 
-Services throw typed error classes for known failure cases. Controllers catch these and return the appropriate HTTP response:
+Services return `ErrorOr<T>` from `@backend/types/errorOr` instead of throwing for known failure cases. Controllers check `result.error` and map to the appropriate HTTP response:
 
 ```ts
-// In authService.ts
-export class UserAlreadyExistsError extends Error { ... }
-export class UserNotFoundError extends Error { ... }
-
-// In authController.ts
-try {
-  return successResponse(await service.createUser(email, name), 201);
-} catch (err) {
-  if (err instanceof UserAlreadyExistsError) {
-    return validationError('Email already in use', [{ field: 'email', message: '...' }]);
-  }
-  throw err;
+// In a service:
+async getUser(id: string): Promise<ErrorOr<User>> {
+  const user = await repo.getById(id);
+  if (!user) return errorOr(null, [{ type: 'not_found', message: 'User not found' }]);
+  return errorOr(user);
 }
+
+// In a controller:
+const result = await service.getUser(id);
+if (result.error) return serviceErrorResponse(result.error);
+return successResponse(result.data);
 ```
 
 ## 🧪 Testing

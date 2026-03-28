@@ -1,13 +1,21 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, test, expect, beforeEach } from 'bun:test';
 
 process.env.JWT_SECRET = 'test-secret';
 process.env.APP_URL = 'http://localhost:3000';
 
 import { createAuthService } from '../authService';
+import { mockRefreshTokenRepository } from '@backend/utils/test/mockRefreshTokenRepository';
 import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
 import { mockUsers } from '@backend/utils/test/mockUsers';
 
-const authService = createAuthService(mockUserRepository);
+beforeEach(() => {
+  mockRefreshTokenRepository._reset();
+});
+
+const authService = createAuthService(
+  mockUserRepository,
+  mockRefreshTokenRepository,
+);
 
 const VALID_PASSWORD = 'correctpass123';
 
@@ -72,7 +80,7 @@ describe('AuthService', () => {
         },
       };
 
-      const svc = createAuthService(trackingRepo);
+      const svc = createAuthService(trackingRepo, mockRefreshTokenRepository);
       await svc.createUser('track@example.com', 'Tracked User');
 
       expect(calls.length).toBe(1);
@@ -121,7 +129,7 @@ describe('AuthService', () => {
         },
       };
 
-      const svc = createAuthService(trackingRepo);
+      const svc = createAuthService(trackingRepo, mockRefreshTokenRepository);
       const existingUser = mockUsers[0]!;
       await svc.setPassword(existingUser.id!, 'newpassword123');
 
@@ -133,7 +141,7 @@ describe('AuthService', () => {
   describe('login', () => {
     test('should return token on valid credentials', async () => {
       const repo = await repoWithHashedPassword();
-      const svc = createAuthService(repo);
+      const svc = createAuthService(repo, mockRefreshTokenRepository);
       const result = await svc.login(mockUsers[0]!.email, VALID_PASSWORD);
       expect(result.error).toBeNull();
       expect(result.data).toHaveProperty('token');
@@ -141,7 +149,7 @@ describe('AuthService', () => {
 
     test('token should be a non-empty string', async () => {
       const repo = await repoWithHashedPassword();
-      const svc = createAuthService(repo);
+      const svc = createAuthService(repo, mockRefreshTokenRepository);
       const result = await svc.login(mockUsers[0]!.email, VALID_PASSWORD);
       expect(typeof result.data?.token).toBe('string');
       expect(result.data?.token.length).toBeGreaterThan(0);
@@ -149,7 +157,7 @@ describe('AuthService', () => {
 
     test('should return unauthorized for wrong password', async () => {
       const repo = await repoWithHashedPassword();
-      const svc = createAuthService(repo);
+      const svc = createAuthService(repo, mockRefreshTokenRepository);
       const result = await svc.login(mockUsers[0]!.email, 'wrongpassword');
       expect(result.data).toBeNull();
       expect(result.error?.[0]?.type).toBe('unauthorized');
@@ -163,7 +171,7 @@ describe('AuthService', () => {
 
     test('wrong email and wrong password return the same error message', async () => {
       const repo = await repoWithHashedPassword();
-      const svc = createAuthService(repo);
+      const svc = createAuthService(repo, mockRefreshTokenRepository);
       const badEmail = await svc.login('nobody@example.com', 'anypass');
       const badPassword = await svc.login(mockUsers[0]!.email, 'wrongpass');
       expect(badEmail.error?.[0]?.message).toBe(
