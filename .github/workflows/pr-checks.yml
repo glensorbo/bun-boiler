@@ -6,9 +6,6 @@ on:
       - main
       - test
       - prod
-    paths:
-      - 'frontend/**'
-      - 'backend/**'
 
 jobs:
   test:
@@ -27,6 +24,9 @@ jobs:
       - name: 📦 Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: 🧪 Run tests
+        run: bun run test
+
       - name: 🧹 Run oxlint
         run: bun run lint
 
@@ -36,8 +36,8 @@ jobs:
       - name: ✨ Check formatting
         run: bun run format:check
 
-      - name: 🧪 Run tests
-        run: bun test
+      - name: 🔎 Check for unused exports (knip)
+        run: bun run knip
 
       - name: 🏗️ Build project
         run: bun run build

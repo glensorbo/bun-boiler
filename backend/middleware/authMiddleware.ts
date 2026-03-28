@@ -1,5 +1,5 @@
-import { verifyToken } from '@backend/utils/auth/verifyToken';
-import { unauthorizedError } from '@backend/utils/response/unauthorizedError';
+import { verifyToken } from '@backend/utils/auth';
+import { unauthorizedError } from '@backend/utils/response';
 
 import type { MiddlewareFn } from '.';
 

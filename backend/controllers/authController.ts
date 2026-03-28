@@ -1,11 +1,15 @@
 import { authService } from '../services/authService';
-import { buildRefreshCookie } from '@backend/utils/auth/buildRefreshCookie';
-import { clearRefreshCookie } from '@backend/utils/auth/clearRefreshCookie';
-import { readRefreshCookie } from '@backend/utils/auth/readRefreshCookie';
-import { serviceErrorResponse } from '@backend/utils/response/serviceErrorResponse';
-import { successResponse } from '@backend/utils/response/successResponse';
-import { unauthorizedError } from '@backend/utils/response/unauthorizedError';
-import { validationErrorResponse } from '@backend/utils/response/validationErrorResponse';
+import {
+  buildRefreshCookie,
+  clearRefreshCookie,
+  readRefreshCookie,
+} from '@backend/utils/auth';
+import {
+  serviceErrorResponse,
+  successResponse,
+  unauthorizedError,
+  validationErrorResponse,
+} from '@backend/utils/response';
 import {
   setPasswordSchema,
   changePasswordSchema,

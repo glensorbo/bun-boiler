@@ -1,7 +1,9 @@
 import { userService } from '../services/userService';
-import { notFoundError } from '@backend/utils/response/notFoundError';
-import { successResponse } from '@backend/utils/response/successResponse';
-import { validationErrorResponse } from '@backend/utils/response/validationErrorResponse';
+import {
+  notFoundError,
+  successResponse,
+  validationErrorResponse,
+} from '@backend/utils/response';
 import { uuidSchema } from '@backend/validation/schemas/user';
 import { validateParam } from '@backend/validation/utils/validateParam';
 

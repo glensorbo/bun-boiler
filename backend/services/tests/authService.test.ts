@@ -4,9 +4,11 @@ process.env.JWT_SECRET = 'test-secret';
 process.env.APP_URL = 'http://localhost:3000';
 
 import { createAuthService } from '../authService';
-import { mockRefreshTokenRepository } from '@backend/utils/test/mockRefreshTokenRepository';
-import { mockUserRepository } from '@backend/utils/test/mockUserRepository';
-import { mockUsers } from '@backend/utils/test/mockUsers';
+import {
+  mockRefreshTokenRepository,
+  mockUserRepository,
+  mockUsers,
+} from '@backend/utils/test';
 
 beforeEach(() => {
   mockRefreshTokenRepository._reset();

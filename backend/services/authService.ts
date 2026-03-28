@@ -1,11 +1,13 @@
 import { refreshTokenRepository } from '../repositories/refreshTokenRepository';
 import { userRepository } from '../repositories/userRepository';
 import { errorOr } from '../types/errorOr';
-import { generateRefreshToken } from '../utils/auth/generateRefreshToken';
-import { hashRefreshToken } from '../utils/auth/hashRefreshToken';
-import { generatePassphrase } from '../utils/auth/passphrase';
-import { signAuthToken } from '../utils/auth/signAuthToken';
-import { signSignupToken } from '../utils/auth/signSignupToken';
+import {
+  generateRefreshToken,
+  hashRefreshToken,
+  generatePassphrase,
+  signAuthToken,
+  signSignupToken,
+} from '../utils/auth';
 
 import type { refreshTokenRepository as RefreshTokenRepositoryType } from '../repositories/refreshTokenRepository';
 import type { userRepository as UserRepositoryType } from '../repositories/userRepository';
