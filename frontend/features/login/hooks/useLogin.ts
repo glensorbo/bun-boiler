@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { setRememberedEmail, setToken } from '../state/authSlice';
 import { clearLoginForm } from '../state/loginFormSlice';
 import { useLoginMutation } from '@frontend/redux/api/authApi';
-import { unwrapResult } from '@frontend/shared/utils/unwrapResult';
+import { errorOr } from '@frontend/shared/utils/errorOr';
 
 import type { LoginFormValues } from '../logic/loginSchema';
 import type { AppDispatch } from '@frontend/redux/store';
@@ -16,7 +16,7 @@ export const useLogin = () => {
   const [loginMutation, { isLoading }] = useLoginMutation();
 
   const submit = async (values: LoginFormValues) => {
-    const result = unwrapResult(
+    const result = errorOr(
       await loginMutation({
         email: values.email,
         password: values.password,

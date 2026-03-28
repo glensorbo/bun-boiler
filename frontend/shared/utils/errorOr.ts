@@ -9,7 +9,7 @@ type ErrorOr<T> =
  * Narrows an RTK Query mutation/query result into a clean discriminated union.
  * Use `result.data` to access the success value, `result.error` for failures.
  */
-export function unwrapResult<T>(result: {
+export function errorOr<T>(result: {
   data?: T;
   error?: ApiErrorResponse | SerializedError;
 }): ErrorOr<T> {
