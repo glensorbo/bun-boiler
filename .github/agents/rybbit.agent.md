@@ -12,7 +12,7 @@ You are a senior engineer specialising in Rybbit analytics and React. You know t
 Rybbit is a **privacy-first, cookie-free** web analytics platform. Key concepts:
 
 - **Site ID** — a numeric ID assigned to each tracked website in the Rybbit dashboard
-- **Analytics Host** — the URL of your Rybbit backend (e.g. `http://localhost:3001` for local dev, `https://analytics.yourapp.com` for prod)
+- **Analytics Host** — the URL of your Rybbit backend (e.g. `http://localhost:8090` for local dev, `https://analytics.yourapp.com` for prod)
 - **Tracking script** — served by the backend at `{analyticsHost}/api/script.js`
 - **SDK** — `@rybbit/js` for programmatic control (what this project uses)
 - **Events** — custom named events with optional metadata
@@ -33,7 +33,7 @@ frontend/features/analytics/
 
 | Variable                    | Example                 | Description                           |
 | --------------------------- | ----------------------- | ------------------------------------- |
-| `BUN_PUBLIC_RYBBIT_HOST`    | `http://localhost:3001` | Rybbit backend URL                    |
+| `BUN_PUBLIC_RYBBIT_HOST`    | `http://localhost:8090` | Rybbit backend URL                    |
 | `BUN_PUBLIC_RYBBIT_SITE_ID` | `1`                     | Numeric site ID from Rybbit dashboard |
 
 Analytics is a **no-op** when either variable is absent — safe for all developers.
@@ -53,11 +53,11 @@ docker compose -f docker-compose.rybbit.yml up -d
 
 After starting the stack:
 
-1. Open `http://localhost:3002` and create an account
+1. Open `http://localhost:8090` and create an account
 2. Add a new site — note the **Site ID** assigned to it
 3. Set env vars in `.env`:
    ```env
-   BUN_PUBLIC_RYBBIT_HOST=http://localhost:3001
+   BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
    BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
    ```
 4. Restart `bun dev` — analytics will be active
@@ -138,7 +138,7 @@ Place `<AnalyticsTracker />` inside `<BrowserRouter>` but outside all routes so 
 
 ### Without Caddy (local dev)
 
-The backend is accessed directly on port `3001`. The tracking script is at `http://localhost:3001/api/script.js`.
+The backend is accessed directly on port `3001`. The tracking script is at `http://localhost:8090/api/script.js`.
 
 Because there's no HTTPS in local dev, the SDK connects over plain HTTP — this is fine for development.
 
@@ -154,7 +154,7 @@ These live in `.env` and are loaded by the compose file. They do **not** need to
 
 ### Adding a Site Programmatically
 
-Rybbit does not currently expose a public API for site creation — use the dashboard at `http://localhost:3002`.
+Rybbit does not currently expose a public API for site creation — use the dashboard at `http://localhost:8090`.
 
 ---
 
@@ -166,7 +166,7 @@ When asked to add or modify Rybbit analytics:
 2. **Read** `frontend/features/analytics/README.md` for current state
 3. **Implement** changes in `frontend/features/analytics/`
 4. **Use** the `useAnalytics` hook in components — never call `rybbit.*` directly from components
-5. **Verify** events appear in the Rybbit dashboard at `http://localhost:3002`
+5. **Verify** events appear in the Rybbit dashboard at `http://localhost:8090`
 6. **Run** `bun run cc` — fix every error before finishing
 
 ## 🚫 Don'ts

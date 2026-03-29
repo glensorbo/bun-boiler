@@ -8,6 +8,22 @@ x-common: &common
       max-file: '3'
 
 services:
+  rybbit-caddy:
+    <<: *common
+    image: caddy:2.10.0
+    container_name: rybbit-caddy
+    ports:
+      - '8090:8090'
+    volumes:
+      - ./docker/rybbit/Caddyfile:/etc/caddy/Caddyfile
+      - rybbit-caddy-data:/data
+      - rybbit-caddy-config:/config
+    depends_on:
+      rybbit-backend:
+        condition: service_healthy
+      rybbit-client:
+        condition: service_started
+
   rybbit-clickhouse:
     <<: *common
     image: clickhouse/clickhouse-server:25.4.2
@@ -85,7 +101,7 @@ services:
       - POSTGRES_USER=${RYBBIT_POSTGRES_USER:-rybbit}
       - POSTGRES_PASSWORD=${RYBBIT_POSTGRES_PASSWORD:-rybbit_pass}
       - BETTER_AUTH_SECRET=${RYBBIT_AUTH_SECRET:-change-me-rybbit-secret-32chars!!}
-      - BASE_URL=${RYBBIT_BASE_URL:-http://localhost:3001}
+      - BASE_URL=${RYBBIT_BASE_URL:-http://localhost:8090}
       - DISABLE_SIGNUP=false
     depends_on:
       rybbit-clickhouse:
@@ -115,7 +131,7 @@ services:
       - '3002:3002'
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_BACKEND_URL=${RYBBIT_BASE_URL:-http://localhost:3001}
+      - NEXT_PUBLIC_BACKEND_URL=${RYBBIT_BASE_URL:-http://localhost:8090}
     depends_on:
       rybbit-backend:
         condition: service_healthy
@@ -165,3 +181,7 @@ volumes:
     name: rybbit-clickhouse-logs
   rybbit-postgres-data:
     name: rybbit-postgres-data
+  rybbit-caddy-data:
+    name: rybbit-caddy-data
+  rybbit-caddy-config:
+    name: rybbit-caddy-config

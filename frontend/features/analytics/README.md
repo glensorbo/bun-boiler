@@ -8,11 +8,11 @@ Rybbit analytics integration for the frontend. Opt-in via environment variables 
    ```sh
    docker compose -f docker-compose.rybbit.yml up -d
    ```
-2. Open the dashboard at `http://localhost:3002`, create an account, and add a new site.
+2. Open the dashboard at `http://localhost:8090`, create an account, and add a new site.
 3. Note the **Site ID** assigned to your site.
 4. Add to your `.env`:
    ```env
-   BUN_PUBLIC_RYBBIT_HOST=http://localhost:3001
+   BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
    BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
    ```
 5. Restart `bun dev`.
