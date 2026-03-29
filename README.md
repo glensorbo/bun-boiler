@@ -1,180 +1,144 @@
 # 🚀 bun-boiler
 
-A full-stack boilerplate built on [Bun](https://bun.sh) with a React 19 frontend, layered backend architecture, PostgreSQL via Drizzle ORM, and JWT authentication. Everything — runtime, bundler, test runner, package manager — is Bun.
+**The full-stack Bun template that's actually production-ready on day one.**
 
-## ✨ Features
+Most boilerplates give you a skeleton. This gives you working authentication, a tested layered backend, typed frontend state, and an enforced quality pipeline — already wired together, already proven.
 
-- ⚡ **Bun** as runtime, bundler, test runner, and package manager
-- ⚛️ **React 19** with HMR in development and optimized production builds
-- 🗄️ **Drizzle ORM** with PostgreSQL — migrations, typed schemas, string-mode timestamps
-- 🏗️ **Layered backend** — Controller → Service → Repository with factory-based dependency injection
-- 🔐 **JWT authentication** — login, invite-based user creation, password setup, and change-password flows
-- 🛡️ **RBAC** — role-based access control with `requireRole` middleware (`admin` | `user`)
-- 🚦 **Rate limiting** — in-memory per-IP limiter applied to auth endpoints
-- 🌐 **CORS** — automatic CORS headers on every response via `withMiddleware`
-- 🔴 **Redux Toolkit + RTK Query** — typed server state with `ApiErrorResponse`-typed errors
-- 💀 **Skeleton loaders** — `TableSkeleton`, `ListSkeleton`, `CardSkeleton` shared components
-- 🛡️ **Error boundary** — app-level React error boundary with reset support
-- 🗄️ **DB resilience** — connection pool + startup ping with 5-attempt exponential backoff
-- 🧪 **Unit tests** with dependency injection (no database required)
-- 🔍 **oxlint + oxfmt** for linting and formatting
-- ⚙️ **React Compiler** via ESLint plugin
-- 🐶 **Husky** pre-push hook that runs all checks before pushing
-- 🌐 **REST files** for testing every endpoint with [kulala.nvim](https://github.com/mistweaverco/kulala.nvim)
+[Quick Start](#️-quick-start) · [Why bun-boiler?](#-why-bun-boiler) · [Stack](#️-stack) · [Architecture](#️-architecture) · [Optional Integrations](#️-optional-integrations)
 
-## 📋 Prerequisites
+---
 
-- [Bun](https://bun.sh) v1.3+
-- PostgreSQL database
+## 💡 Why bun-boiler?
 
-## 🛠️ Setup
+|                   | bun-boiler                                                            | typical boilerplate              |
+| ----------------- | --------------------------------------------------------------------- | -------------------------------- |
+| **Runtime**       | Bun everywhere — runtime, bundler, test runner, package manager       | Node + webpack/Vite + Jest + npm |
+| **Auth**          | JWT login, invite flow, refresh rotation, RBAC — fully working        | Placeholder or "bring your own"  |
+| **Testing**       | Unit tests with DI mocks ship with every layer                        | Empty `__tests__` folder         |
+| **Architecture**  | Controller → Service → Repository, factory DI, enforced by convention | `index.ts` does everything       |
+| **Type safety**   | Types derived from Drizzle schema — no manual interfaces              | `any` or hand-rolled types       |
+| **Quality gate**  | oxlint + oxfmt + React Compiler + knip + Husky — blocks bad pushes    | ESLint config you'll never touch |
+| **Observability** | OTel tracing + Rybbit analytics, both opt-in, zero overhead when off  | `console.log`                    |
+
+---
+
+## 🛠️ Stack
+
+| Layer             | Choice                                                                                              | Why                                                      |
+| ----------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Runtime & bundler | [Bun](https://bun.sh)                                                                               | 3× faster installs, native TypeScript, unified toolchain |
+| Frontend          | React 19 + Redux Toolkit + MUI v7                                                                   | Mature, typed, component-rich                            |
+| Backend           | `Bun.serve()` + layered architecture                                                                | No framework overhead, full control                      |
+| Database          | PostgreSQL + [Drizzle ORM](https://orm.drizzle.team)                                                | Type-safe queries, migration-first                       |
+| Auth              | JWT + HttpOnly refresh cookies                                                                      | Stateless, secure, rotation built-in                     |
+| Linting           | [oxlint](https://oxc.rs/docs/guide/usage/linter) + [oxfmt](https://github.com/nicolo-ribaudo/oxfmt) | 50–100× faster than ESLint                               |
+| Testing           | `bun:test` + happy-dom                                                                              | No config, no Jest, same runtime                         |
+
+---
+
+## ⚡️ Quick Start
 
 ```bash
 bun install
-```
-
-Copy the env example and fill in your values:
-
-```bash
-cp .env.example .env
-```
-
-```env
-# PostgreSQL
-POSTGRES_SERVER=localhost:5432
-POSTGRES_DB=bun_boiler
-POSTGRES_USER=bun_boiler_user
-POSTGRES_PASSWORD=bun_boiler_pass
-
-# Auth
-JWT_SECRET=your-secret-key-here
-APP_URL=http://localhost:3000
-
-# CORS — * allows all origins; comma-separate for specific origins
-CORS_ORIGIN=*
-
-# Seed
-SEED_ADMIN_EMAIL=admin@example.com
-SEED_ADMIN_PASSWORD=change-me-on-first-login
-```
-
-Run migrations and seed the initial admin user:
-
-```bash
+cp .env.example .env        # fill in POSTGRES_* and JWT_SECRET
 bun run db:migrate
-bun run db:seed
+bun run db:seed             # creates the initial admin user
+bun dev                     # http://localhost:3000
 ```
 
-## 🧑‍💻 Development
+---
 
-```bash
-bun dev        # Start dev server with HMR at http://localhost:3000
-```
+## ✨ Features
 
-## 📦 Production
+- 🔐 **JWT authentication** — login, invite-based signup, refresh token rotation, change password
+- 🛡️ **RBAC** — `admin` | `user` roles enforced in middleware, embedded in the JWT
+- 🏗️ **Layered backend** — Controller → Service → Repository with factory-based DI
+- 🧪 **Tests included** — every service and controller ships with unit tests; no DB required
+- ⚛️ **React 19 + HMR** — hot module reloading in dev, optimised production build via Bun bundler
+- 🔴 **RTK Query** — typed server state with auto token refresh on 401
+- 💀 **Skeleton loaders** — `TableSkeleton`, `ListSkeleton`, `CardSkeleton` ready to use
+- 🛡️ **Error boundary** — app-level reset support out of the box
+- 🚦 **Rate limiting** — in-memory per-IP limiter on auth endpoints
+- 🌐 **CORS** — configured via `CORS_ORIGIN` env var
+- 🗄️ **DB resilience** — startup ping with 5-attempt exponential backoff
+- 🐶 **Quality enforced** — Husky blocks pushes that fail lint, format, tests, or knip
 
-```bash
-bun run build  # Bundle frontend to dist/
-bun start      # Start production server
-```
-
-## 🗄️ Database
-
-```bash
-bun run db:generate  # Generate migrations from schema changes
-bun run db:migrate   # Apply migrations to the database
-bun run db:seed      # Seed the initial admin user (idempotent)
-bun run db:push      # Push schema directly (dev only)
-bun run db:studio    # Open Drizzle Studio
-```
-
-## 🧪 Testing
-
-```bash
-bun test               # Run all tests
-bun test <path>        # Run a single test file
-bun test --watch       # Watch mode
-```
-
-## 🔍 Linting & Formatting
-
-```bash
-bun run lint           # oxlint (type-aware)
-bun run lint:compiler  # ESLint React Compiler check
-bun run format         # Auto-format with oxfmt
-bun run format:check   # Check formatting only
-bun run cc             # Full check suite (test + lint + format)
-```
-
-## 🔐 API Endpoints
-
-| Method | Path                        | Auth       | Role    | Description                            |
-| ------ | --------------------------- | ---------- | ------- | -------------------------------------- |
-| `POST` | `/api/auth/login`           | —          | —       | Login, returns auth JWT                |
-| `POST` | `/api/auth/create-user`     | Auth JWT   | `admin` | Invite a new user, returns signup link |
-| `POST` | `/api/auth/set-password`    | Signup JWT | —       | Set password, returns auth JWT         |
-| `POST` | `/api/auth/change-password` | Auth JWT   | —       | Change own password                    |
-| `POST` | `/api/auth/refresh`         | —          | —       | Refresh auth token via cookie          |
-| `POST` | `/api/auth/logout`          | —          | —       | Clears refresh token cookie            |
-| `GET`  | `/api/user`                 | Auth JWT   | —       | List all users                         |
-| `GET`  | `/api/user/:id`             | Auth JWT   | —       | Get user by ID                         |
-
-**Token types:** `auth` (15 min, for regular requests) and `signup` (1 hour, for the set-password flow). Each middleware validates the correct token type and rejects the other.
-
-## 🌐 REST Testing
-
-Every endpoint has a request in `rest/`. Copy the env example to get started:
-
-```bash
-cp rest/http-client.env.json.example rest/http-client.env.json
-```
-
-Open any `.http` file in Neovim with kulala and send requests with your kulala keybind. See `rest/README.md` for details.
+---
 
 ## 🏗️ Architecture
 
 ```
+Request → Bun.serve() → withMiddleware() → Controller → Service → Repository → Drizzle → PostgreSQL
+```
+
+```
 bun-boiler/
-├── backend/
-│   ├── server.ts            # Bun.serve() entry point
-│   ├── routes/              # Route definitions — spread into Bun.serve()
-│   ├── controllers/         # HTTP layer — validate request, call service, return Response
-│   ├── services/            # Business logic — returns ErrorOr<T>
-│   ├── repositories/        # Data access — Drizzle queries only
-│   ├── middleware/          # Composable middleware (auth, signup token)
-│   ├── db/
-│   │   ├── client.ts        # Singleton Drizzle client
-│   │   ├── seed.ts          # Admin user seed script
-│   │   ├── schemas/         # Table definitions (source of truth for types)
-│   │   └── migrations/      # Auto-generated SQL migration files
-│   ├── types/               # Types derived from Drizzle schemas
-│   ├── utils/               # Response helpers, auth utilities
-│   └── validation/          # Zod schemas + validateRequest / validateParam
+├── backend/            # Bun.serve() server — routes, controllers, services, repositories
+│   ├── db/             # Drizzle client, schemas (source of truth for types), migrations, seed
+│   ├── middleware/      # Auth guards, CORS
+│   ├── telemetry/      # Optional OTel tracing + structured logger
+│   └── utils/          # Response helpers, auth utilities, Zod validation
 ├── frontend/
-│   ├── main.tsx             # Entry point, HMR setup, Redux Provider
-│   ├── App.tsx              # Root component
-│   └── redux/
-│       ├── store.ts         # Redux store
-│       └── api/             # RTK Query — one file per backend controller
-├── rest/                    # HTTP request files for API testing
-├── public/                  # Static assets and HTML entrypoint (dev)
-├── build.ts                 # Production build script
-└── drizzle.config.ts        # Drizzle Kit config
+│   ├── features/       # Self-contained feature modules (components, hooks, state, tests)
+│   ├── shared/         # Generic components (skeletons, error boundary, protected route)
+│   ├── redux/          # Store, RTK Query API, slices, localStorage middleware
+│   └── providers/      # React providers (theme, auth, toast)
+├── e2e/                # Playwright tests — api/ (no browser) and frontend/ (Chromium)
+├── rest/               # .http request files for every endpoint (kulala.nvim)
+└── docker/             # Dockerfiles and service configs
 ```
 
-### Request flow
+See the READMEs inside each directory for layer-specific conventions and rules.
 
+---
+
+## ⚙️ Optional Integrations
+
+Both are opt-in — zero code changes, zero overhead when the env vars are not set.
+
+### 🔭 OpenTelemetry — Tracing & Logs
+
+```bash
+docker compose -f docker-compose.signoz.yml up -d
 ```
-Bun.serve() → withMiddleware(...) → Controller → Service → Repository → Drizzle → PostgreSQL
+
+Add to `.env`:
+
+```env
+OTEL_ENDPOINT=http://localhost:4318
+OTEL_SERVICE_NAME=bun-boiler
 ```
 
-### Key patterns
+SigNoz UI → **http://localhost:8080**
 
-- **`ErrorOr<T>`** — services never throw; return `{ data: T, error: null }` or `{ data: null, error: AppError[] }`
-- **Factory functions** — controllers and services accept dependencies as arguments for testability
-- **Types from schema** — all types derived via `$inferSelect` / `$inferInsert`, never manually defined
-- **Typed API errors** — RTK Query `baseQuery` narrows errors to `ApiErrorResponse` across all hooks
-- **RBAC** — `requireRole('admin')` middleware guards admin-only routes; role is embedded in the JWT
-- **Startup validation** — `validateEnv()` + `pingDb()` run before `Bun.serve()` so the server never starts with bad config
+### 📊 Rybbit Analytics — Privacy-First Frontend Analytics
 
-See the READMEs in each subdirectory for layer-specific conventions.
+```bash
+# First: gh auth token | docker login ghcr.io -u <your-github-username> --password-stdin
+docker compose -f docker-compose.rybbit.yml up -d
+```
+
+Open **http://localhost:8090**, create an account, add a site, copy the Site ID. Add to `.env`:
+
+```env
+BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
+BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
+```
+
+Pageviews tracked automatically. Custom events via `useAnalytics` hook. See `frontend/features/analytics/README.md`.
+
+---
+
+## 🔑 Key Commands
+
+```bash
+bun dev                # Dev server with HMR → http://localhost:3000
+bun run build          # Production bundle
+bun test               # Unit tests
+bun run cc             # Full quality check — test + lint + format + knip
+bun run db:generate    # Generate Drizzle migration from schema changes
+bun run db:migrate     # Apply migrations
+bun run db:studio      # Drizzle Studio GUI
+bun e2e                # Playwright API tests
+bun e2e:browser        # Playwright browser tests
+```

@@ -56,5 +56,10 @@ declare module 'bun' {
     // OpenTelemetry — optional, only active when OTEL_ENDPOINT is set
     OTEL_ENDPOINT?: string; // e.g. http://localhost:4318
     OTEL_SERVICE_NAME?: string; // defaults to "bun-boiler"
+
+    // Rybbit Analytics — optional, only active when both are set
+    // BUN_PUBLIC_ prefix is required for Bun to expose these to the frontend bundle
+    BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:3001
+    BUN_PUBLIC_RYBBIT_SITE_ID?: string; // numeric site ID from the Rybbit dashboard
   }
 }
