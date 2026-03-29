@@ -1,7 +1,8 @@
 import rybbit from '@rybbit/js';
 
 const isEnabled = Boolean(
-  Bun.env.BUN_PUBLIC_RYBBIT_HOST && Bun.env.BUN_PUBLIC_RYBBIT_SITE_ID,
+  import.meta.env.BUN_PUBLIC_RYBBIT_HOST &&
+  import.meta.env.BUN_PUBLIC_RYBBIT_SITE_ID,
 );
 
 /**

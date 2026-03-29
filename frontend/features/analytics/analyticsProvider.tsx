@@ -2,8 +2,8 @@ import rybbit from '@rybbit/js';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-const host = Bun.env.BUN_PUBLIC_RYBBIT_HOST;
-const siteId = Bun.env.BUN_PUBLIC_RYBBIT_SITE_ID;
+const host = import.meta.env.BUN_PUBLIC_RYBBIT_HOST;
+const siteId = import.meta.env.BUN_PUBLIC_RYBBIT_SITE_ID;
 const isEnabled = Boolean(host && siteId);
 
 if (isEnabled) {
