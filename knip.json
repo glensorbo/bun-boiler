@@ -4,7 +4,8 @@
     "frontend/main.tsx",
     "backend/**/*.test.ts",
     "backend/middleware/*.ts",
-    "frontend/shared/components/skeleton.tsx"
+    "frontend/shared/components/skeleton.tsx",
+    "frontend/features/analytics/useAnalytics.ts"
   ],
   "project": ["backend/**/*.ts", "frontend/**/*.{ts,tsx}"],
   "ignoreDependencies": ["@babel/preset-react", "@babel/preset-typescript"]

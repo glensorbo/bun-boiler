@@ -43,6 +43,7 @@
     "@opentelemetry/sdk-trace-node": "^2.6.1",
     "@opentelemetry/semantic-conventions": "^1.40.0",
     "@reduxjs/toolkit": "^2.11.2",
+    "@rybbit/js": "^0.6.2",
     "dayjs": "^1.11.20",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
