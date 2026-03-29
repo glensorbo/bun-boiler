@@ -1,4 +1,4 @@
-import { logger } from '@backend/telemetry';
+import { logger, startHttpSpan } from '@backend/telemetry';
 import { applyCorsHeaders, corsPreflightResponse } from '@backend/utils/cors';
 
 /**
@@ -53,9 +53,30 @@ const logRequest = (req: Request, res: Response, durationMs: number): void => {
 };
 
 /**
+ * Rebuilds the route template from the actual URL path by replacing dynamic
+ * segment *values* with their `:key` placeholder names.
+ *
+ * @example
+ * // req.url = "http://localhost/api/user/42", req.params = { id: "42" }
+ * getRouteTemplate(req) // → "/api/user/:id"
+ *
+ * // req.url = "http://localhost/api/auth/login", req.params = {}
+ * getRouteTemplate(req) // → "/api/auth/login"
+ */
+const getRouteTemplate = (req: BunRequest): string => {
+  const path = new URL(req.url).pathname;
+  let template = path;
+  for (const [key, value] of Object.entries(req.params)) {
+    template = template.replace(value, `:${key}`);
+  }
+  return template;
+};
+
+/**
  * Compose middleware functions before a route handler.
  * Each middleware runs in order; the first to return a Response short-circuits the chain.
- * CORS headers and request logging are applied to every response automatically.
+ * CORS headers, request logging, HTTP traces, and HTTP metrics are applied to
+ * every response automatically (traces/metrics are no-ops when OTEL_ENDPOINT is unset).
  *
  * @example
  * withMiddleware(authMiddleware, rateLimitMiddleware)((req, ctx) => {
@@ -68,11 +89,24 @@ export const withMiddleware =
   (handler: HandlerFn): BunHandler =>
   async (req: BunRequest): Promise<Response> => {
     const start = performance.now();
+    const path = new URL(req.url).pathname;
+    const route = getRouteTemplate(req);
+
+    // Start an HTTP span (no-op when OTEL_ENDPOINT is not set).
+    const span = startHttpSpan(req.method, route, path, (name) =>
+      req.headers.get(name),
+    );
+
+    /** Finalises the request: apply CORS, log, finish span, return response. */
+    const finalize = (res: Response): Response => {
+      const corsRes = applyCorsHeaders(req, res);
+      logRequest(req, corsRes, performance.now() - start);
+      span?.finish(corsRes.status);
+      return corsRes;
+    };
 
     if (req.method === 'OPTIONS') {
-      const res = corsPreflightResponse(req);
-      logRequest(req, res, performance.now() - start);
-      return res;
+      return finalize(corsPreflightResponse(req));
     }
 
     const ctx: Ctx = {};
@@ -80,14 +114,10 @@ export const withMiddleware =
     for (const middleware of middlewares) {
       const result = await middleware(req, ctx);
       if (result !== null) {
-        const res = applyCorsHeaders(req, result);
-        logRequest(req, res, performance.now() - start);
-        return res;
+        return finalize(result);
       }
     }
 
     const response = await handler(req, ctx);
-    const res = applyCorsHeaders(req, response);
-    logRequest(req, res, performance.now() - start);
-    return res;
+    return finalize(response);
   };

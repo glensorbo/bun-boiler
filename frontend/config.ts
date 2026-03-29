@@ -15,4 +15,17 @@ export const config = {
     host: env?.BUN_PUBLIC_RYBBIT_HOST ?? null,
     siteId: env?.BUN_PUBLIC_RYBBIT_SITE_ID ?? null,
   },
+  otel: {
+    /**
+     * OTLP HTTP base URL for browser-side tracing.
+     * Set BUN_PUBLIC_OTEL_ENDPOINT to enable (e.g. "http://localhost:4318").
+     * When null, the frontend OTel SDK is never loaded.
+     */
+    endpoint: env?.BUN_PUBLIC_OTEL_ENDPOINT ?? null,
+    /**
+     * Service name reported in browser traces.
+     * Defaults to "bun-boiler-frontend" when not set.
+     */
+    serviceName: env?.BUN_PUBLIC_OTEL_SERVICE_NAME ?? 'bun-boiler-frontend',
+  },
 } as const;
