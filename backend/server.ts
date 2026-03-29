@@ -6,6 +6,9 @@ import { authRoutes } from './routes/authRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
+import { initTelemetry, logger } from '@backend/telemetry';
+
+initTelemetry();
 
 validateEnv();
 await pingDb();
@@ -32,4 +35,4 @@ const server = serve({
   },
 });
 
-console.log(`🚀 Server running at ${server.url}`);
+logger.info(`🚀 Server running at ${server.url}`);

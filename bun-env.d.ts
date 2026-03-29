@@ -52,5 +52,9 @@ declare module 'bun' {
     E2E_TEST_EMAIL?: string;
     E2E_TEST_PASSWORD?: string;
     E2E_TEST_NAME?: string;
+
+    // OpenTelemetry — optional, only active when OTEL_ENDPOINT is set
+    OTEL_ENDPOINT?: string; // e.g. http://localhost:4318
+    OTEL_SERVICE_NAME?: string; // defaults to "bun-boiler"
   }
 }
