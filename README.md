@@ -118,7 +118,7 @@ SigNoz UI → **http://localhost:8080**
 docker compose -f docker-compose.rybbit.yml up -d
 ```
 
-Open **http://localhost:8090**, create an account, add a site, copy the Site ID. Add to `.env`:
+Open **http://localhost:8090**, create an account, add a site, copy the Site ID. Then set `RYBBIT_DISABLE_SIGNUP=true` in `.env` and restart to lock registration. Add to `.env`:
 
 ```env
 BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090

@@ -102,7 +102,7 @@ services:
       - POSTGRES_PASSWORD=${RYBBIT_POSTGRES_PASSWORD:-rybbit_pass}
       - BETTER_AUTH_SECRET=${RYBBIT_AUTH_SECRET:-change-me-rybbit-secret-32chars!!}
       - BASE_URL=${RYBBIT_BASE_URL:-http://localhost:8090}
-      - DISABLE_SIGNUP=false
+      - DISABLE_SIGNUP=${RYBBIT_DISABLE_SIGNUP:-false}
     depends_on:
       rybbit-clickhouse:
         condition: service_healthy

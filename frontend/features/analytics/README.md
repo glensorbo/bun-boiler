@@ -9,14 +9,18 @@ Rybbit analytics integration for the frontend. Opt-in via environment variables 
    docker compose -f docker-compose.rybbit.yml up -d
    ```
 2. Open the dashboard at `http://localhost:8090`, create an account, and add a new site.
-3. Note the **Site ID** assigned to your site.
-4. Add to your `.env`:
+3. Lock registration — set `RYBBIT_DISABLE_SIGNUP=true` in `.env` and restart the backend:
+   ```sh
+   docker compose -f docker-compose.rybbit.yml restart rybbit-backend
+   ```
+4. Note the **Site ID** assigned to your site.
+5. Add to your `.env`:
    ```env
    BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
    BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
    ```
    These vars are surfaced to frontend code via `frontend/config.ts` — see [Environment Variables](../../README.md#-environment-variables).
-5. Restart `bun dev`.
+6. Restart `bun dev`.
 
 ## Tracking Custom Events
 
