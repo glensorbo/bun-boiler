@@ -17,15 +17,11 @@ export const config = {
   },
   otel: {
     /**
-     * OTLP HTTP base URL for browser-side tracing.
-     * Set BUN_PUBLIC_OTEL_ENDPOINT to enable (e.g. "http://localhost:4318").
-     * When null, the frontend OTel SDK is never loaded.
-     */
-    endpoint: env?.BUN_PUBLIC_OTEL_ENDPOINT ?? null,
-    /**
      * Service name reported in browser traces.
-     * Defaults to "bun-boiler-frontend" when not set.
+     * Set BUN_PUBLIC_OTEL_SERVICE_NAME to enable frontend tracing
+     * (e.g. "bun-boiler-frontend"). When null, the frontend OTel SDK is
+     * never loaded. Spans are proxied via /api/telemetry/traces.
      */
-    serviceName: env?.BUN_PUBLIC_OTEL_SERVICE_NAME ?? 'bun-boiler-frontend',
+    serviceName: env?.BUN_PUBLIC_OTEL_SERVICE_NAME ?? null,
   },
 } as const;

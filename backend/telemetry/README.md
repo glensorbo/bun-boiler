@@ -29,6 +29,12 @@ A full SigNoz stack is included in the repo — ClickHouse, Zookeeper, the SigNo
    OTEL_SERVICE_NAME=bun-boiler
    ```
 
+   For frontend browser tracing, also set:
+
+   ```
+   BUN_PUBLIC_OTEL_SERVICE_NAME=bun-boiler-frontend
+   ```
+
 4. Start the dev server — you should see:
 
    ```
@@ -62,12 +68,11 @@ Port **4318** (OTLP HTTP) — not 4317 (gRPC).
 
 ## Environment Variables
 
-| Variable                       | Required | Default               | Description                                                                               |
-| ------------------------------ | -------- | --------------------- | ----------------------------------------------------------------------------------------- |
-| `OTEL_ENDPOINT`                | No       | —                     | OTLP HTTP base URL (e.g. `http://localhost:4318`). OTel is disabled when absent.          |
-| `OTEL_SERVICE_NAME`            | No       | `bun-boiler`          | Service name reported in all backend signals.                                             |
-| `BUN_PUBLIC_OTEL_ENDPOINT`     | No       | —                     | Same as `OTEL_ENDPOINT` but exposed to the browser bundle. Required for frontend tracing. |
-| `BUN_PUBLIC_OTEL_SERVICE_NAME` | No       | `bun-boiler-frontend` | Service name for browser spans.                                                           |
+| Variable                       | Required | Default      | Description                                                                      |
+| ------------------------------ | -------- | ------------ | -------------------------------------------------------------------------------- |
+| `OTEL_ENDPOINT`                | No       | —            | OTLP HTTP base URL (e.g. `http://localhost:4318`). OTel is disabled when absent. |
+| `OTEL_SERVICE_NAME`            | No       | `bun-boiler` | Service name reported in all backend signals.                                    |
+| `BUN_PUBLIC_OTEL_SERVICE_NAME` | No       | —            | Service name for browser spans. Frontend tracing is disabled when absent.        |
 
 ---
 
@@ -108,14 +113,15 @@ Metrics are exported every **30 seconds**.
 
 ## Frontend Tracing
 
-Browser-side tracing lives in `frontend/telemetry/telemetry.ts`. When `BUN_PUBLIC_OTEL_ENDPOINT` is set, every `fetch()` call — including RTK Query requests — gets a span automatically. W3C `traceparent` headers are injected into outgoing requests so backend spans appear as children of the browser span in the trace waterfall.
+Browser-side tracing lives in `frontend/telemetry/telemetry.ts`. When `BUN_PUBLIC_OTEL_SERVICE_NAME` is set, every `fetch()` call — including RTK Query requests — gets a span automatically. W3C `traceparent` headers are injected into outgoing requests so backend spans appear as children of the browser span in the trace waterfall.
+
+Spans are **not** sent directly to the OTel collector from the browser. Instead, they are forwarded through the backend proxy at `POST /api/telemetry/traces`, which relays them server-side to `{OTEL_ENDPOINT}/v1/traces`. This keeps the collector off the public internet and removes the need for CORS on the collector.
 
 **Setup:**
 
-1. Set `BUN_PUBLIC_OTEL_ENDPOINT=http://localhost:4318` in your `.env`
-2. Optionally set `BUN_PUBLIC_OTEL_SERVICE_NAME` (defaults to `bun-boiler-frontend`)
+1. Set `BUN_PUBLIC_OTEL_SERVICE_NAME=bun-boiler-frontend` in your `.env`
 
-**CORS:** The OTel collector must allow browser cross-origin requests. `docker/signoz/otel-collector-config.yaml` already enables this for `localhost` origins. For production, update `cors.allowed_origins` in that file to match your domain.
+**CORS:** No collector CORS configuration is needed. The browser talks only to the backend proxy.
 
 ---
 

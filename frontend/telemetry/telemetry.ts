@@ -1,9 +1,13 @@
 /**
  * Frontend (browser) OpenTelemetry tracing.
  *
- * Opt-in: only activates when BUN_PUBLIC_OTEL_ENDPOINT is set.
+ * Opt-in: only activates when BUN_PUBLIC_OTEL_SERVICE_NAME is set.
  * When the variable is absent the module is a complete no-op — no SDK is
  * loaded, no network connections are made.
+ *
+ * Spans are forwarded to the backend proxy at `/api/telemetry/traces` rather
+ * than directly to the OTel collector.  This keeps the collector off the
+ * public internet and removes the need for CORS on the collector.
  *
  * What gets instrumented automatically once enabled:
  *  - Every `fetch()` call (including RTK Query API requests) → a span with
@@ -35,19 +39,15 @@ import { config } from '@frontend/config';
  * Call this **once** before mounting the React app. Safe to call multiple
  * times — subsequent calls are no-ops (the provider is only registered once).
  *
- * Prerequisites for the browser to reach the OTel collector:
- *  - The collector must allow cross-origin requests (CORS). The bundled
- *    `docker/signoz/otel-collector-config.yaml` already sets this up for
- *    `localhost` development. For production, restrict `allowed_origins`
- *    to your actual domain.
+ * Spans are sent to the backend proxy (`/api/telemetry/traces`) which
+ * forwards them to the OTel collector server-side.  No CORS configuration
+ * on the collector is required.
  */
 export const initFrontendTelemetry = async (): Promise<void> => {
-  const endpoint = config.otel.endpoint;
-  if (!endpoint) {
+  const serviceName = config.otel.serviceName;
+  if (!serviceName) {
     return;
   }
-
-  const serviceName = config.otel.serviceName;
 
   // Dynamic import keeps the OTel exporter out of the critical path when OTel
   // is disabled (the import is evaluated only when the endpoint is set).
@@ -63,7 +63,7 @@ export const initFrontendTelemetry = async (): Promise<void> => {
     spanProcessors: [
       new BatchSpanProcessor(
         new OTLPTraceExporter({
-          url: `${endpoint}/v1/traces`,
+          url: '/api/telemetry/traces',
         }),
       ),
     ],
@@ -86,6 +86,6 @@ export const initFrontendTelemetry = async (): Promise<void> => {
   fetchInstrumentation.enable();
 
   console.log(
-    `🔭 Frontend OTel enabled → ${endpoint} (service: ${serviceName})`,
+    `🔭 Frontend OTel enabled → /api/telemetry/traces (service: ${serviceName})`,
   );
 };
