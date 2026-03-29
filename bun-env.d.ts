@@ -59,7 +59,21 @@ declare module 'bun' {
 
     // Rybbit Analytics — optional, only active when both are set
     // BUN_PUBLIC_ prefix is required for Bun to expose these to the frontend bundle
-    BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:3001
+    BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:8090
     BUN_PUBLIC_RYBBIT_SITE_ID?: string; // numeric site ID from the Rybbit dashboard
   }
+}
+
+/**
+ * Augment import.meta.env so BUN_PUBLIC_* variables are named and typed
+ * when accessed via import.meta.env in frontend (bundled) code.
+ *
+ * The base ImportMetaEnv interface in bun-types uses an index signature
+ * ([key: string]: string | undefined), which accepts any key. This augmentation
+ * adds explicit named properties so IDEs autocomplete and document them.
+ */
+interface ImportMetaEnv {
+  // Rybbit Analytics — mirrors the Bun.env declarations above
+  BUN_PUBLIC_RYBBIT_HOST?: string;
+  BUN_PUBLIC_RYBBIT_SITE_ID?: string;
 }
