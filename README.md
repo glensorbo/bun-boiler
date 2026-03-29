@@ -21,6 +21,8 @@ A full-stack boilerplate built on [Bun](https://bun.sh) with a React 19 frontend
 - ⚙️ **React Compiler** via ESLint plugin
 - 🐶 **Husky** pre-push hook that runs all checks before pushing
 - 🌐 **REST files** for testing every endpoint with [kulala.nvim](https://github.com/mistweaverco/kulala.nvim)
+- 🔭 **OpenTelemetry** — optional tracing + logs via SigNoz (`docker-compose.signoz.yml`)
+- 📊 **Rybbit Analytics** — optional privacy-first frontend analytics (`docker-compose.rybbit.yml`)
 
 ## 📋 Prerequisites
 
@@ -120,6 +122,54 @@ bun run cc             # Full check suite (test + lint + format)
 | `GET`  | `/api/user/:id`             | Auth JWT   | —       | Get user by ID                         |
 
 **Token types:** `auth` (15 min, for regular requests) and `signup` (1 hour, for the set-password flow). Each middleware validates the correct token type and rejects the other.
+
+## ⚙️ Optional Integrations
+
+Both integrations follow the same opt-in pattern: fully inactive (zero overhead) when the relevant env vars are not set.
+
+### 🔭 OpenTelemetry — Distributed Tracing & Logs
+
+Uses [SigNoz](https://signoz.io) as a local observability backend.
+
+```bash
+docker compose -f docker-compose.signoz.yml up -d
+```
+
+Then enable in `.env`:
+
+```env
+OTEL_ENDPOINT=http://localhost:4318
+OTEL_SERVICE_NAME=bun-boiler
+```
+
+Open SigNoz at **http://localhost:8080**.
+
+### 📊 Rybbit Analytics — Privacy-First Frontend Analytics
+
+Uses [Rybbit](https://rybbit.io) for cookie-free, privacy-respecting page view and event tracking.
+
+```bash
+# Requires GHCR authentication: gh auth token | docker login ghcr.io -u <your-gh-username> --password-stdin
+docker compose -f docker-compose.rybbit.yml up -d
+```
+
+Open **http://localhost:8090**, create an account, add a site, and copy the Site ID. Then enable in `.env`:
+
+```env
+BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
+BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
+```
+
+Restart `bun dev`. Pageviews are tracked automatically on every route change. Track custom events in components via the `useAnalytics` hook:
+
+```tsx
+import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+
+const { trackEvent } = useAnalytics();
+trackEvent('button_clicked', { label: 'Save' });
+```
+
+See `frontend/features/analytics/README.md` for full usage details.
 
 ## 🌐 REST Testing
 
