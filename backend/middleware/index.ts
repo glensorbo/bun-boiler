@@ -1,3 +1,4 @@
+import { logger } from '@backend/telemetry';
 import { applyCorsHeaders, corsPreflightResponse } from '@backend/utils/cors';
 
 /**
@@ -46,7 +47,7 @@ type BunHandler = (req: BunRequest) => Response | Promise<Response>;
 const logRequest = (req: Request, res: Response, durationMs: number): void => {
   const ts = new Date().toISOString();
   const path = new URL(req.url).pathname;
-  console.log(
+  logger.info(
     `[${ts}] ${req.method} ${path} → ${res.status} (${Math.round(durationMs)}ms)`,
   );
 };

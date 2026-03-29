@@ -4,6 +4,7 @@ import postgres from 'postgres';
 
 import { refreshTokens } from './schemas/refreshTokens';
 import { users } from './schemas/users';
+import { logger } from '@backend/telemetry';
 
 let cachedClient: postgres.Sql | null = null;
 let cachedDb: ReturnType<typeof drizzle> | null = null;
@@ -39,7 +40,7 @@ export const getDb = () => {
   const schema = { users, refreshTokens };
   cachedDb = drizzle(cachedClient, { schema });
 
-  console.log('🔌 Database connection established');
+  logger.info('🔌 Database connection established');
 
   return cachedDb;
 };
@@ -62,17 +63,15 @@ export const pingDb = async (): Promise<void> => {
     } catch (err) {
       lastError = err;
       const delayMs = PING_BASE_DELAY_MS * 2 ** (attempt - 1);
-      console.warn(
+      logger.warn(
         `⚠️  DB connection attempt ${attempt}/${PING_RETRIES} failed. Retrying in ${delayMs}ms…`,
       );
       await Bun.sleep(delayMs);
     }
   }
 
-  console.error(
-    '❌ Failed to connect to the database after',
-    PING_RETRIES,
-    'attempts',
+  logger.error(
+    `❌ Failed to connect to the database after ${PING_RETRIES} attempts`,
   );
   throw lastError;
 };
