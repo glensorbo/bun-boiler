@@ -14,20 +14,59 @@ When `OTEL_ENDPOINT` **is** set, the module exports:
 
 ## Quick Start
 
-1. Set `OTEL_ENDPOINT` in your `.env` (or environment) pointing at an OTLP
-   HTTP collector:
+### With the local SigNoz stack (recommended for development)
+
+A full SigNoz stack is included in the repo — ClickHouse, Zookeeper, the
+SigNoz UI, and the OTel Collector. All data is persisted in named Docker
+volumes so it survives restarts.
+
+1. Start SigNoz:
+
+   ```sh
+   docker compose -f docker-compose.signoz.yml up -d
+   ```
+
+2. Wait ~30 s for ClickHouse to become healthy, then open
+   [http://localhost:8080](http://localhost:8080).
+
+3. Uncomment the OTel vars in your `.env`:
 
    ```
    OTEL_ENDPOINT=http://localhost:4318
-   OTEL_SERVICE_NAME=bun-boiler   # optional, defaults to "bun-boiler"
+   OTEL_SERVICE_NAME=bun-boiler
    ```
 
-2. Start your collector (e.g. SigNoz, Jaeger, or the OTel Collector).
-
-3. Start the server — you should see:
+4. Start the dev server — you should see:
 
    ```
    🔭 OpenTelemetry enabled → http://localhost:4318 (service: bun-boiler)
+   ```
+
+5. To stop SigNoz (data is preserved in volumes):
+
+   ```sh
+   docker compose -f docker-compose.signoz.yml down
+   ```
+
+6. To stop **and** wipe all data:
+
+   ```sh
+   docker compose -f docker-compose.signoz.yml down -v
+   ```
+
+### With an external collector
+
+1. Set `OTEL_ENDPOINT` in your `.env` pointing at any OTLP HTTP collector:
+
+   ```
+   OTEL_ENDPOINT=http://<your-collector>:4318
+   OTEL_SERVICE_NAME=bun-boiler   # optional, defaults to "bun-boiler"
+   ```
+
+2. Start the server — you should see:
+
+   ```
+   🔭 OpenTelemetry enabled → http://<your-collector>:4318 (service: bun-boiler)
    ```
 
 ---
