@@ -1,8 +1,11 @@
 /**
  * Safe access to BUN_PUBLIC_* env vars for frontend (browser) code.
  *
- * import.meta.env can be undefined in production when no BUN_PUBLIC_* vars
- * are set, so all reads go through optional chaining with null fallbacks.
+ * import.meta.env is always an object, but individual properties are
+ * undefined when the corresponding BUN_PUBLIC_* var is not set. All reads
+ * go through optional chaining with null fallbacks so callers always get a
+ * typed string | null rather than string | undefined.
+ *
  * Never access import.meta.env directly outside this file.
  */
 const env = import.meta.env as ImportMetaEnv | undefined;

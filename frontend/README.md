@@ -6,6 +6,7 @@ React 19 frontend built and served by Bun with zero configuration — no Vite, n
 
 ```
 frontend/
+├── config.ts       # Single source of truth for all BUN_PUBLIC_* env vars
 ├── main.tsx        # Entry point — mounts React root, handles HMR
 ├── App.tsx         # Root application component
 └── test-setup.ts   # Registers happy-dom globally for all tests
@@ -73,3 +74,22 @@ Client-side env vars must be prefixed with `BUN_PUBLIC_` to be exposed to the br
 [serve.static]
 env = "BUN_PUBLIC_*"
 ```
+
+### Config pattern
+
+`frontend/config.ts` is the **single source of truth** for all `BUN_PUBLIC_*` vars. It wraps `import.meta.env` with optional chaining so missing vars fall back to `null` rather than throwing at runtime:
+
+```ts
+const env = import.meta.env as ImportMetaEnv | undefined;
+
+export const config = {
+  rybbit: {
+    host: env?.BUN_PUBLIC_RYBBIT_HOST ?? null,
+    siteId: env?.BUN_PUBLIC_RYBBIT_SITE_ID ?? null,
+  },
+} as const;
+```
+
+- **Must** add new `BUN_PUBLIC_*` vars to `config.ts` — never read them elsewhere
+- **Must not** access `import.meta.env` directly outside `config.ts`
+- Import via `@frontend/config`: `import { config } from '@frontend/config'`
