@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
+import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
 import { setToken } from '@frontend/features/login/state/authSlice';
 import { useSetPasswordMutation } from '@frontend/redux/api/authApi';
 
@@ -32,6 +33,7 @@ export const useSetPassword = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [errors, setErrors] = useState<Errors>({});
   const [setPasswordMutation, { isLoading }] = useSetPasswordMutation();
+  const { trackEvent } = useAnalytics();
 
   const clearErrors = () => setErrors({});
 
@@ -39,6 +41,8 @@ export const useSetPassword = () => {
     password: string,
     confirmPassword: string,
   ): Promise<boolean> => {
+    trackEvent('set_password_submitted');
+
     const validationErrors = validate(password, confirmPassword);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -55,12 +59,14 @@ export const useSetPassword = () => {
     const result = await setPasswordMutation({ password, confirmPassword });
 
     if ('error' in result) {
-      toast.error(
-        result.error?.message ?? 'Failed to set password. Please try again.',
-      );
+      const reason =
+        result.error?.message ?? 'Failed to set password. Please try again.';
+      trackEvent('set_password_failed', { reason });
+      toast.error(reason);
       return false;
     }
 
+    trackEvent('set_password_success');
     dispatch(setToken(result.data.token));
     toast.success('Password set successfully! 🔒');
     return true;

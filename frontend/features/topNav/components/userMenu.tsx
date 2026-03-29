@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
 import { ChangePasswordModal } from './changePasswordModal';
 import { SetPasswordModal } from './setPasswordModal';
+import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
 import { setThemeMode } from '@frontend/redux/slices/themeSlice';
 
 import type { AppDispatch, RootState } from '@frontend/redux/store';
@@ -48,6 +49,7 @@ export const UserMenu = () => {
   const { logout } = useLogout();
   const themeMode = useSelector((state: RootState) => state.theme.mode);
   const token = useSelector((state: RootState) => state.auth.token);
+  const { trackEvent } = useAnalytics();
 
   const isSignupToken =
     !!token &&
@@ -75,6 +77,7 @@ export const UserMenu = () => {
   };
 
   const handleThemeModeSelect = (mode: ThemeMode) => {
+    trackEvent('theme_changed', { mode });
     dispatch(setThemeMode(mode));
   };
 

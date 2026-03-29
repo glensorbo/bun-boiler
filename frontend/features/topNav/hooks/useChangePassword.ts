@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { validateChangePassword } from '../logic/validateChangePassword';
+import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
 import { setToken } from '@frontend/features/login/state/authSlice';
 import { useChangePasswordMutation } from '@frontend/redux/api/authApi';
 
@@ -16,12 +17,15 @@ export const useChangePassword = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [errors, setErrors] = useState<ChangePasswordErrors>({});
   const [changePasswordMutation, { isLoading }] = useChangePasswordMutation();
+  const { trackEvent } = useAnalytics();
 
   const clearErrors = () => {
     setErrors({});
   };
 
   const submit = async (values: ChangePasswordValues): Promise<boolean> => {
+    trackEvent('change_password_submitted');
+
     const validationErrors = validateChangePassword(values);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -42,12 +46,14 @@ export const useChangePassword = () => {
     });
 
     if ('error' in result) {
-      toast.error(
-        result.error?.message ?? 'Failed to change password. Please try again.',
-      );
+      const reason =
+        result.error?.message ?? 'Failed to change password. Please try again.';
+      trackEvent('change_password_failed', { reason });
+      toast.error(reason);
       return false;
     }
 
+    trackEvent('change_password_success');
     dispatch(setToken(result.data.token));
     toast.success('Password changed successfully! 🔒');
     return true;
