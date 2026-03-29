@@ -1,9 +1,8 @@
 import rybbit from '@rybbit/js';
 
-const isEnabled = Boolean(
-  import.meta.env.BUN_PUBLIC_RYBBIT_HOST &&
-  import.meta.env.BUN_PUBLIC_RYBBIT_SITE_ID,
-);
+import { config } from '@frontend/config';
+
+const isEnabled = Boolean(config.rybbit.host && config.rybbit.siteId);
 
 /**
  * Hook for tracking custom analytics events.
