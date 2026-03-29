@@ -54,13 +54,14 @@ docker compose -f docker-compose.rybbit.yml up -d
 After starting the stack:
 
 1. Open `http://localhost:8090` and create an account
-2. Add a new site — note the **Site ID** assigned to it
-3. Set env vars in `.env`:
+2. Lock registration — set `RYBBIT_DISABLE_SIGNUP=true` in `.env` and run `docker compose -f docker-compose.rybbit.yml restart rybbit-backend`
+3. Add a new site — note the **Site ID** assigned to it
+4. Set env vars in `.env`:
    ```env
    BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
    BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
    ```
-4. Restart `bun dev` — analytics will be active
+5. Restart `bun dev` — analytics will be active
 
 ---
 
