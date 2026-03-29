@@ -55,3 +55,33 @@ Whenever an env var is added, removed, or renamed — update **both** `.env.exam
 ## 🌐 Routes
 
 Whenever a route or controller is added, changed, or removed — update the corresponding file in `rest/` and `rest/README.md` if the file table changes.
+
+## 🤖 Agent Workflow
+
+After making code changes, always invoke the appropriate agents **in this order** before committing:
+
+### 1. Always — `docs` agent
+
+Run the `docs` agent to review and update any READMEs affected by your changes.
+
+- Root `README.md` → advertisement style (why, not how)
+- Sub-level READMEs → reference style (what, rules, tables)
+
+### 2. Conditionally — specialised agents
+
+| Changed files   | Run agent                                                                |
+| --------------- | ------------------------------------------------------------------------ |
+| `frontend/**`   | `rybbit` — verify analytics integration is documented and correct        |
+| `backend/**`    | `otel` — verify telemetry instrumentation and docs are up to date        |
+| `backend/db/**` | `backend-feature` — verify schema, migration, and repository conventions |
+| `e2e/**`        | `e2e-playwright` — verify tests follow project Playwright conventions    |
+
+### 3. Always last — quality gate
+
+```sh
+bun run cc   # test + lint + compiler check + format check + knip
+```
+
+If `bun run cc` fails, fix the errors at source before committing. Run `bun run format` first if it's a formatting failure.
+
+**Never commit with a failing `bun run cc`.**
