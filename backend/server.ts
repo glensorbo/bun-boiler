@@ -3,6 +3,7 @@ import { serve } from 'bun';
 import index from '../public/index.html';
 import { pingDb } from './db/client';
 import { authRoutes } from './routes/authRoutes';
+import { telemetryRoutes } from './routes/telemetryRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
@@ -23,6 +24,7 @@ const server = serve({
 
     ...userRoutes,
     ...authRoutes,
+    ...telemetryRoutes,
 
     '/*': isProduction
       ? async (req) => serveProdBuild(new URL(req.url).pathname)

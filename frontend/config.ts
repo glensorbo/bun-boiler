@@ -15,4 +15,13 @@ export const config = {
     host: env?.BUN_PUBLIC_RYBBIT_HOST ?? null,
     siteId: env?.BUN_PUBLIC_RYBBIT_SITE_ID ?? null,
   },
+  otel: {
+    /**
+     * Service name reported in browser traces.
+     * Set BUN_PUBLIC_OTEL_SERVICE_NAME to enable frontend tracing
+     * (e.g. "bun-boiler-frontend"). When null, the frontend OTel SDK is
+     * never loaded. Spans are proxied via /api/telemetry/traces.
+     */
+    serviceName: env?.BUN_PUBLIC_OTEL_SERVICE_NAME ?? null,
+  },
 } as const;

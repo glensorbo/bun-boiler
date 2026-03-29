@@ -61,6 +61,10 @@ declare module 'bun' {
     // BUN_PUBLIC_ prefix is required for Bun to expose these to the frontend bundle
     BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:8090
     BUN_PUBLIC_RYBBIT_SITE_ID?: string; // numeric site ID from the Rybbit dashboard
+
+    // Frontend OpenTelemetry — optional, only active when BUN_PUBLIC_OTEL_SERVICE_NAME is set
+    // BUN_PUBLIC_ prefix exposes this to frontend code at build time
+    BUN_PUBLIC_OTEL_SERVICE_NAME?: string; // e.g. "bun-boiler-frontend"
   }
 }
 
@@ -76,4 +80,7 @@ interface ImportMetaEnv {
   // Rybbit Analytics — mirrors the Bun.env declarations above
   BUN_PUBLIC_RYBBIT_HOST?: string;
   BUN_PUBLIC_RYBBIT_SITE_ID?: string;
+
+  // Frontend OpenTelemetry — mirrors the Bun.env declarations above
+  BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
 }
