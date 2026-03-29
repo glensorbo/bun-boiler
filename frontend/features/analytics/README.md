@@ -15,6 +15,7 @@ Rybbit analytics integration for the frontend. Opt-in via environment variables 
    BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
    BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
    ```
+   These vars are surfaced to frontend code via `frontend/config.ts` — see [Environment Variables](../../README.md#-environment-variables).
 5. Restart `bun dev`.
 
 ## Tracking Custom Events
@@ -32,7 +33,8 @@ trackEvent('button_clicked', { label: 'Save' });
 
 ## Files
 
-| File                    | Purpose                                                |
-| ----------------------- | ------------------------------------------------------ |
-| `analyticsProvider.tsx` | Initialises Rybbit; tracks route changes automatically |
-| `useAnalytics.ts`       | Hook exposing `trackEvent` and `trackPageview`         |
+| File                    | Purpose                                                             |
+| ----------------------- | ------------------------------------------------------------------- |
+| `analyticsProvider.tsx` | Initialises Rybbit; tracks route changes automatically              |
+| `useAnalytics.ts`       | Hook exposing `trackEvent` and `trackPageview`                      |
+| `../../config.ts`       | Shared env-var wrapper — `config.rybbit.host/siteId` read from here |
