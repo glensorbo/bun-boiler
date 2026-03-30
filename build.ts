@@ -168,6 +168,14 @@ const result = await Bun.build({
   // Sourcemaps disabled by default for production (no source files in dev tools)
   // To enable for debugging, use: bun run build --sourcemap=linked
   sourcemap: 'none',
+  // Inline BUN_PUBLIC_* env vars so they are available via import.meta.env
+  // in the browser bundle.  Without this, Bun.build() leaves them as
+  // literal `import.meta.env.*` expressions which evaluate to undefined at
+  // runtime — causing every opt-in feature (analytics, otel, …) to silently
+  // disable itself in production.  The dev server handles this automatically
+  // via [serve.static] env = "BUN_PUBLIC_*" in bunfig.toml; this option
+  // brings the production build into parity.
+  env: 'BUN_PUBLIC_*',
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
   },
