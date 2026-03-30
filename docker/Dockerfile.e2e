@@ -1,0 +1,20 @@
+# ── E2E test runner ───────────────────────────────────────────────────────────
+# Official Microsoft Playwright image — Node.js + Chromium pre-installed.
+# No Bun needed here: the app container (Dockerfile.app-e2e) seeds all test
+# data before this container starts.
+FROM mcr.microsoft.com/playwright:v1.58.2-noble
+
+WORKDIR /app
+
+COPY package.json ./
+# Install @playwright/test so e2e files can import from it.
+# --no-package-lock: no lockfile write inside the container.
+# --ignore-scripts: skip postinstall hooks (not needed for test runner).
+RUN npm install --no-package-lock --ignore-scripts @playwright/test
+
+COPY tsconfig.json playwright.config.ts ./
+COPY e2e/ ./e2e/
+
+ENV CI=true
+
+CMD ["npx", "playwright", "test"]

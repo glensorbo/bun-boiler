@@ -93,25 +93,47 @@ Then run:
 bun e2e:browser
 ```
 
-### Docker / GitHub CI
+### Docker / CI
 
-Use Playwright's official image which ships with all browser dependencies pre-installed:
+Use `bun run e2e:docker` — it spins up a fully isolated stack with Chromium pre-installed. No manual image setup needed. See [Docker / CI Mode](#docker--ci-mode) below.
 
-```dockerfile
-FROM mcr.microsoft.com/playwright:v1.58.2-jammy
+## Docker / CI Mode
 
-WORKDIR /app
-COPY . .
-RUN npm install -g bun
-RUN bun install
+Run the full suite (API + browser) in a self-contained, isolated Docker stack:
 
-CMD ["bun", "e2e:all"]
+```bash
+bun run e2e:docker
 ```
 
-Or install deps into your own image:
+**How it works:**
 
-```dockerfile
-RUN bunx playwright install --with-deps chromium
+1. Tears down any leftover containers from a previous run
+2. Builds images; spins up ephemeral Postgres (RAM-backed tmpfs) + app server + Playwright runner
+3. Postgres runs `docker/e2e/init/` SQL scripts on first init — full schema + seeded test users, no runtime migrations needed
+4. Playwright waits for the app healthcheck, then runs all tests
+5. Always tears down — containers, volumes, orphans — regardless of outcome
+6. Exits with Playwright's own exit code so cron / CI picks it up correctly
+
+**Orchestration:**
+
+| File                        | Role                                                                  |
+| --------------------------- | --------------------------------------------------------------------- |
+| `docker-compose.e2e.yml`    | Three-service stack: `db`, `app`, `e2e`                               |
+| `docker/e2e/init/`          | SQL init scripts — schema + seed users; run by Postgres on first init |
+| `docker/Dockerfile.app-e2e` | App image — full deps + build; `bun run start` only (no migrations)   |
+| `docker/Dockerfile.e2e`     | Playwright/Chromium runner image (official Microsoft image, Node.js)  |
+| `scripts/e2e-ci.sh`         | Wraps compose up/down, captures Playwright's exit code                |
+
+**Env vars:** all have safe defaults — the stack works out of the box with no `.env` file. Override inline:
+
+```bash
+POSTGRES_PASSWORD=secret JWT_SECRET=s3cr3t bun run e2e:docker
+```
+
+**Cron** (daily at 02:00, logs appended to file):
+
+```cron
+0 2 * * * cd /path/to/bun-boiler && ./scripts/e2e-ci.sh >> /var/log/bun-boiler-e2e.log 2>&1
 ```
 
 ## Configuration

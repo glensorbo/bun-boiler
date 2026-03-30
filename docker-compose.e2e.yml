@@ -1,0 +1,87 @@
+# Full self-contained E2E stack.
+#
+# Usage:
+#   docker compose -f docker-compose.e2e.yml up --build --exit-code-from e2e
+#
+# Or via the convenience script (recommended for cron):
+#   ./scripts/e2e-ci.sh
+#
+# All variables have safe defaults baked in so the file works out of the box.
+# Override by exporting env vars or creating a .env file:
+#   export POSTGRES_PASSWORD=something && ./scripts/e2e-ci.sh
+#
+# The database uses tmpfs (RAM) — it is destroyed when the stack stops.
+# No persistent volume is created, so every run starts from a clean slate.
+
+name: bun-boiler-e2e
+
+services:
+  # ── Ephemeral database ──────────────────────────────────────────────────────
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-boiler_e2e}
+      POSTGRES_USER: ${POSTGRES_USER:-e2e_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-e2e_pass}
+    volumes:
+      - ./docker/e2e/init:/docker-entrypoint-initdb.d:ro # schema + seed on first init
+    tmpfs:
+      - /var/lib/postgresql # RAM-backed — no disk writes, instant teardown
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${POSTGRES_USER:-e2e_user} -d ${POSTGRES_DB:-boiler_e2e}',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── App server ──────────────────────────────────────────────────────────────
+  # Starts the production server — schema and seed data are already in the DB
+  # (applied by the db service's SQL init scripts on container creation).
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app-e2e
+    environment:
+      NODE_ENV: production
+      POSTGRES_USER: ${POSTGRES_USER:-e2e_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-e2e_pass}
+      POSTGRES_SERVER: db:5432
+      POSTGRES_DB: ${POSTGRES_DB:-boiler_e2e}
+      JWT_SECRET: ${JWT_SECRET:-e2e-only-jwt-secret-not-for-production}
+      APP_URL: http://app:3000
+      CORS_ORIGIN: '*'
+      DISABLE_RATE_LIMIT: 'true'
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - bun
+        - --eval
+        - "const r = await fetch('http://127.0.0.1:3000/healthcheck'); process.exit(r.ok ? 0 : 1)"
+      interval: 5s
+      timeout: 5s
+      retries: 12 # allow time for initial startup
+
+  # ── Playwright test runner ──────────────────────────────────────────────────
+  # Waits for the app to be healthy, then runs the full suite (API + browser).
+  e2e:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.e2e
+    environment:
+      # Point Playwright at the app container — disables webServer auto-start
+      E2E_BASE_URL: http://app:3000
+      DISABLE_RATE_LIMIT: 'true'
+      # E2E test user credentials (defaults match global-setup.ts)
+      E2E_TEST_EMAIL: ${E2E_TEST_EMAIL:-e2e-playwright@local.test}
+      E2E_TEST_PASSWORD: ${E2E_TEST_PASSWORD:-correct-horse-battery-staple-purple-elephant-dancing-at-midnight-with-seven-golden-penguins-in-antarctica-42}
+      E2E_TEST_NAME: ${E2E_TEST_NAME:-Playwright E2E User}
+      CI: 'true'
+    depends_on:
+      app:
+        condition: service_healthy

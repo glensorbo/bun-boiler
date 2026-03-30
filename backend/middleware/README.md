@@ -100,6 +100,8 @@ const myLimit = createRateLimitMiddleware({ max: 20, windowMs: 60_000 });
 withMiddleware(authRateLimit)((req) => controller.login(req));
 ```
 
+Set `DISABLE_RATE_LIMIT=true` to bypass the limiter entirely — used in the Docker E2E stack so sequential browser tests don't trip the per-IP limit. The rate-limit spec skips itself when this var is set.
+
 > ⚠️ In-memory only — single instance. For multi-instance deployments, replace the store with Redis.
 
 ## Token Types

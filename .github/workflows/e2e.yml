@@ -1,0 +1,18 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  e2e:
+    name: 🧪 Docker E2E Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v6
+
+      - name: 🐳 Run self-contained E2E suite
+        run: ./scripts/e2e-ci.sh

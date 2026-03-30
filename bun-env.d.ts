@@ -43,6 +43,9 @@ declare module 'bun' {
     // CORS — comma-separated list of allowed origins, or * to allow all
     CORS_ORIGIN?: string;
 
+    // Rate limiting — set to "true" to disable (e.g. in e2e test environments)
+    DISABLE_RATE_LIMIT?: string;
+
     // Seed
     SEED_ADMIN_EMAIL?: string;
     SEED_ADMIN_PASSWORD?: string;
