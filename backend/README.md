@@ -15,6 +15,8 @@ backend/
 ├── repositories/       # Data access — Drizzle queries, no business logic
 ├── validation/         # Centralised validation — Zod schemas and parsing utilities
 ├── db/                 # Database client and schema definitions
+├── telemetry/          # Optional OTel tracing + structured logger
+├── mail/               # Optional SMTP email — initMail(), sendMail()
 ├── types/              # Shared TypeScript types (derived from Drizzle or manually defined)
 └── utils/              # Utilities organised by concern (auth, response, validation, test)
 ```
@@ -34,13 +36,17 @@ Bun.serve() route
 
 `server.ts` handles startup and infrastructure concerns. On boot it:
 
-1. Calls `validateEnv()` — exits immediately if any required env vars are missing
-2. Calls `await pingDb()` — verifies database connectivity with exponential backoff (5 attempts)
-3. Starts `Bun.serve()` with all routes and static file handling
+1. Calls `initTelemetry()` — must be first; starts OTel SDK and makes the logger available (no-op when `OTEL_ENDPOINT` is unset)
+2. Calls `initMail()` — creates the Nodemailer transporter (no-op when `SMTP_HOST` is unset)
+3. Calls `validateEnv()` — exits immediately if any required env vars are missing
+4. Calls `await pingDb()` — verifies database connectivity with exponential backoff (5 attempts)
+5. Starts `Bun.serve()` with all routes and static file handling
 
 All API routes live in `backend/routes/` and are spread in:
 
 ```ts
+initTelemetry();
+initMail();
 validateEnv();
 await pingDb();
 

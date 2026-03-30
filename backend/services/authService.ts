@@ -1,5 +1,7 @@
+import { sendMail } from '@backend/mail';
 import { refreshTokenRepository } from '@backend/repositories/refreshTokenRepository';
 import { userRepository } from '@backend/repositories/userRepository';
+import { logger } from '@backend/telemetry';
 import { errorOr } from '@backend/types/errorOr';
 import {
   generateRefreshToken,
@@ -48,7 +50,23 @@ export const createAuthService = (
     const token = await signSignupToken(user.id!, email);
     const appUrl = Bun.env.APP_URL ?? 'http://localhost:3000';
 
-    return errorOr({ signupLink: `${appUrl}/set-password?token=${token}` });
+    const signupLink = `${appUrl}/set-password?token=${token}`;
+
+    try {
+      await sendMail({
+        to: email,
+        subject: "You've been invited — set your password",
+        html: `<p>Hi ${name},</p><p>Your account has been created. Click the link below to set your password:</p><p><a href="${signupLink}">${signupLink}</a></p><p>This link expires in 24 hours.</p>`,
+        text: `Hi ${name},\n\nYour account has been created. Set your password at:\n${signupLink}\n\nThis link expires in 24 hours.`,
+      });
+    } catch (err) {
+      logger.warn('📧 Failed to send signup email', {
+        email,
+        error: String(err),
+      });
+    }
+
+    return errorOr({ signupLink });
   },
 
   /**

@@ -65,6 +65,14 @@ declare module 'bun' {
     // Frontend OpenTelemetry — optional, only active when BUN_PUBLIC_OTEL_SERVICE_NAME is set
     // BUN_PUBLIC_ prefix exposes this to frontend code at build time
     BUN_PUBLIC_OTEL_SERVICE_NAME?: string; // e.g. "bun-boiler-frontend"
+
+    // SMTP Mail — optional, only active when SMTP_HOST is set
+    SMTP_HOST?: string; // e.g. smtp.example.com
+    SMTP_PORT?: string; // defaults to 587
+    SMTP_USER?: string; // SMTP auth username
+    SMTP_PASS?: string; // SMTP auth password
+    SMTP_FROM?: string; // e.g. "My App <no-reply@example.com>"
+    SMTP_SECURE?: string; // "true" for TLS (port 465), defaults to "false"
   }
 }
 
