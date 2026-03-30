@@ -14,7 +14,7 @@ Most boilerplates give you a skeleton. This gives you working authentication, a 
 | ----------------- | --------------------------------------------------------------------- | -------------------------------- |
 | **Runtime**       | Bun everywhere — runtime, bundler, test runner, package manager       | Node + webpack/Vite + Jest + npm |
 | **Auth**          | JWT login, invite flow, refresh rotation, RBAC — fully working        | Placeholder or "bring your own"  |
-| **Testing**       | Unit tests with DI mocks ship with every layer                        | Empty `__tests__` folder         |
+| **Testing**       | Unit tests (DI mocks, every layer) + self-contained Docker E2E suite  | Empty `__tests__` folder         |
 | **Architecture**  | Controller → Service → Repository, factory DI, enforced by convention | `index.ts` does everything       |
 | **Type safety**   | Types derived from Drizzle schema — no manual interfaces              | `any` or hand-rolled types       |
 | **Quality gate**  | oxlint + oxfmt + React Compiler + knip + Husky — blocks bad pushes    | ESLint config you'll never touch |
@@ -59,7 +59,8 @@ bun dev                     # http://localhost:3000
 - 💀 **Skeleton loaders** — `TableSkeleton`, `ListSkeleton`, `CardSkeleton` ready to use
 - 🛡️ **Error boundary** — app-level reset support out of the box
 - 📧 **SMTP email** — opt-in Nodemailer integration; invite email sent on user creation; no-op when `SMTP_HOST` is unset
-- 🚦 **Rate limiting** — in-memory per-IP limiter on auth endpoints
+- 🚦 **Rate limiting** — in-memory per-IP limiter on auth endpoints; bypass with `DISABLE_RATE_LIMIT=true` (used in Docker E2E)
+- 🎭 **Docker E2E suite** — self-contained Playwright stack (Postgres + app + Chromium); `bun run e2e:docker` runs API + browser tests with no local browser install
 - 🌐 **CORS** — configured via `CORS_ORIGIN` env var
 - 🗄️ **DB resilience** — startup ping with 5-attempt exponential backoff
 - 🐶 **Quality enforced** — Husky blocks pushes that fail lint, format, tests, or knip

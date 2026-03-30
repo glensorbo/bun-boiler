@@ -109,19 +109,20 @@ bun run e2e:docker
 
 1. Tears down any leftover containers from a previous run
 2. Builds images; spins up ephemeral Postgres (RAM-backed tmpfs) + app server + Playwright runner
-3. App image runs `db:migrate` → `db:seed` before accepting traffic
+3. Postgres runs `docker/e2e/init/` SQL scripts on first init — full schema + seeded test users, no runtime migrations needed
 4. Playwright waits for the app healthcheck, then runs all tests
 5. Always tears down — containers, volumes, orphans — regardless of outcome
 6. Exits with Playwright's own exit code so cron / CI picks it up correctly
 
 **Orchestration:**
 
-| File                        | Role                                                   |
-| --------------------------- | ------------------------------------------------------ |
-| `docker-compose.e2e.yml`    | Three-service stack: `db`, `app`, `e2e`                |
-| `docker/Dockerfile.app-e2e` | App image — full deps, runs migrate + seed + start     |
-| `docker/Dockerfile.e2e`     | Playwright/Chromium runner image                       |
-| `scripts/e2e-ci.sh`         | Wraps compose up/down, captures Playwright's exit code |
+| File                        | Role                                                                  |
+| --------------------------- | --------------------------------------------------------------------- |
+| `docker-compose.e2e.yml`    | Three-service stack: `db`, `app`, `e2e`                               |
+| `docker/e2e/init/`          | SQL init scripts — schema + seed users; run by Postgres on first init |
+| `docker/Dockerfile.app-e2e` | App image — full deps + build; `bun run start` only (no migrations)   |
+| `docker/Dockerfile.e2e`     | Playwright/Chromium runner image (official Microsoft image, Node.js)  |
+| `scripts/e2e-ci.sh`         | Wraps compose up/down, captures Playwright's exit code                |
 
 **Env vars:** all have safe defaults — the stack works out of the box with no `.env` file. Override inline:
 
