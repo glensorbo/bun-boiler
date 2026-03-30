@@ -58,6 +58,7 @@ bun dev                     # http://localhost:3000
 - 🔴 **RTK Query** — typed server state with auto token refresh on 401
 - 💀 **Skeleton loaders** — `TableSkeleton`, `ListSkeleton`, `CardSkeleton` ready to use
 - 🛡️ **Error boundary** — app-level reset support out of the box
+- 📧 **SMTP email** — opt-in Nodemailer integration; invite email sent on user creation; no-op when `SMTP_HOST` is unset
 - 🚦 **Rate limiting** — in-memory per-IP limiter on auth endpoints
 - 🌐 **CORS** — configured via `CORS_ORIGIN` env var
 - 🗄️ **DB resilience** — startup ping with 5-attempt exponential backoff
@@ -110,6 +111,24 @@ OTEL_SERVICE_NAME=bun-boiler
 ```
 
 SigNoz UI → **http://localhost:8080**
+
+### 📧 SMTP Email — Transactional Email
+
+For local dev, use [Mailpit](https://github.com/axllent/mailpit) — a lightweight SMTP server with a web UI:
+
+```bash
+docker run -d -p 1025:1025 -p 8025:8025 axllent/mailpit
+```
+
+Add to `.env`:
+
+```env
+SMTP_HOST=localhost
+SMTP_PORT=1025
+SMTP_FROM=My App <no-reply@localhost>
+```
+
+Mailpit UI → **http://localhost:8025**. For production, point at any provider (Resend, Postmark, Mailgun). See `backend/mail/README.md`.
 
 ### 📊 Rybbit Analytics — Privacy-First Frontend Analytics
 

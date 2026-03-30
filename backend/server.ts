@@ -7,9 +7,11 @@ import { telemetryRoutes } from './routes/telemetryRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
+import { initMail } from '@backend/mail';
 import { initTelemetry, logger } from '@backend/telemetry';
 
 initTelemetry();
+initMail();
 
 validateEnv();
 await pingDb();
