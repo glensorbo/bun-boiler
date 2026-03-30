@@ -1,18 +1,20 @@
 # ── E2E test runner ───────────────────────────────────────────────────────────
-# oven/bun:1 is Debian-based, so apt-get (used by playwright --with-deps) works.
-FROM oven/bun:1
+# Official Microsoft Playwright image — Node.js + Chromium pre-installed.
+# No Bun needed here: the app container (Dockerfile.app-e2e) seeds all test
+# data before this container starts.
+FROM mcr.microsoft.com/playwright:v1.58.2-noble
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+COPY package.json ./
+# Install @playwright/test so e2e files can import from it.
+# --no-package-lock: no lockfile write inside the container.
+# --ignore-scripts: skip postinstall hooks (not needed for test runner).
+RUN npm install --no-package-lock --ignore-scripts @playwright/test
 
-COPY . .
-
-# Download Chromium and install all OS-level browser dependencies.
-# Docker layer cache keeps this fast on subsequent builds unless bun.lock changes.
-RUN bunx playwright install --with-deps chromium
+COPY tsconfig.json playwright.config.ts ./
+COPY e2e/ ./e2e/
 
 ENV CI=true
 
-CMD ["bun", "run", "e2e:all"]
+CMD ["npx", "playwright", "test"]

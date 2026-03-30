@@ -33,6 +33,10 @@ export const createRateLimitMiddleware = (
   const store = new Map<string, RateLimitEntry>();
 
   return (req, _ctx) => {
+    if (Bun.env.DISABLE_RATE_LIMIT === 'true') {
+      return Promise.resolve(null);
+    }
+
     const ip =
       req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
       req.headers.get('cf-connecting-ip') ??

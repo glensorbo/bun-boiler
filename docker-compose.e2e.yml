@@ -23,8 +23,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-boiler_e2e}
       POSTGRES_USER: ${POSTGRES_USER:-e2e_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-e2e_pass}
+    volumes:
+      - ./docker/e2e/init:/docker-entrypoint-initdb.d:ro # schema + seed on first init
     tmpfs:
-      - /var/lib/postgresql/data # RAM-backed — no disk writes, instant teardown
+      - /var/lib/postgresql # RAM-backed — no disk writes, instant teardown
     healthcheck:
       test:
         [
@@ -36,7 +38,8 @@ services:
       retries: 10
 
   # ── App server ──────────────────────────────────────────────────────────────
-  # Runs: migrate → seed admin user → start production server.
+  # Starts the production server — schema and seed data are already in the DB
+  # (applied by the db service's SQL init scripts on container creation).
   app:
     build:
       context: .
@@ -50,30 +53,22 @@ services:
       JWT_SECRET: ${JWT_SECRET:-e2e-only-jwt-secret-not-for-production}
       APP_URL: http://app:3000
       CORS_ORIGIN: '*'
-      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@e2e.local}
-      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-e2e-admin-password-local-only}
-      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-E2E Admin}
+      DISABLE_RATE_LIMIT: 'true'
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
       test:
-        [
-          'CMD',
-          'wget',
-          '--quiet',
-          '--tries=1',
-          '--spider',
-          'http://127.0.0.1:3000/healthcheck',
-        ]
+        - CMD
+        - bun
+        - --eval
+        - "const r = await fetch('http://127.0.0.1:3000/healthcheck'); process.exit(r.ok ? 0 : 1)"
       interval: 5s
       timeout: 5s
-      retries: 20 # allow time for migrations + seed on first boot
+      retries: 12 # allow time for initial startup
 
   # ── Playwright test runner ──────────────────────────────────────────────────
   # Waits for the app to be healthy, then runs the full suite (API + browser).
-  # The seed scripts (global-setup) connect to the DB directly,
-  # so POSTGRES_* vars must match the db service above.
   e2e:
     build:
       context: .
@@ -81,11 +76,7 @@ services:
     environment:
       # Point Playwright at the app container — disables webServer auto-start
       E2E_BASE_URL: http://app:3000
-      # Direct DB access for seed scripts in global-setup
-      POSTGRES_USER: ${POSTGRES_USER:-e2e_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-e2e_pass}
-      POSTGRES_SERVER: db:5432
-      POSTGRES_DB: ${POSTGRES_DB:-boiler_e2e}
+      DISABLE_RATE_LIMIT: 'true'
       # E2E test user credentials (defaults match global-setup.ts)
       E2E_TEST_EMAIL: ${E2E_TEST_EMAIL:-e2e-playwright@local.test}
       E2E_TEST_PASSWORD: ${E2E_TEST_PASSWORD:-correct-horse-battery-staple-purple-elephant-dancing-at-midnight-with-seven-golden-penguins-in-antarctica-42}

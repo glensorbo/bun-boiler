@@ -351,6 +351,10 @@ publicTest.describe('Rate limiting on auth endpoints', () => {
   publicTest(
     'returns 429 after 10 rapid login requests from same IP',
     async ({ request }) => {
+      publicTest.skip(
+        process.env.DISABLE_RATE_LIMIT === 'true',
+        'Rate limiting is disabled in this environment',
+      );
       // The rate limiter allows max 10 requests per minute per IP.
       // Send 11 consecutive requests with invalid credentials — the 11th
       // (and any beyond) must receive 429.

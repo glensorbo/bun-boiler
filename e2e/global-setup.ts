@@ -32,8 +32,17 @@ export default async function globalSetup(config: FullConfig) {
  * Seeds the test user by spawning a Bun subprocess.
  * This keeps Bun-specific APIs (Bun.env, Bun.password) out of the Node.js
  * Playwright runner context where they are not defined.
+ *
+ * Skipped when E2E_BASE_URL is set (Docker/CI mode) because the app container
+ * seeds the user via backend/db/seed-e2e.ts before the server starts.
  */
 function seedTestUser() {
+  if (process.env.E2E_BASE_URL) {
+    console.log(
+      'ℹ️  E2E_BASE_URL set — skipping local seed (app container seeds the e2e user)',
+    );
+    return;
+  }
   execSync('bun e2e/seed-test-user.ts', { stdio: 'inherit' });
 }
 
