@@ -23,8 +23,7 @@
 
     "paths": {
       "@frontend/*": ["./frontend/*"],
-      "@backend/*": ["./backend/*"],
-      "@type/*": ["./types/*"]
+      "@backend/*": ["./backend/*"]
     },
 
     // Some stricter flags (disabled by default)
