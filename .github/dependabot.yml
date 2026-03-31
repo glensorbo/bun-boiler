@@ -22,8 +22,8 @@ updates:
     schedule:
       interval: 'daily'
 
-  # Docker
-  # - package-ecosystem: 'docker'
-  #   directory: '/docker'
-  #   schedule:
-  #     interval: 'daily'
+  Docker
+  - package-ecosystem: 'docker'
+    directory: '/docker'
+    schedule:
+      interval: 'daily'
