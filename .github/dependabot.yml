@@ -22,7 +22,7 @@ updates:
     schedule:
       interval: 'daily'
 
-  Docker
+  # Docker
   - package-ecosystem: 'docker'
     directory: '/docker'
     schedule:
