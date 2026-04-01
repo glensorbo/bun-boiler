@@ -13,15 +13,12 @@ React dashboard UI: app shell, route pages, providers, and shared primitives.
 
 ## React Compiler
 
-Active in all three environments — there is no mode where it is off:
+| Environment | Mechanism                                                     |
+| ----------- | ------------------------------------------------------------- |
+| Production  | `babel-plugin-react-compiler` custom Bun plugin in `build.ts` |
+| Lint        | `eslint-plugin-react-compiler` in `eslint.config.js`          |
 
-| Environment | Mechanism                                                         |
-| ----------- | ----------------------------------------------------------------- |
-| Dev         | `bun-plugin-react-compiler` via `[serve.static]` in `bunfig.toml` |
-| Production  | `babel-plugin-react-compiler` custom Bun plugin in `build.ts`     |
-| Lint        | `eslint-plugin-react-compiler` in `eslint.config.js`              |
-
-Violations are hard errors — they will block `bun dev`, `bun run build`, and `bun run cc`.
+Dev hot-reload does not run the compiler — `bun-plugin-react-compiler` is incompatible with the MUI `sx` theme-callback pattern used in this project. Compiler compliance is enforced at lint time (`bun run cc`) and applied at build time.
 
 ## Rules
 
