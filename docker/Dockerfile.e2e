@@ -2,7 +2,7 @@
 # Official Microsoft Playwright image — Node.js + Chromium pre-installed.
 # No Bun needed here: the app container (Dockerfile.app-e2e) seeds all test
 # data before this container starts.
-FROM mcr.microsoft.com/playwright:v1.59.2-noble
+FROM mcr.microsoft.com/playwright:v1.59.0-noble
 
 WORKDIR /app
 
