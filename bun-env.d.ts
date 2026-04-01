@@ -29,6 +29,7 @@ declare module '*.css' {
 declare module 'bun' {
   interface Env {
     NODE_ENV?: 'development' | 'production' | 'test';
+    PORT?: string;
 
     // PostgreSQL — individual parts used to build the connection URL at runtime
     POSTGRES_SERVER?: string;
@@ -62,7 +63,7 @@ declare module 'bun' {
 
     // Rybbit Analytics — optional, only active when both are set
     // BUN_PUBLIC_ prefix is required for Bun to expose these to the frontend bundle
-    BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:8090
+    BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:3001
     BUN_PUBLIC_RYBBIT_SITE_ID?: string; // numeric site ID from the Rybbit dashboard
 
     // Frontend OpenTelemetry — optional, only active when BUN_PUBLIC_OTEL_SERVICE_NAME is set

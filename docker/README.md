@@ -27,3 +27,4 @@ Dockerfiles, entrypoints, and service-specific config for all container targets.
 - Do not add runtime logic to `Dockerfile.app-e2e`; schema and seed belong in `e2e/init/`
 - `entrypoint.sh` runs on every prod container start — keep it idempotent and fast
 - The Playwright image must stay pinned (`v1.58.2-noble`) to match `@playwright/test` in `package.json`
+- Local Docker defaults expose the app on `3210` and Postgres on `55432`

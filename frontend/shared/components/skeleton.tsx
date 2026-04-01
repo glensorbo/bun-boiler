@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import MuiSkeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 
@@ -12,8 +13,7 @@ export const TableSkeleton = ({
   rows?: number;
   cols?: number;
 }) => (
-  <Stack spacing={1}>
-    {/* Header row */}
+  <Stack spacing={1.5}>
     <Box sx={{ display: 'flex', gap: 2, pb: 1 }}>
       {Array.from({ length: cols }).map((_, i) => (
         <MuiSkeleton
@@ -24,9 +24,17 @@ export const TableSkeleton = ({
         />
       ))}
     </Box>
-    {/* Data rows */}
     {Array.from({ length: rows }).map((_item, row) => (
-      <Box key={row} sx={{ display: 'flex', gap: 2 }}>
+      <Box
+        key={row}
+        sx={{
+          display: 'flex',
+          gap: 2,
+          p: 1.25,
+          borderRadius: 3,
+          backgroundColor: 'surface.sunken',
+        }}
+      >
         {Array.from({ length: cols }).map((_col, col) => (
           <MuiSkeleton
             key={col}
@@ -44,9 +52,19 @@ export const TableSkeleton = ({
  * Skeleton for a list of items — mimics a vertically stacked list.
  */
 export const ListSkeleton = ({ rows = 5 }: { rows?: number }) => (
-  <Stack spacing={1.5}>
+  <Stack spacing={1.75}>
     {Array.from({ length: rows }).map((_, i) => (
-      <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box
+        key={i}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          p: 1.5,
+          borderRadius: 3,
+          backgroundColor: 'surface.sunken',
+        }}
+      >
         <MuiSkeleton variant="circular" width={40} height={40} />
         <Stack flex={1} spacing={0.5}>
           <MuiSkeleton variant="text" width="60%" height={20} />
@@ -61,16 +79,22 @@ export const ListSkeleton = ({ rows = 5 }: { rows?: number }) => (
  * Skeleton for a content card — mimics a card with a title and body text.
  */
 export const CardSkeleton = ({ count = 3 }: { count?: number }) => (
-  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+  <Box
+    sx={{
+      display: 'grid',
+      gap: 2,
+      gridTemplateColumns: {
+        xs: 'minmax(0, 1fr)',
+        md: 'repeat(2, minmax(0, 1fr))',
+        xl: 'repeat(3, minmax(0, 1fr))',
+      },
+    }}
+  >
     {Array.from({ length: count }).map((_, i) => (
-      <Box
+      <Card
         key={i}
         sx={{
-          flex: '1 1 240px',
           p: 2,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
         }}
       >
         <MuiSkeleton
@@ -81,7 +105,7 @@ export const CardSkeleton = ({ count = 3 }: { count?: number }) => (
         <MuiSkeleton variant="text" width="70%" height={24} />
         <MuiSkeleton variant="text" width="90%" height={16} />
         <MuiSkeleton variant="text" width="50%" height={16} />
-      </Box>
+      </Card>
     ))}
   </Box>
 );

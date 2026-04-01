@@ -1,20 +1,25 @@
 # 🔧 Shared
 
-Generic, reusable code with **no business logic**. Safe to import from any feature or page.
+Reusable dashboard primitives, fallback UI, and refreshed skeletons with no business logic.
 
-```
-shared/
-├── components/   # Reusable UI primitives
-│   ├── errorBoundary.tsx  # App-level React error boundary with reset support
-│   └── skeleton.tsx       # Skeleton loaders: TableSkeleton, ListSkeleton, CardSkeleton
-├── hooks/        # Generic hooks (e.g. useDebounce, useLocalStorage)
-├── utils/        # Pure utility functions (e.g. formatDate, cn)
-└── types/        # Shared TypeScript types & utility types
-```
+| File                            | Purpose                                                   |
+| ------------------------------- | --------------------------------------------------------- |
+| `components/dashboardPage.tsx`  | Standard dashboard page header and action row             |
+| `components/surfaceCard.tsx`    | Base panel for dashboard sections                         |
+| `components/statCard.tsx`       | Compact KPI card                                          |
+| `components/dashboardTable.tsx` | Table wrapper for dashboard pages                         |
+| `components/emptyState.tsx`     | Empty panel state with optional action                    |
+| `components/miniTrend.tsx`      | Small bar-trend visual                                    |
+| `components/progressList.tsx`   | Labeled progress rows                                     |
+| `components/skeleton.tsx`       | Table, list, and card skeletons tuned to the refreshed UI |
+| `components/errorBoundary.tsx`  | App-level render fallback                                 |
 
 ## Rules
 
-- ❌ No API calls
-- ❌ No Redux state
-- ❌ No domain/business concepts
-- ✅ Purely generic — could theoretically live in any project
+- Must build new dashboard pages from these primitives before creating feature-local shells or cards.
+- Must keep shared components small, generic, and composable.
+- Must use theme tokens and semantic props; must not hard-code dashboard colors.
+- Must not import feature modules, API clients, or Redux state.
+- Must treat `../pages/homePage.tsx` as the reference composition for dashboard spacing and density.
+
+See `../README.md` for the frontend overview.

@@ -1,59 +1,56 @@
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
 
+import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
+
 export const NotFoundPage = () => (
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '70vh',
-      textAlign: 'center',
-      gap: 2,
-    }}
-  >
-    <Typography
-      component="p"
+  <SurfaceCard tone="accent">
+    <Stack
       sx={{
-        fontSize: 'clamp(7rem, 22vw, 14rem)',
-        fontWeight: 900,
-        lineHeight: 1,
-        letterSpacing: '-0.04em',
-        userSelect: 'none',
-        background: (theme) =>
-          `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark ?? theme.palette.primary.main} 100%)`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
+        minHeight: '70vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
       }}
+      spacing={2}
     >
-      404
-    </Typography>
+      <Typography
+        component="p"
+        sx={{
+          fontSize: 'clamp(7rem, 22vw, 14rem)',
+          fontWeight: 900,
+          lineHeight: 1,
+          letterSpacing: '-0.04em',
+          userSelect: 'none',
+          background: (theme) => theme.palette.gradient.accent,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}
+      >
+        404
+      </Typography>
 
-    <Typography variant="h4" fontWeight={700} sx={{ mt: -1 }}>
-      Page not found
-    </Typography>
+      <Typography variant="h4" fontWeight={700} sx={{ mt: -1 }}>
+        Page not found
+      </Typography>
 
-    <Typography
-      variant="body1"
-      color="text.secondary"
-      sx={{ maxWidth: 400, lineHeight: 1.7 }}
-    >
-      The page you&apos;re looking for doesn&apos;t exist or may have been
-      moved.
-    </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 420 }}>
+        The page you&apos;re looking for doesn&apos;t exist, or it has moved
+        inside the new dashboard shell.
+      </Typography>
 
-    <Button
-      component={Link}
-      to="/"
-      variant="contained"
-      size="large"
-      sx={{ mt: 2, px: 4, borderRadius: 2 }}
-    >
-      Back to home
-    </Button>
-  </Box>
+      <Button
+        component={Link}
+        to="/"
+        variant="contained"
+        size="large"
+        sx={{ mt: 2, px: 4 }}
+      >
+        Back to home
+      </Button>
+    </Stack>
+  </SurfaceCard>
 );

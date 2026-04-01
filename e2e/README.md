@@ -21,7 +21,7 @@ bun e2e:ui
 bun e2e:debug
 
 # Against an already-running server
-E2E_BASE_URL=http://localhost:3000 bun e2e
+E2E_BASE_URL=http://localhost:3210 bun e2e
 ```
 
 ## Projects
@@ -141,7 +141,7 @@ POSTGRES_PASSWORD=secret JWT_SECRET=s3cr3t bun run e2e:docker
 See `playwright.config.ts` at the project root.
 
 - **Web server**: `bun run dev` — auto-started before tests, reused between runs (non-CI)
-- **Base URL**: `http://localhost:3000` (override with `E2E_BASE_URL`)
+- **Base URL**: `http://localhost:3210` (override with `E2E_BASE_URL`)
 - **Auth state**: `.auth/user.json` (git-ignored)
 
 ## Prerequisites
