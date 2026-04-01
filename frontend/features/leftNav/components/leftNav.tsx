@@ -13,6 +13,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router';
@@ -33,6 +34,7 @@ interface LeftNavProps {
 const LeftNavContent = () => {
   const location = useLocation();
   const items = useMemo(() => navItems, []);
+  const theme = useTheme();
 
   return (
     <Stack sx={{ height: '100%', p: 2, gap: 2 }}>
@@ -41,7 +43,7 @@ const LeftNavContent = () => {
           borderRadius: 4,
           px: 2,
           py: 2.5,
-          background: (theme) => theme.palette.gradient.hero,
+          background: theme.palette.gradient.hero,
           border: '1px solid',
           borderColor: 'border.subtle',
         }}
@@ -54,7 +56,7 @@ const LeftNavContent = () => {
               borderRadius: 3,
               display: 'grid',
               placeItems: 'center',
-              backgroundImage: (theme) => theme.palette.gradient.accent,
+              backgroundImage: theme.palette.gradient.accent,
               color: '#fff',
             }}
           >
