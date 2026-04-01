@@ -7,5 +7,9 @@
     "frontend/shared/components/skeleton.tsx"
   ],
   "project": ["backend/**/*.ts", "frontend/**/*.{ts,tsx}"],
-  "ignoreDependencies": ["@babel/preset-react", "@babel/preset-typescript"]
+  "ignoreDependencies": [
+    "@babel/preset-react",
+    "@babel/preset-typescript",
+    "bun-plugin-react-compiler"
+  ]
 }
