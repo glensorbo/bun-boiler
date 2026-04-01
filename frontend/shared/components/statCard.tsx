@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import { alpha, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import type { ReactNode } from 'react';
@@ -19,37 +20,6 @@ interface StatCardProps {
   tone?: StatTone;
 }
 
-const toneStyles: Record<
-  StatTone,
-  { bg: string; bgAlpha: string; chipColor: MuiChipColor }
-> = {
-  default: {
-    bg: 'text.primary',
-    bgAlpha: 'rgba(var(--mui-palette-text-primaryChannel) / 0.14)',
-    chipColor: 'default',
-  },
-  accent: {
-    bg: 'primary.main',
-    bgAlpha: 'rgba(var(--mui-palette-primary-mainChannel) / 0.14)',
-    chipColor: 'primary',
-  },
-  positive: {
-    bg: 'success.main',
-    bgAlpha: 'rgba(var(--mui-palette-success-mainChannel) / 0.14)',
-    chipColor: 'success',
-  },
-  warning: {
-    bg: 'warning.main',
-    bgAlpha: 'rgba(var(--mui-palette-warning-mainChannel) / 0.14)',
-    chipColor: 'warning',
-  },
-  danger: {
-    bg: 'error.main',
-    bgAlpha: 'rgba(var(--mui-palette-error-mainChannel) / 0.14)',
-    chipColor: 'error',
-  },
-};
-
 export const StatCard = ({
   label,
   value,
@@ -58,7 +28,25 @@ export const StatCard = ({
   icon,
   tone = 'default',
 }: StatCardProps) => {
-  const toneStyle = toneStyles[tone];
+  const { palette } = useTheme();
+
+  const bgColor: Record<StatTone, string> = {
+    default: palette.text.primary,
+    accent: palette.primary.main,
+    positive: palette.success.main,
+    warning: palette.warning.main,
+    danger: palette.error.main,
+  };
+
+  const bg = bgColor[tone];
+
+  const chipColor: Record<StatTone, MuiChipColor> = {
+    default: 'default',
+    accent: 'primary',
+    positive: 'success',
+    warning: 'warning',
+    danger: 'error',
+  };
 
   return (
     <Card sx={{ p: 2.5, height: '100%' }}>
@@ -84,8 +72,8 @@ export const StatCard = ({
               borderRadius: 3,
               display: 'grid',
               placeItems: 'center',
-              backgroundColor: toneStyle.bgAlpha,
-              color: toneStyle.bg,
+              backgroundColor: alpha(bg, 0.14),
+              color: bg,
             }}
           >
             {icon}
@@ -98,7 +86,7 @@ export const StatCard = ({
             <Chip
               label={trend}
               size="small"
-              color={toneStyle.chipColor}
+              color={chipColor[tone]}
               sx={{ fontWeight: 700 }}
             />
           ) : null}
