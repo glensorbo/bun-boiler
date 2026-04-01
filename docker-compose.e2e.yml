@@ -40,18 +40,22 @@ services:
   # ── App server ──────────────────────────────────────────────────────────────
   # Starts the production server — schema and seed data are already in the DB
   # (applied by the db service's SQL init scripts on container creation).
-  app:
+  # NOTE: Named 'webapp' not 'app' — Chrome's HSTS preload list marks the
+  # '.app' TLD as HTTPS-only, so 'http://app:*' always triggers
+  # ERR_SSL_PROTOCOL_ERROR in Chrome 115+.
+  webapp:
     build:
       context: .
       dockerfile: docker/Dockerfile.app-e2e
     environment:
       NODE_ENV: production
+      PORT: 3210
       POSTGRES_USER: ${POSTGRES_USER:-e2e_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-e2e_pass}
       POSTGRES_SERVER: db:5432
       POSTGRES_DB: ${POSTGRES_DB:-boiler_e2e}
       JWT_SECRET: ${JWT_SECRET:-e2e-only-jwt-secret-not-for-production}
-      APP_URL: http://app:3000
+      APP_URL: http://webapp:3210
       CORS_ORIGIN: '*'
       DISABLE_RATE_LIMIT: 'true'
     depends_on:
@@ -62,7 +66,7 @@ services:
         - CMD
         - bun
         - --eval
-        - "const r = await fetch('http://127.0.0.1:3000/healthcheck'); process.exit(r.ok ? 0 : 1)"
+        - "const r = await fetch('http://127.0.0.1:3210/healthcheck'); process.exit(r.ok ? 0 : 1)"
       interval: 5s
       timeout: 5s
       retries: 12 # allow time for initial startup
@@ -75,7 +79,7 @@ services:
       dockerfile: docker/Dockerfile.e2e
     environment:
       # Point Playwright at the app container — disables webServer auto-start
-      E2E_BASE_URL: http://app:3000
+      E2E_BASE_URL: http://webapp:3210
       DISABLE_RATE_LIMIT: 'true'
       # E2E test user credentials (defaults match global-setup.ts)
       E2E_TEST_EMAIL: ${E2E_TEST_EMAIL:-e2e-playwright@local.test}
@@ -83,5 +87,5 @@ services:
       E2E_TEST_NAME: ${E2E_TEST_NAME:-Playwright E2E User}
       CI: 'true'
     depends_on:
-      app:
+      webapp:
         condition: service_healthy

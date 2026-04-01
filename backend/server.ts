@@ -17,8 +17,10 @@ validateEnv();
 await pingDb();
 
 const isProduction = process.env.NODE_ENV === 'production';
+const port = Number(Bun.env.PORT ?? '3210');
 
 const server = serve({
+  port,
   routes: {
     '/healthcheck': {
       GET: () => new Response('OK'),

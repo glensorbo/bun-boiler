@@ -1,13 +1,17 @@
 # 🏗️ Layout
 
-Shell components that define the page structure. Not business-logic-aware.
+Dashboard shell that composes the persistent nav chrome and route outlet.
 
-| File             | Role                                                                       |
-| ---------------- | -------------------------------------------------------------------------- |
-| `pageLayout.tsx` | Top-level route component — composes `TopNav`, `LeftNav`, and `<Outlet />` |
-| `constants.ts`   | Shared layout constants (e.g. `DRAWER_WIDTH`)                              |
+| File             | Purpose                                                          |
+| ---------------- | ---------------------------------------------------------------- |
+| `pageLayout.tsx` | Responsive shell with left nav, top nav, and padded page content |
+| `constants.ts`   | Shared shell constants such as `DRAWER_WIDTH`                    |
 
-## Notes
+## Rules
 
-- `pageLayout.tsx` is the only file here allowed to import from `features/`.
-- Keep layout components structurally focused — no API calls, no Redux slices.
+- Must keep layout structural; must not add page metrics, API calls, or feature state here.
+- Must compose `leftNav` and `topNav` here instead of building page-specific shells.
+- Must change shell-wide spacing and drawer sizing here, not inside pages.
+- Must use shared dashboard components inside pages before introducing new layout variants.
+
+See `../README.md` for the frontend overview.

@@ -48,7 +48,7 @@ export const createAuthService = (
     const hashedPassword = await Bun.password.hash(passphrase);
     const user = await repo.create(email, name, hashedPassword);
     const token = await signSignupToken(user.id!, email);
-    const appUrl = Bun.env.APP_URL ?? 'http://localhost:3000';
+    const appUrl = Bun.env.APP_URL ?? 'http://localhost:3210';
 
     const signupLink = `${appUrl}/set-password?token=${token}`;
 

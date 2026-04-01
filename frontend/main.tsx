@@ -16,7 +16,7 @@ import { ErrorBoundary } from './shared/components/errorBoundary';
 import { initFrontendTelemetry } from '@frontend/telemetry/telemetry';
 
 // Start browser-side OTel tracing before the app renders.
-// No-op (async import skipped) when BUN_PUBLIC_OTEL_ENDPOINT is not set.
+// No-op (async import skipped) when BUN_PUBLIC_OTEL_SERVICE_NAME is not set.
 void initFrontendTelemetry();
 
 const elem = document.getElementById('root')!;

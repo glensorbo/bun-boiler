@@ -21,7 +21,7 @@ bun e2e:ui
 bun e2e:debug
 
 # Against an already-running server
-E2E_BASE_URL=http://localhost:3000 bun e2e
+E2E_BASE_URL=http://localhost:3210 bun e2e
 ```
 
 ## Projects
@@ -118,7 +118,7 @@ bun run e2e:docker
 
 | File                        | Role                                                                  |
 | --------------------------- | --------------------------------------------------------------------- |
-| `docker-compose.e2e.yml`    | Three-service stack: `db`, `app`, `e2e`                               |
+| `docker-compose.e2e.yml`    | Three-service stack: `db`, `webapp`, `e2e`                            |
 | `docker/e2e/init/`          | SQL init scripts — schema + seed users; run by Postgres on first init |
 | `docker/Dockerfile.app-e2e` | App image — full deps + build; `bun run start` only (no migrations)   |
 | `docker/Dockerfile.e2e`     | Playwright/Chromium runner image (official Microsoft image, Node.js)  |
@@ -141,7 +141,7 @@ POSTGRES_PASSWORD=secret JWT_SECRET=s3cr3t bun run e2e:docker
 See `playwright.config.ts` at the project root.
 
 - **Web server**: `bun run dev` — auto-started before tests, reused between runs (non-CI)
-- **Base URL**: `http://localhost:3000` (override with `E2E_BASE_URL`)
+- **Base URL**: `http://localhost:3210` (override with `E2E_BASE_URL`)
 - **Auth state**: `.auth/user.json` (git-ignored)
 
 ## Prerequisites

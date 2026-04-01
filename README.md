@@ -43,7 +43,7 @@ bun install
 cp .env.example .env        # fill in POSTGRES_* and JWT_SECRET
 bun run db:migrate
 bun run db:seed             # creates the initial admin user
-bun dev                     # http://localhost:3000
+bun dev                     # http://localhost:3210
 ```
 
 ---
@@ -141,9 +141,11 @@ docker compose -f docker-compose.rybbit.yml up -d
 Open **http://localhost:8090**, create an account, add a site, copy the Site ID. Then set `RYBBIT_DISABLE_SIGNUP=true` in `.env` and restart to lock registration. Add to `.env`:
 
 ```env
-BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
+BUN_PUBLIC_RYBBIT_HOST=http://localhost:3001
 BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
 ```
+
+Use `3001` for `BUN_PUBLIC_RYBBIT_HOST` so the SDK talks to the Rybbit backend directly. Keep `8090` for the dashboard UI.
 
 Pageviews tracked automatically. Custom events via `useAnalytics` hook. See `frontend/features/analytics/README.md`.
 
@@ -152,7 +154,7 @@ Pageviews tracked automatically. Custom events via `useAnalytics` hook. See `fro
 ## 🔑 Key Commands
 
 ```bash
-bun dev                # Dev server with HMR → http://localhost:3000
+bun dev                # Dev server with HMR → http://localhost:3210
 bun run build          # Production bundle
 bun test               # Unit tests
 bun run cc             # Full quality check — test + lint + format + knip
@@ -163,3 +165,8 @@ bun e2e                # Playwright API tests
 bun e2e:browser        # Playwright browser tests
 bun run e2e:docker     # Full E2E suite in isolated Docker stack (CI / cron)
 ```
+
+### Local defaults
+
+- App: `http://localhost:3210`
+- Postgres (Docker host port): `localhost:55432`

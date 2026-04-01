@@ -19,7 +19,7 @@ export default defineConfig({
   globalSetup: './e2e/global-setup.ts',
 
   use: {
-    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
+    baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:3210',
     trace: 'on-first-retry',
   },
 
@@ -39,7 +39,7 @@ export default defineConfig({
     ? undefined
     : {
         command: 'bun run dev',
-        url: 'http://localhost:3000/healthcheck',
+        url: 'http://localhost:3210/healthcheck',
         reuseExistingServer: !process.env.CI,
         timeout: 15_000,
       },
