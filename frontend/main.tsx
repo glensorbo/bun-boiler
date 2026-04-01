@@ -22,17 +22,17 @@ void initFrontendTelemetry();
 const elem = document.getElementById('root')!;
 const app = (
   <StrictMode>
-    <ErrorBoundary>
-      <Provider store={store}>
-        <ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <ErrorBoundary>
           <ToastProvider>
             <AuthProvider>
               <AppRouter />
             </AuthProvider>
           </ToastProvider>
-        </ThemeProvider>
-      </Provider>
-    </ErrorBoundary>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </Provider>
   </StrictMode>
 );
 
