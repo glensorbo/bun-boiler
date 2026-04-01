@@ -118,7 +118,7 @@ bun run e2e:docker
 
 | File                        | Role                                                                  |
 | --------------------------- | --------------------------------------------------------------------- |
-| `docker-compose.e2e.yml`    | Three-service stack: `db`, `app`, `e2e`                               |
+| `docker-compose.e2e.yml`    | Three-service stack: `db`, `webapp`, `e2e`                            |
 | `docker/e2e/init/`          | SQL init scripts — schema + seed users; run by Postgres on first init |
 | `docker/Dockerfile.app-e2e` | App image — full deps + build; `bun run start` only (no migrations)   |
 | `docker/Dockerfile.e2e`     | Playwright/Chromium runner image (official Microsoft image, Node.js)  |
