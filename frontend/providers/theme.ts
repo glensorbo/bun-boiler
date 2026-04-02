@@ -58,7 +58,6 @@ export const buildTheme = (mode: PaletteMode) => {
     : 'linear-gradient(135deg, #6d28d9 0%, #0ea5e9 100%)';
 
   return createTheme({
-    cssVariables: true,
     shape: {
       borderRadius: 10,
     },

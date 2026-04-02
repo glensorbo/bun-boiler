@@ -6,7 +6,6 @@ describe('buildTheme', () => {
   test('provides dashboard-specific palette tokens in light mode', () => {
     const theme = buildTheme('light');
 
-    expect(theme.vars).toBeDefined();
     expect(theme.palette.surface.raised).toBeDefined();
     expect(theme.palette.border.subtle).toBeDefined();
     expect(theme.palette.sidebar.background).toBeDefined();

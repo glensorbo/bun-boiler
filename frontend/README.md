@@ -11,6 +11,15 @@ React dashboard UI: app shell, route pages, providers, and shared primitives.
 | `shared/`    | Reusable dashboard building blocks with no business logic     |
 | `features/`  | Feature modules, including the shell nav features             |
 
+## React Compiler
+
+| Environment | Mechanism                                                     |
+| ----------- | ------------------------------------------------------------- |
+| Production  | `babel-plugin-react-compiler` custom Bun plugin in `build.ts` |
+| Lint        | `eslint-plugin-react-compiler` in `eslint.config.js`          |
+
+Dev hot-reload does not run the compiler — `bun-plugin-react-compiler` is incompatible with the MUI `sx` theme-callback pattern used in this project. Compiler compliance is enforced at lint time (`bun run cc`) and applied at build time.
+
 ## Rules
 
 - Must start new dashboard UI work in `shared/README.md` and `providers/README.md`.
