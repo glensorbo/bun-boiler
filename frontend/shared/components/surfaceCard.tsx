@@ -26,6 +26,8 @@ export const SurfaceCard = ({
     sx={{
       p: 2.5,
       height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
       borderColor: tone === 'accent' ? 'primary.main' : 'border.subtle',
       background: (theme) =>
         tone === 'accent'
@@ -52,7 +54,7 @@ export const SurfaceCard = ({
         {action ? <Box>{action}</Box> : null}
       </Stack>
     ) : null}
-    <Box>{children}</Box>
+    <Box sx={{ flexGrow: 1 }}>{children}</Box>
     {footer ? <Box sx={{ mt: 2.5 }}>{footer}</Box> : null}
   </Card>
 );

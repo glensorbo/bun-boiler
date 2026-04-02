@@ -23,7 +23,8 @@ export const LoginPage = () => {
   return (
     <Box
       sx={{
-        minHeight: '100dvh',
+        height: '100dvh',
+        overflow: 'hidden',
         boxSizing: 'border-box',
         display: 'grid',
         alignItems: 'stretch',
@@ -37,10 +38,7 @@ export const LoginPage = () => {
       }}
     >
       <SurfaceCard tone="accent">
-        <Stack
-          justifyContent="space-between"
-          sx={{ minHeight: { lg: 'calc(100dvh - 48px)' } }}
-        >
+        <Stack justifyContent="space-between" sx={{ height: '100%' }}>
           <Box>
             <Chip label="bun-boiler dashboard starter" color="primary" />
             <Typography variant="h2" sx={{ mt: 3, maxWidth: 640 }}>

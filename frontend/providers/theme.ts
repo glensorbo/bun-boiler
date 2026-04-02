@@ -60,7 +60,7 @@ export const buildTheme = (mode: PaletteMode) => {
   return createTheme({
     cssVariables: true,
     shape: {
-      borderRadius: 20,
+      borderRadius: 10,
     },
     shadows: createDashboardShadows(mode),
     typography: {
@@ -230,11 +230,10 @@ export const buildTheme = (mode: PaletteMode) => {
         styleOverrides: {
           root: {
             minHeight: 42,
-            borderRadius: 14,
+            borderRadius: 8,
             paddingInline: 18,
           },
           containedPrimary: ({ theme }) => ({
-            backgroundImage: theme.palette.gradient.accent,
             boxShadow: theme.shadows[1],
           }),
           outlined: ({ theme }) => ({
@@ -246,22 +245,39 @@ export const buildTheme = (mode: PaletteMode) => {
       MuiChip: {
         styleOverrides: {
           root: ({ theme }) => ({
-            borderRadius: 999,
+            borderRadius: 6,
             fontWeight: 600,
             border: `1px solid ${theme.palette.border.subtle}`,
+          }),
+          colorDefault: ({ theme }) => ({
             backgroundColor: alpha(theme.palette.background.paper, 0.46),
           }),
-          filledPrimary: ({ theme }) => ({
-            color: '#fff',
+          colorPrimary: ({ theme }: { theme: Theme }) => ({
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
             borderColor: 'transparent',
-            backgroundImage: theme.palette.gradient.accent,
+          }),
+          colorSuccess: ({ theme }: { theme: Theme }) => ({
+            backgroundColor: theme.palette.success.main,
+            color: theme.palette.success.contrastText,
+            borderColor: 'transparent',
+          }),
+          colorWarning: ({ theme }: { theme: Theme }) => ({
+            backgroundColor: theme.palette.warning.main,
+            color: theme.palette.warning.contrastText,
+            borderColor: 'transparent',
+          }),
+          colorError: ({ theme }: { theme: Theme }) => ({
+            backgroundColor: theme.palette.error.main,
+            color: theme.palette.error.contrastText,
+            borderColor: 'transparent',
           }),
         },
       },
       MuiInputBase: {
         styleOverrides: {
           root: () => ({
-            borderRadius: 16,
+            borderRadius: 8,
           }),
           input: ({ theme }: { theme: Theme }) => ({
             '&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus':
@@ -310,7 +326,7 @@ export const buildTheme = (mode: PaletteMode) => {
       MuiMenu: {
         styleOverrides: {
           paper: ({ theme }) => ({
-            borderRadius: 18,
+            borderRadius: 10,
             border: `1px solid ${theme.palette.border.subtle}`,
             backdropFilter: 'blur(20px)',
             backgroundColor: alpha(
@@ -324,7 +340,7 @@ export const buildTheme = (mode: PaletteMode) => {
       MuiListItemButton: {
         styleOverrides: {
           root: ({ theme }) => ({
-            borderRadius: 14,
+            borderRadius: 8,
             color: theme.palette.sidebar.muted,
             '&.Mui-selected': {
               color: theme.palette.sidebar.foreground,
