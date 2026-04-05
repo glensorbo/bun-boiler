@@ -61,6 +61,23 @@ const id = req.params['id'];
 
 Apply middleware per-route with `withMiddleware()`. See [`middleware/README.md`](../middleware/README.md) for full details.
 
+## WebSocket routes
+
+WebSocket upgrade handlers have a different signature (`(req, server) => Response | undefined`) and must not be wrapped with `withMiddleware`. Register them as plain handlers:
+
+```ts
+// backend/routes/wsRoutes.ts
+import { handleWsUpgrade } from '@backend/ws/wsServer';
+
+export const wsRoutes = {
+  '/api/ws': {
+    GET: handleWsUpgrade,
+  },
+};
+```
+
+See [`ws/README.md`](../ws/README.md) for the full auth and broadcast pattern.
+
 ## HTTP Test Files
 
 Every routes file should have a matching file in `rest/` for manual testing. See [`rest/README.md`](../../rest/README.md).
