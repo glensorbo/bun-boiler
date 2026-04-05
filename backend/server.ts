@@ -5,8 +5,10 @@ import { pingDb } from './db/client';
 import { authRoutes } from './routes/authRoutes';
 import { telemetryRoutes } from './routes/telemetryRoutes';
 import { userRoutes } from './routes/userRoutes';
+import { wsRoutes } from './routes/wsRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
+import { wsHandlers } from './ws/wsServer';
 import { initMail } from '@backend/features/mail';
 import { initTelemetry, logger } from '@backend/features/telemetry';
 
@@ -29,11 +31,14 @@ const server = serve({
     ...userRoutes,
     ...authRoutes,
     ...telemetryRoutes,
+    ...wsRoutes,
 
     '/*': isProduction
       ? async (req) => serveProdBuild(new URL(req.url).pathname)
       : index,
   },
+
+  websocket: wsHandlers,
 
   development: !isProduction && {
     hmr: true,

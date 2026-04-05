@@ -1,5 +1,5 @@
 import { decodeJwt } from 'jose';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { clearToken, setToken } from '@frontend/features/login/state/authSlice';
@@ -12,47 +12,37 @@ interface Props {
   children: ReactNode;
 }
 
+const REFRESH_BEFORE_EXPIRY_S = 60;
+
 /**
- * Validates the stored JWT on mount and whenever it changes.
+ * Validates the stored JWT and proactively refreshes it before it expires.
  *
- * - If the token is valid and not yet expired: do nothing.
- * - If the token is expired (or malformed): attempt a silent refresh via the
- *   HttpOnly refresh token cookie. On success the new access token replaces
- *   the old one in Redux. On failure the token is cleared and the user is
- *   redirected to login by the app's protected-route layer.
+ * - Decodes the exp claim from the current token.
+ * - If already expired: attempts a silent refresh immediately.
+ * - If not yet expired: schedules a refresh REFRESH_BEFORE_EXPIRY_S seconds
+ *   before the expiry time. When the new token arrives, the effect re-runs and
+ *   re-schedules the next refresh — keeping the session alive indefinitely.
+ * - If refresh fails: clears the token, triggering a redirect to /login via
+ *   the app's protected-route layer.
  */
 export const AuthProvider = ({ children }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.auth.token);
-  const hasAttemptedRefresh = useRef(false);
 
   useEffect(() => {
     if (!token) {
       return;
     }
 
-    let expired = false;
+    let exp: number | undefined;
     try {
-      const { exp } = decodeJwt(token);
-      expired = exp !== undefined && Date.now() / 1000 > exp;
+      ({ exp } = decodeJwt(token));
     } catch {
-      expired = true;
-    }
-
-    if (!expired) {
-      return;
-    }
-
-    // Token is expired — attempt a silent refresh using the HttpOnly cookie.
-    // Guard with a ref so we only try once per mount, not on every render.
-    if (hasAttemptedRefresh.current) {
       dispatch(clearToken());
       return;
     }
 
-    hasAttemptedRefresh.current = true;
-
-    void (async () => {
+    const doRefresh = async () => {
       try {
         const res = await fetch('/api/auth/refresh', {
           method: 'POST',
@@ -69,7 +59,27 @@ export const AuthProvider = ({ children }: Props) => {
       } catch {
         dispatch(clearToken());
       }
-    })();
+    };
+
+    const nowSeconds = Date.now() / 1000;
+
+    if (exp !== undefined && nowSeconds >= exp) {
+      void doRefresh();
+      return;
+    }
+
+    if (exp !== undefined) {
+      const msUntilRefresh = Math.max(
+        0,
+        (exp - REFRESH_BEFORE_EXPIRY_S - nowSeconds) * 1000,
+      );
+      const timer = setTimeout(() => {
+        void doRefresh();
+      }, msUntilRefresh);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
   }, [token, dispatch]);
 
   return <>{children}</>;
