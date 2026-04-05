@@ -10,15 +10,15 @@ Most boilerplates give you a skeleton. This gives you working authentication, a 
 
 ## 💡 Why bun-boiler?
 
-|                   | bun-boiler                                                            | typical boilerplate              |
-| ----------------- | --------------------------------------------------------------------- | -------------------------------- |
-| **Runtime**       | Bun everywhere — runtime, bundler, test runner, package manager       | Node + webpack/Vite + Jest + npm |
-| **Auth**          | JWT login, invite flow, refresh rotation, RBAC — fully working        | Placeholder or "bring your own"  |
-| **Testing**       | Unit tests (DI mocks, every layer) + self-contained Docker E2E suite  | Empty `__tests__` folder         |
-| **Architecture**  | Controller → Service → Repository, factory DI, enforced by convention | `index.ts` does everything       |
-| **Type safety**   | Types derived from Drizzle schema — no manual interfaces              | `any` or hand-rolled types       |
-| **Quality gate**  | oxlint + oxfmt + React Compiler + knip + Husky — blocks bad pushes    | ESLint config you'll never touch |
-| **Observability** | OTel tracing + Rybbit analytics, both opt-in, zero overhead when off  | `console.log`                    |
+|                   | bun-boiler                                                              | typical boilerplate              |
+| ----------------- | ----------------------------------------------------------------------- | -------------------------------- |
+| **Runtime**       | Bun everywhere — runtime, bundler, test runner, package manager         | Node + webpack/Vite + Jest + npm |
+| **Auth**          | JWT login, invite flow, refresh rotation, RBAC — fully working          | Placeholder or "bring your own"  |
+| **Testing**       | Unit tests (DI mocks, every layer) + self-contained Docker E2E suite    | Empty `__tests__` folder         |
+| **Architecture**  | Controller → Service → Repository, factory DI, enforced by convention   | `index.ts` does everything       |
+| **Type safety**   | Types derived from Drizzle schema — no manual interfaces                | `any` or hand-rolled types       |
+| **Quality gate**  | oxlint + oxfmt + React Compiler + knip + Husky — blocks bad pushes      | ESLint config you'll never touch |
+| **Observability** | OTel tracing + OpenPanel analytics, both opt-in, zero overhead when off | `console.log`                    |
 
 ---
 
@@ -129,23 +129,22 @@ SMTP_PORT=1025
 SMTP_FROM=My App <no-reply@localhost>
 ```
 
-Mailpit UI → **http://localhost:8025**. For production, point at any provider (Resend, Postmark, Mailgun). See `backend/mail/README.md`.
+Mailpit UI → **http://localhost:8025**. For production, point at any provider (Resend, Postmark, Mailgun). See `backend/features/mail/README.md`.
 
-### 📊 Rybbit Analytics — Privacy-First Frontend Analytics
+### 📊 OpenPanel Analytics — Privacy-First Frontend Analytics
 
 ```bash
-# First: gh auth token | docker login ghcr.io -u <your-github-username> --password-stdin
-docker compose -f docker-compose.rybbit.yml up -d
+docker compose -f docker-compose.openpanel.yml up -d
 ```
 
-Open **http://localhost:8090**, create an account, add a site, copy the Site ID. Then set `RYBBIT_DISABLE_SIGNUP=true` in `.env` and restart to lock registration. Add to `.env`:
+Open **http://localhost:8091**, create an account, add a project, copy the **Client ID**. Lock registration — set `OP_ALLOW_REGISTRATION=false` in `.env` and restart. Add to `.env`:
 
 ```env
-BUN_PUBLIC_RYBBIT_HOST=http://localhost:8090
-BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
+BUN_PUBLIC_OPENPANEL_CLIENT_ID=<your-client-id>
+BUN_PUBLIC_OPENPANEL_API_URL=http://localhost:3001
 ```
 
-Pageviews tracked automatically. Custom events via `useAnalytics` hook. See `frontend/features/analytics/README.md`.
+Pageviews and session replay active automatically. Custom events via `useAnalytics` hook. See `frontend/features/analytics/README.md`.
 
 ---
 

@@ -140,7 +140,7 @@ Spans are **not** sent directly to the OTel collector from the browser. Instead,
 Import `logger` anywhere in the backend — it always writes to `console.*` and, when OTel is enabled, also emits structured log records to the collector.
 
 ```ts
-import { logger } from '@backend/telemetry';
+import { logger } from '@backend/features/telemetry';
 
 logger.info('Server started');
 logger.warn('Slow query', { durationMs: 1234, query: 'SELECT ...' });
@@ -159,11 +159,11 @@ logger.debug('Cache hit', { key: 'user:42' });
 
 ## Adding Custom Spans
 
-Span creation helpers must live in `backend/telemetry/index.ts` and be exported from `@backend/telemetry`.
+Span creation helpers must live in `backend/features/telemetry/index.ts` and be exported from `@backend/features/telemetry`.
 
-Service-layer code **must not** import from `@opentelemetry/*` directly. Add a helper to `backend/telemetry/index.ts` and import it from `@backend/telemetry` instead.
+Service-layer code **must not** import from `@opentelemetry/*` directly. Add a helper to `backend/features/telemetry/index.ts` and import it from `@backend/features/telemetry` instead.
 
-Inside `backend/telemetry/index.ts` only, the tracer is obtained via:
+Inside `backend/features/telemetry/index.ts` only, the tracer is obtained via:
 
 ```ts
 import { trace, SpanStatusCode } from '@opentelemetry/api';

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import { logger } from '@backend/telemetry';
+import { logger } from '@backend/features/telemetry';
 
 import type { Transporter } from 'nodemailer';
 

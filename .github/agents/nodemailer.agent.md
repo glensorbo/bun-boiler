@@ -156,7 +156,7 @@ SMTP_SECURE?: string;  // "true" for TLS (port 465), defaults to "false"
 
 ### 5. `.env.example` — add SMTP section (commented out)
 
-Add at the end, following the same style as OTel/Rybbit sections:
+Add at the end, following the same style as OTel/OpenPanel sections:
 
 ```env
 # SMTP Mail (optional — uncomment to enable)

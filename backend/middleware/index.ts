@@ -1,4 +1,4 @@
-import { logger, startHttpSpan } from '@backend/telemetry';
+import { logger, startHttpSpan } from '@backend/features/telemetry';
 import { applyCorsHeaders, corsPreflightResponse } from '@backend/utils/cors';
 
 /**

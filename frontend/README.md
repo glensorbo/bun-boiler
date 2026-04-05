@@ -80,12 +80,20 @@ env = "BUN_PUBLIC_*"
 `frontend/config.ts` is the **single source of truth** for all `BUN_PUBLIC_*` vars. It wraps `import.meta.env` with optional chaining so missing vars fall back to `null` rather than throwing at runtime:
 
 ```ts
+const runtimeConfig =
+  typeof window !== 'undefined' ? window.__APP_CONFIG__ : undefined;
 const env = import.meta.env as ImportMetaEnv | undefined;
 
 export const config = {
-  rybbit: {
-    host: env?.BUN_PUBLIC_RYBBIT_HOST ?? null,
-    siteId: env?.BUN_PUBLIC_RYBBIT_SITE_ID ?? null,
+  openpanel: {
+    clientId:
+      runtimeConfig?.BUN_PUBLIC_OPENPANEL_CLIENT_ID ||
+      env?.BUN_PUBLIC_OPENPANEL_CLIENT_ID ||
+      null,
+    apiUrl:
+      runtimeConfig?.BUN_PUBLIC_OPENPANEL_API_URL ||
+      env?.BUN_PUBLIC_OPENPANEL_API_URL ||
+      null,
   },
 } as const;
 ```

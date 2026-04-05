@@ -1,7 +1,7 @@
-import { sendMail } from '@backend/mail';
+import { sendMail } from '@backend/features/mail';
+import { logger } from '@backend/features/telemetry';
 import { refreshTokenRepository } from '@backend/repositories/refreshTokenRepository';
 import { userRepository } from '@backend/repositories/userRepository';
-import { logger } from '@backend/telemetry';
 import { errorOr } from '@backend/types/errorOr';
 import {
   generateRefreshToken,

@@ -1,11 +1,11 @@
+import { uuidSchema } from '@backend/features/validation/schemas/user';
+import { validateParam } from '@backend/features/validation/utils/validateParam';
 import { userService } from '@backend/services/userService';
 import {
   notFoundError,
   successResponse,
   validationErrorResponse,
 } from '@backend/utils/response';
-import { uuidSchema } from '@backend/validation/schemas/user';
-import { validateParam } from '@backend/validation/utils/validateParam';
 
 import type { userService as UserServiceType } from '@backend/services/userService';
 

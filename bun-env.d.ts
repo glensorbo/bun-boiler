@@ -60,10 +60,10 @@ declare module 'bun' {
     OTEL_ENDPOINT?: string; // e.g. http://localhost:4318
     OTEL_SERVICE_NAME?: string; // defaults to "bun-boiler"
 
-    // Rybbit Analytics — optional, only active when both are set
+    // OpenPanel Analytics — optional, only active when BUN_PUBLIC_OPENPANEL_CLIENT_ID is set
     // BUN_PUBLIC_ prefix is required for Bun to expose these to the frontend bundle
-    BUN_PUBLIC_RYBBIT_HOST?: string; // e.g. http://localhost:8090
-    BUN_PUBLIC_RYBBIT_SITE_ID?: string; // numeric site ID from the Rybbit dashboard
+    BUN_PUBLIC_OPENPANEL_CLIENT_ID?: string; // Client ID from the OpenPanel dashboard
+    BUN_PUBLIC_OPENPANEL_API_URL?: string; // e.g. http://localhost:3001 for a self-hosted instance
 
     // Frontend OpenTelemetry — optional, only active when BUN_PUBLIC_OTEL_SERVICE_NAME is set
     // BUN_PUBLIC_ prefix exposes this to frontend code at build time
@@ -88,10 +88,23 @@ declare module 'bun' {
  * adds explicit named properties so IDEs autocomplete and document them.
  */
 interface ImportMetaEnv {
-  // Rybbit Analytics — mirrors the Bun.env declarations above
-  BUN_PUBLIC_RYBBIT_HOST?: string;
-  BUN_PUBLIC_RYBBIT_SITE_ID?: string;
+  // OpenPanel Analytics — mirrors the Bun.env declarations above
+  BUN_PUBLIC_OPENPANEL_CLIENT_ID?: string;
+  BUN_PUBLIC_OPENPANEL_API_URL?: string;
 
   // Frontend OpenTelemetry — mirrors the Bun.env declarations above
   BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
+}
+
+/**
+ * Runtime config injected into HTML by the server (backend/serveProdBuild.ts).
+ * Allows deployments that supply env vars at runtime (e.g. Coolify) to work
+ * correctly even when the Docker image was built without those vars.
+ */
+interface Window {
+  __APP_CONFIG__?: {
+    BUN_PUBLIC_OPENPANEL_CLIENT_ID?: string;
+    BUN_PUBLIC_OPENPANEL_API_URL?: string;
+    BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
+  };
 }
