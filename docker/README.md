@@ -18,7 +18,7 @@ Dockerfiles, entrypoints, and service-specific config for all container targets.
 | `entrypoint.sh`          | Production container entrypoint — runs `drizzle-kit migrate` then `bun run start`; migrations are idempotent |
 | `e2e/init/01_schema.sql` | Full DB schema (enum, tables, FK) for the e2e stack; run automatically by Postgres on container init         |
 | `e2e/init/02_seed.sql`   | Admin + e2e test user with pre-hashed Argon2id passwords; run after schema on container init                 |
-| `rybbit/Caddyfile`       | Caddy reverse-proxy config for the Rybbit analytics stack                                                    |
+| `openpanel/Caddyfile`    | Caddy reverse-proxy config for the OpenPanel analytics stack                                                 |
 | `signoz/`                | ClickHouse + OTel Collector configs for the SigNoz observability stack                                       |
 
 ## Rules

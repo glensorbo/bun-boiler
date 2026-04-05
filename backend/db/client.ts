@@ -4,7 +4,7 @@ import postgres from 'postgres';
 
 import { refreshTokens } from './schemas/refreshTokens';
 import { users } from './schemas/users';
-import { logger } from '@backend/telemetry';
+import { logger } from '@backend/features/telemetry';
 
 let cachedClient: postgres.Sql | null = null;
 let cachedDb: ReturnType<typeof drizzle> | null = null;

@@ -13,10 +13,11 @@ backend/
 ├── controllers/        # HTTP boundary — parse requests, return Responses
 ├── services/           # Business logic — data transformation, rules
 ├── repositories/       # Data access — Drizzle queries, no business logic
-├── validation/         # Centralised validation — Zod schemas and parsing utilities
+├── features/           # Opt-in feature modules
+│   ├── mail/           # Optional SMTP email — initMail(), sendMail()
+│   ├── telemetry/      # Optional OTel tracing + structured logger
+│   └── validation/     # Centralised validation — Zod schemas and parsing utilities
 ├── db/                 # Database client and schema definitions
-├── telemetry/          # Optional OTel tracing + structured logger
-├── mail/               # Optional SMTP email — initMail(), sendMail()
 ├── types/              # Shared TypeScript types (derived from Drizzle or manually defined)
 └── utils/              # Utilities organised by concern (auth, response, validation, test)
 ```
@@ -104,7 +105,7 @@ const controller = createUserController(service);
 
 1. Add DB schema → `backend/db/schemas/myResource.ts`
 2. Add types → `backend/types/myResource.ts` (use `$inferSelect` / `$inferInsert`)
-3. Add Zod schemas → `backend/validation/schemas/myResource.ts`
+3. Add Zod schemas → `backend/features/validation/schemas/myResource.ts`
 4. Add repository → `backend/repositories/myResourceRepository.ts`
 5. Add service → `backend/services/myResourceService.ts` (factory pattern)
 6. Add controller → `backend/controllers/myResourceController.ts` (factory pattern)

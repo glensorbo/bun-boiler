@@ -1,3 +1,10 @@
+import {
+  setPasswordSchema,
+  changePasswordSchema,
+  createUserSchema,
+  loginSchema,
+} from '@backend/features/validation/schemas/auth';
+import { validateRequest } from '@backend/features/validation/utils/validateRequest';
 import { authService } from '@backend/services/authService';
 import {
   buildRefreshCookie,
@@ -10,13 +17,6 @@ import {
   unauthorizedError,
   validationErrorResponse,
 } from '@backend/utils/response';
-import {
-  setPasswordSchema,
-  changePasswordSchema,
-  createUserSchema,
-  loginSchema,
-} from '@backend/validation/schemas/auth';
-import { validateRequest } from '@backend/validation/utils/validateRequest';
 
 import type { BunRequest, Ctx } from '@backend/middleware';
 import type { authService as AuthServiceType } from '@backend/services/authService';

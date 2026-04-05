@@ -10,6 +10,8 @@ App-wide providers and theme infrastructure for the dashboard UI.
 | `themeProvider.tsx`      | Resolved light/dark mode, MUI provider, and `CssBaseline` |
 | `toastProvider.tsx`      | Global toast host                                         |
 
+> **Note:** `AnalyticsProvider` (OpenPanel) lives in `frontend/features/analytics/` and is mounted inside `<BrowserRouter>` in `router.tsx` rather than here, because it needs access to React Router's `useLocation` hook.
+
 ## Rules
 
 - Must add new palette tokens in both `theme.ts` and `themeAugmentation.d.ts`.

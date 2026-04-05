@@ -7,8 +7,8 @@ import { telemetryRoutes } from './routes/telemetryRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
-import { initMail } from '@backend/mail';
-import { initTelemetry, logger } from '@backend/telemetry';
+import { initMail } from '@backend/features/mail';
+import { initTelemetry, logger } from '@backend/features/telemetry';
 
 initTelemetry();
 initMail();

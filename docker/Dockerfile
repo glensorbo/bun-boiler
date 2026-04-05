@@ -12,6 +12,18 @@ FROM deps AS build
 WORKDIR /app
 
 COPY . .
+
+# BUN_PUBLIC_* vars are inlined into the frontend bundle at build time by
+# Bun's bundler. They must be declared as ARG and re-exported as ENV here so
+# that `bun run build` can embed them. Pass them via `build.args` in
+# docker-compose.yml (they read from the host .env automatically).
+ARG BUN_PUBLIC_OPENPANEL_CLIENT_ID
+ARG BUN_PUBLIC_OPENPANEL_API_URL
+ARG BUN_PUBLIC_OTEL_SERVICE_NAME
+ENV BUN_PUBLIC_OPENPANEL_CLIENT_ID=${BUN_PUBLIC_OPENPANEL_CLIENT_ID}
+ENV BUN_PUBLIC_OPENPANEL_API_URL=${BUN_PUBLIC_OPENPANEL_API_URL}
+ENV BUN_PUBLIC_OTEL_SERVICE_NAME=${BUN_PUBLIC_OTEL_SERVICE_NAME}
+
 RUN bun run build
 
 # ---- Runner stage ----

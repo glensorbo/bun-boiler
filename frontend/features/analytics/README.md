@@ -1,39 +1,42 @@
 # 📊 Analytics
 
-Rybbit analytics integration for the frontend. Opt-in via environment variables — fully inactive for developers who don't set them.
+OpenPanel analytics integration for the frontend. Opt-in via environment variables — fully inactive for developers who don't set them. Includes automatic SPA pageview tracking and session replay.
 
 ## Enabling Analytics
 
-1. Start the local Rybbit stack:
+1. Start the local OpenPanel stack:
    ```sh
-   docker compose -f docker-compose.rybbit.yml up -d
+   docker compose -f docker-compose.openpanel.yml up -d
    ```
-2. Open the dashboard at `http://localhost:8090`, create an account, and add a new site.
-3. Lock registration — set `RYBBIT_DISABLE_SIGNUP=true` in `.env` and restart the backend:
+2. Open the dashboard at `http://localhost:8091`, create an account, and add a new project.
+3. Lock registration — set `OP_ALLOW_REGISTRATION=false` in `.env` and restart the API:
    ```sh
-   docker compose -f docker-compose.rybbit.yml restart rybbit-backend
+   docker compose -f docker-compose.openpanel.yml restart op-api
    ```
-4. Note the **Site ID** assigned to your site.
+4. Note the **Client ID** assigned to your project.
 5. Add to your `.env`:
 
    ```env
-   BUN_PUBLIC_RYBBIT_HOST=http://localhost:3001
-   BUN_PUBLIC_RYBBIT_SITE_ID=<your-site-id>
+   BUN_PUBLIC_OPENPANEL_CLIENT_ID=your-client-id-here
+   BUN_PUBLIC_OPENPANEL_API_URL=http://localhost:3001
    ```
 
-   **Use port `3001` (the backend directly), not `8090` (the Caddy proxy).**
-   The Caddy proxy only forwards `/api/*` paths to the backend; the SDK’s
-   tracking endpoints (`/track`, `/site/tracking-config/…`) have no `/api/`
-   prefix and would be routed to the dashboard UI instead. The dashboard
-   remains accessible at `http://localhost:8090`.
+   **Use port `3001` (the API directly), not `8091` (the Caddy proxy).**
+   The Caddy proxy only forwards `/api/*` to the API service; the SDK's
+   tracking endpoints are at the root and would route to the dashboard UI
+   instead. The dashboard remains accessible at `http://localhost:8091`.
 
-   These vars are surfaced to frontend code via `frontend/config.ts` — see [Environment Variables](../../README.md#-environment-variables).
+   These vars are read by `frontend/config.ts`. In production, `serveProdBuild.ts`
+   also injects them into every HTML response via `window.__APP_CONFIG__`, so they
+   work in Coolify and similar platforms that supply env vars at runtime — no image
+   rebuild required. `config.ts` prefers `window.__APP_CONFIG__` over
+   `import.meta.env`, so runtime values always win.
 
 6. Restart `bun dev`.
 
 ## Tracking Custom Events
 
-Use the `useAnalytics` hook — never import `@rybbit/js` directly in components:
+Use the `useAnalytics` hook — never import `@openpanel/web` directly in components:
 
 ```tsx
 import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
@@ -44,10 +47,14 @@ const { trackEvent } = useAnalytics();
 trackEvent('button_clicked', { label: 'Save' });
 ```
 
+## Session Replay
+
+Session replay is enabled automatically when `BUN_PUBLIC_OPENPANEL_CLIENT_ID` is set. All input fields are masked by default (`maskAllInputs: true`). To exclude specific elements from recording, add the `data-openpanel-replay-mask` attribute.
+
 ## Files
 
-| File                    | Purpose                                                             |
-| ----------------------- | ------------------------------------------------------------------- |
-| `analyticsProvider.tsx` | Initialises Rybbit; tracks route changes automatically              |
-| `useAnalytics.ts`       | Hook exposing `trackEvent` and `trackPageview`                      |
-| `../../config.ts`       | Shared env-var wrapper — `config.rybbit.host/siteId` read from here |
+| File                    | Purpose                                                                    |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `analyticsProvider.tsx` | Initialises OpenPanel SDK with session replay; exports `AnalyticsProvider` |
+| `useAnalytics.ts`       | Hook exposing `trackEvent`, `identify`, and `clear`                        |
+| `../../config.ts`       | Shared env-var wrapper — `config.openpanel.clientId/apiUrl` read from here |

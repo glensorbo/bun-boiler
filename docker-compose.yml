@@ -3,6 +3,13 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      # BUN_PUBLIC_* vars are inlined at build time — they must be forwarded
+      # here so the bundler can embed them into the frontend bundle.
+      # Set them in your .env file; docker compose passes them through automatically.
+      args:
+        BUN_PUBLIC_OPENPANEL_CLIENT_ID: ${BUN_PUBLIC_OPENPANEL_CLIENT_ID:-}
+        BUN_PUBLIC_OPENPANEL_API_URL: ${BUN_PUBLIC_OPENPANEL_API_URL:-}
+        BUN_PUBLIC_OTEL_SERVICE_NAME: ${BUN_PUBLIC_OTEL_SERVICE_NAME:-}
     ports:
       - '3210:3210'
     environment:
@@ -13,6 +20,12 @@ services:
       POSTGRES_SERVER: db:5432
       POSTGRES_DB: ${POSTGRES_DB}
       JWT_SECRET: ${JWT_SECRET}
+      # BUN_PUBLIC_* vars are also forwarded at runtime so the server can
+      # inject them into HTML via window.__APP_CONFIG__ (see backend/serveProdBuild.ts).
+      # This makes them work in Coolify and other runtimes that don't pass build args.
+      BUN_PUBLIC_OPENPANEL_CLIENT_ID: ${BUN_PUBLIC_OPENPANEL_CLIENT_ID:-}
+      BUN_PUBLIC_OPENPANEL_API_URL: ${BUN_PUBLIC_OPENPANEL_API_URL:-}
+      BUN_PUBLIC_OTEL_SERVICE_NAME: ${BUN_PUBLIC_OTEL_SERVICE_NAME:-}
     depends_on:
       db:
         condition: service_healthy
