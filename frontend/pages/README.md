@@ -1,13 +1,19 @@
 # 📄 Pages
 
-One file per route. Pages are intentionally thin — they import and compose feature components, they do not own logic themselves.
+Route files that compose features and shared dashboard primitives.
 
-```
-pages/
-└── homePage.tsx   →  route "/"
-```
+| File               | Route    | Purpose                                                       |
+| ------------------ | -------- | ------------------------------------------------------------- |
+| `homePage.tsx`     | `/`      | Showcase dashboard and reference composition for future pages |
+| `loginPage.tsx`    | `/login` | Authentication entry route                                    |
+| `notFoundPage.tsx` | `*`      | Fallback route for unknown paths                              |
 
-## Conventions
+## Rules
 
-- Filename matches the route intent, lowerCamelCase.
-- Pages may import from `features/` and `shared/`, not from each other.
+- Must keep pages thin; reusable UI and logic belong in `../shared/` or feature folders.
+- Must use `homePage.tsx` as the reference for dashboard spacing, card mix, and table composition.
+- Must build new dashboard routes with shared primitives before adding bespoke wrappers.
+- Must not import one page from another.
+- Must keep filenames lowerCamelCase and aligned with route intent.
+
+See `../shared/README.md` for the dashboard building blocks.

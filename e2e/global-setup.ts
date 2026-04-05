@@ -22,7 +22,7 @@ export const AUTH_FILE = path.resolve('.auth/user.json');
 
 export default async function globalSetup(config: FullConfig) {
   const project = config.projects[0];
-  const baseURL = project?.use.baseURL ?? 'http://localhost:3000';
+  const baseURL = project?.use.baseURL ?? 'http://localhost:3210';
 
   seedTestUser();
   await loginAndSaveToken(baseURL);

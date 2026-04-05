@@ -1,30 +1,34 @@
 # ⚛️ Frontend
 
-React 19 frontend built and served by Bun with zero configuration — no Vite, no Webpack.
+React dashboard UI: app shell, route pages, providers, and shared primitives.
 
-## 📁 Structure
+| Path         | Purpose                                                       |
+| ------------ | ------------------------------------------------------------- |
+| `config.ts`  | Single source of truth for `BUN_PUBLIC_*` vars                |
+| `providers/` | App-wide providers, including the token-based MUI theme       |
+| `layout/`    | Dashboard shell that composes the nav chrome and route outlet |
+| `pages/`     | Thin route files; `homePage.tsx` is the showcase dashboard    |
+| `shared/`    | Reusable dashboard building blocks with no business logic     |
+| `features/`  | Feature modules, including the shell nav features             |
 
-```
-frontend/
-├── config.ts       # Single source of truth for all BUN_PUBLIC_* env vars
-├── main.tsx        # Entry point — mounts React root, handles HMR
-├── App.tsx         # Root application component
-└── test-setup.ts   # Registers happy-dom globally for all tests
-```
+## React Compiler
 
-## 🔧 How It Works
+| Environment | Mechanism                                                     |
+| ----------- | ------------------------------------------------------------- |
+| Production  | `babel-plugin-react-compiler` custom Bun plugin in `build.ts` |
+| Lint        | `eslint-plugin-react-compiler` in `eslint.config.js`          |
 
-### Development
+Dev hot-reload does not run the compiler — `bun-plugin-react-compiler` is incompatible with the MUI `sx` theme-callback pattern used in this project. Compiler compliance is enforced at lint time (`bun run cc`) and applied at build time.
 
-`backend/server.ts` imports `public/index.html` directly and serves it via `Bun.serve()`. Bun automatically transpiles any `.tsx`/`.ts` files referenced in the HTML and enables HMR:
+## Rules
 
-```ts
-import index from '../public/index.html';
-// ...
-'/*': index  // Bun handles bundling + HMR automatically
-```
+- Must start new dashboard UI work in `shared/README.md` and `providers/README.md`.
+- Must compose pages from shared dashboard primitives before creating bespoke shells or cards.
+- Must use theme tokens from `providers/theme.ts`; must not hard-code surface, border, sidebar, gradient, or chart colors.
+- Must keep pages thin and feature modules isolated.
+- Must add new `BUN_PUBLIC_*` vars to `config.ts`; must not read `import.meta.env` anywhere else.
 
-`main.tsx` uses `import.meta.hot` to preserve the React root between hot reloads:
+## See also
 
 ```ts
 if (import.meta.hot) {
@@ -101,3 +105,10 @@ export const config = {
 - **Must** add new `BUN_PUBLIC_*` vars to `config.ts` — never read them elsewhere
 - **Must not** access `import.meta.env` directly outside `config.ts`
 - Import via `@frontend/config`: `import { config } from '@frontend/config'`
+
+## 🗂️ See also
+
+- `./shared/README.md`
+- `./providers/README.md`
+- `./layout/README.md`
+- `./pages/README.md`

@@ -32,7 +32,7 @@ FROM oven/bun:1.3.10-alpine AS runtime
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV BUN_PORT=3000
+ENV PORT=3210
 
 COPY package.json bun.lock ./
 # Full install (not --production) so drizzle-kit is available for migrations
@@ -44,7 +44,7 @@ COPY . .
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/public ./public
 
-EXPOSE 3000
+EXPOSE 3210
 
 CMD ["sh", "docker/entrypoint.sh"]
 

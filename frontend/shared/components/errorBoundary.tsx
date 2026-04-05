@@ -1,7 +1,10 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
+
+import { SurfaceCard } from './surfaceCard';
 
 import type { ReactNode } from 'react';
 import type { FallbackProps } from 'react-error-boundary';
@@ -9,25 +12,24 @@ import type { FallbackProps } from 'react-error-boundary';
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
   <Box
     sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: 'grid',
+      placeItems: 'center',
       minHeight: '100vh',
-      gap: 2,
-      p: 4,
-      textAlign: 'center',
+      p: 3,
     }}
   >
-    <Typography variant="h5" fontWeight="bold">
-      Something went wrong 😕
-    </Typography>
-    <Typography variant="body2" color="text.secondary" maxWidth={480}>
-      {(error as Error).message}
-    </Typography>
-    <Button variant="contained" onClick={resetErrorBoundary}>
-      Try again
-    </Button>
+    <Box sx={{ width: 'min(100%, 560px)' }}>
+      <SurfaceCard tone="accent" title="Something went wrong 😕">
+        <Stack spacing={2} alignItems="flex-start">
+          <Typography variant="body2" color="text.secondary">
+            {(error as Error).message}
+          </Typography>
+          <Button variant="contained" onClick={resetErrorBoundary}>
+            Try again
+          </Button>
+        </Stack>
+      </SurfaceCard>
+    </Box>
   </Box>
 );
 

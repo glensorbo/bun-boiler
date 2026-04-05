@@ -2,15 +2,18 @@
 # Official Microsoft Playwright image — Node.js + Chromium pre-installed.
 # No Bun needed here: the app container (Dockerfile.app-e2e) seeds all test
 # data before this container starts.
-FROM mcr.microsoft.com/playwright:v1.58.2-noble
+FROM mcr.microsoft.com/playwright:v1.59.1-noble
 
 WORKDIR /app
 
 COPY package.json ./
 # Install @playwright/test so e2e files can import from it.
+# Version MUST match the image tag — the image pre-installs browsers for exactly
+# this version. A mismatch causes Playwright to look for browsers at the wrong
+# path and fall back to a system Chrome that may behave unexpectedly.
 # --no-package-lock: no lockfile write inside the container.
-# --ignore-scripts: skip postinstall hooks (not needed for test runner).
-RUN npm install --no-package-lock --ignore-scripts @playwright/test
+# --ignore-scripts: skip postinstall hooks (browsers already in the image).
+RUN npm install --no-package-lock --ignore-scripts @playwright/test@1.59.0
 
 COPY tsconfig.json playwright.config.ts ./
 COPY e2e/ ./e2e/

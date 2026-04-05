@@ -21,6 +21,8 @@ cp rest/http-client.env.json.example rest/http-client.env.json
 
 Then fill in your values. Switch environments in Neovim with kulala's env switcher.
 
+For local development, use `http://localhost:3210` as the default `BASE_URL`.
+
 | Variable       | Description                                                  |
 | -------------- | ------------------------------------------------------------ |
 | `BASE_URL`     | Server base URL                                              |

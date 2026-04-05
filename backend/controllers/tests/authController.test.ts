@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach } from 'bun:test';
 
 process.env.JWT_SECRET = 'test-secret';
-process.env.APP_URL = 'http://localhost:3000';
+process.env.APP_URL = 'http://localhost:3210';
 
 import { createAuthController } from '@backend/controllers/authController';
 import { createAuthService } from '@backend/services/authService';
