@@ -6,8 +6,7 @@ const { stdout: tokenRaw } =
 const ghToken = tokenRaw.toString().trim();
 
 // Detect repo from git remote to avoid gh CLI detection failures inside Bun.$
-const { stdout: remoteRaw } =
-  await Bun.$`git remote get-url origin`.quiet();
+const { stdout: remoteRaw } = await Bun.$`git remote get-url origin`.quiet();
 const remote = remoteRaw.toString().trim();
 const repoMatch = remote.match(/github\.com[:/](.+?)(?:\.git)?$/);
 if (!repoMatch) {
@@ -19,8 +18,7 @@ const repo = repoMatch[1];
 // Scoped shell with the real GH_TOKEN injected
 const $ = Bun.$.env({ ...process.env, GH_TOKEN: ghToken });
 
-const { stdout: tagsRaw } =
-  await $`git tag --sort=-version:refname`.quiet();
+const { stdout: tagsRaw } = await $`git tag --sort=-version:refname`.quiet();
 const allTags = tagsRaw.toString().trim().split('\n').filter(Boolean);
 
 // Find the latest RC tag
