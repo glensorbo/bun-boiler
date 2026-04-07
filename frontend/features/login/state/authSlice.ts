@@ -51,3 +51,41 @@ export const selectUserRole = (state: { auth: AuthState }): UserRole | null => {
     return null;
   }
 };
+
+export const selectUserName = (state: { auth: AuthState }): string | null => {
+  if (!state.auth.token) {
+    return null;
+  }
+  try {
+    const payload = JSON.parse(
+      atob(
+        state.auth.token.split('.')[1]!.replace(/-/g, '+').replace(/_/g, '/'),
+      ),
+    ) as { name?: string; email?: string };
+    if (payload.name) {
+      return payload.name;
+    }
+    if (payload.email) {
+      return payload.email.split('@')[0] ?? null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+export const selectUserEmail = (state: { auth: AuthState }): string | null => {
+  if (!state.auth.token) {
+    return null;
+  }
+  try {
+    const payload = JSON.parse(
+      atob(
+        state.auth.token.split('.')[1]!.replace(/-/g, '+').replace(/_/g, '/'),
+      ),
+    ) as { email?: string };
+    return payload.email ?? null;
+  } catch {
+    return null;
+  }
+};

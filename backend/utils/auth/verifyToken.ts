@@ -28,6 +28,7 @@ export const verifyToken = async (
   if (
     !payload.sub ||
     typeof payload.email !== 'string' ||
+    typeof payload.name !== 'string' ||
     typeof payload.tokenType !== 'string'
   ) {
     return errorOr(null, [
@@ -38,6 +39,7 @@ export const verifyToken = async (
   return errorOr({
     sub: payload.sub,
     email: payload.email,
+    name: payload.name,
     tokenType: payload.tokenType as TokenType,
     role: (typeof payload.role === 'string'
       ? payload.role

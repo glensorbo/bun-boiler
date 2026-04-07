@@ -47,7 +47,7 @@ export const createAuthService = (
     const passphrase = generatePassphrase();
     const hashedPassword = await Bun.password.hash(passphrase);
     const user = await repo.create(email, name, hashedPassword);
-    const token = await signSignupToken(user.id!, email);
+    const token = await signSignupToken(user.id!, email, user.name);
     const appUrl = Bun.env.APP_URL ?? 'http://localhost:3210';
 
     const signupLink = `${appUrl}/set-password?token=${token}`;
@@ -96,7 +96,12 @@ export const createAuthService = (
       return invalidError;
     }
 
-    const token = await signAuthToken(user.id!, user.email, user.role);
+    const token = await signAuthToken(
+      user.id!,
+      user.email,
+      user.role,
+      user.name,
+    );
     const refreshToken = generateRefreshToken();
     const tokenHash = await hashRefreshToken(refreshToken);
     await refreshRepo.create(user.id!, tokenHash);
@@ -122,7 +127,7 @@ export const createAuthService = (
     const hashedPassword = await Bun.password.hash(password);
     await repo.updatePassword(userId, hashedPassword);
 
-    const token = await signAuthToken(userId, user.email, user.role);
+    const token = await signAuthToken(userId, user.email, user.role, user.name);
     const refreshToken = generateRefreshToken();
     const tokenHash = await hashRefreshToken(refreshToken);
     await refreshRepo.create(userId, tokenHash);
@@ -164,7 +169,7 @@ export const createAuthService = (
     const hashedPassword = await Bun.password.hash(newPassword);
     await repo.updatePassword(userId, hashedPassword);
 
-    const token = await signAuthToken(userId, user.email, user.role);
+    const token = await signAuthToken(userId, user.email, user.role, user.name);
     const refreshToken = generateRefreshToken();
     const tokenHash = await hashRefreshToken(refreshToken);
     await refreshRepo.create(userId, tokenHash);
@@ -205,7 +210,12 @@ export const createAuthService = (
     // Rotate — delete the consumed token and issue a fresh one
     await refreshRepo.deleteById(stored.id);
 
-    const token = await signAuthToken(user.id!, user.email, user.role);
+    const token = await signAuthToken(
+      user.id!,
+      user.email,
+      user.role,
+      user.name,
+    );
     const newRefreshToken = generateRefreshToken();
     const newTokenHash = await hashRefreshToken(newRefreshToken);
     await refreshRepo.create(user.id!, newTokenHash);
