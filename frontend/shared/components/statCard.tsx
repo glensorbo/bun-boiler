@@ -52,9 +52,11 @@ export const StatCard = ({
     <Card sx={{ p: 2.5, height: '100%' }}>
       <Stack
         direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        gap={2}
+        sx={{
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: 2,
+        }}
       >
         <Box>
           <Typography variant="body2" color="text.secondary">
@@ -81,7 +83,7 @@ export const StatCard = ({
         ) : null}
       </Stack>
       {helper || trend ? (
-        <Stack direction="row" alignItems="center" gap={1} sx={{ mt: 2 }}>
+        <Stack direction="row" sx={{ alignItems: 'center', gap: 1, mt: 2 }}>
           {trend ? (
             <Chip
               label={trend}

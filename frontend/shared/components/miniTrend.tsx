@@ -19,7 +19,7 @@ export const MiniTrend = ({
 
   return (
     <Stack spacing={1.5}>
-      <Stack direction="row" alignItems="end" gap={1} sx={{ height }}>
+      <Stack direction="row" sx={{ alignItems: 'end', gap: 1, height }}>
         {points.map((point, index) => (
           <Box
             key={`${point}-${index}`}
@@ -40,7 +40,7 @@ export const MiniTrend = ({
         ))}
       </Stack>
       {labels?.length ? (
-        <Stack direction="row" gap={1}>
+        <Stack direction="row" sx={{ gap: 1 }}>
           {labels.map((label) => (
             <Typography
               key={label}

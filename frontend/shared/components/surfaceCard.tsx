@@ -43,10 +43,12 @@ export const SurfaceCard = ({
       {title || description || action ? (
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
-          justifyContent="space-between"
-          alignItems={{ xs: 'flex-start', sm: 'center' }}
-          gap={1.5}
-          sx={{ mb: 2.5 }}
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            gap: 1.5,
+            mb: 2.5,
+          }}
         >
           <Box>
             {title ? <Typography variant="h6">{title}</Typography> : null}

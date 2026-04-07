@@ -48,7 +48,7 @@ const LeftNavContent = () => {
           borderColor: 'border.subtle',
         }}
       >
-        <Stack direction="row" alignItems="center" gap={1.5}>
+        <Stack direction="row" sx={{ alignItems: 'center', gap: 1.5 }}>
           <Box
             sx={{
               width: 40,
@@ -96,7 +96,7 @@ const LeftNavContent = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={item.label}
-                  primaryTypographyProps={{ fontWeight: 600 }}
+                  slotProps={{ primary: { sx: { fontWeight: 600 } } }}
                 />
               </ListItemButton>
             </ListItem>

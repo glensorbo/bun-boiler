@@ -141,7 +141,7 @@ export const UserMenu = () => {
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText
                   primary={label}
-                  primaryTypographyProps={{ variant: 'body2' }}
+                  slotProps={{ primary: { variant: 'body2' } }}
                 />
               </MenuItem>
             ))}
@@ -159,7 +159,7 @@ export const UserMenu = () => {
           </ListItemIcon>
           <ListItemText
             primary={isSignupToken ? 'Set password' : 'Change password'}
-            primaryTypographyProps={{ variant: 'body2' }}
+            slotProps={{ primary: { variant: 'body2' } }}
           />
         </MenuItem>
 
@@ -172,7 +172,7 @@ export const UserMenu = () => {
           </ListItemIcon>
           <ListItemText
             primary="Logout"
-            primaryTypographyProps={{ variant: 'body2' }}
+            slotProps={{ primary: { variant: 'body2' } }}
           />
         </MenuItem>
       </Menu>

@@ -38,7 +38,7 @@ export const LoginPage = () => {
       }}
     >
       <SurfaceCard tone="accent">
-        <Stack justifyContent="space-between" sx={{ height: '100%' }}>
+        <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
           <Box>
             <Chip label="bun-boiler dashboard starter" color="primary" />
             <Typography variant="h2" sx={{ mt: 3, maxWidth: 640 }}>
@@ -55,7 +55,7 @@ export const LoginPage = () => {
               features.
             </Typography>
           </Box>
-          <Stack direction={{ xs: 'column', md: 'row' }} gap={2} sx={{ mt: 4 }}>
+          <Stack direction={{ xs: 'column', md: 'row' }} sx={{ gap: 2, mt: 4 }}>
             <SurfaceCard
               title="Reusable UI"
               description="Shared components cover cards, stats, tables, trends, and empty states."

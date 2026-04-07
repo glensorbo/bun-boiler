@@ -22,9 +22,11 @@ export const DashboardPage = ({
   <Stack spacing={3}>
     <Stack
       direction={{ xs: 'column', md: 'row' }}
-      justifyContent="space-between"
-      alignItems={{ xs: 'flex-start', md: 'center' }}
-      gap={2}
+      sx={{
+        justifyContent: 'space-between',
+        alignItems: { xs: 'flex-start', md: 'center' },
+        gap: 2,
+      }}
     >
       <Box>
         {eyebrow ? (

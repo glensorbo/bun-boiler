@@ -227,13 +227,13 @@ export const buildTheme = (mode: PaletteMode) => {
           disableElevation: true,
         },
         styleOverrides: {
-          root: {
+          root: ({ theme }) => ({
             minHeight: 42,
             borderRadius: 8,
             paddingInline: 18,
-          },
-          containedPrimary: ({ theme }) => ({
-            boxShadow: theme.shadows[1],
+            '&.MuiButton-contained.MuiButton-colorPrimary': {
+              boxShadow: theme.shadows[1],
+            },
           }),
           outlined: ({ theme }) => ({
             borderColor: theme.palette.border.strong,
