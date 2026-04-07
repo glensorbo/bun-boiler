@@ -56,6 +56,35 @@ Whenever an env var is added, removed, or renamed — update **both** `.env.exam
 
 Whenever a route or controller is added, changed, or removed — update the corresponding file in `rest/` and `rest/README.md` if the file table changes.
 
+## 📓 Docs (Obsidian / Quartz)
+
+The `docs/` folder is an Obsidian vault published with [Quartz v4](https://quartz.jzhao.xyz/).
+
+- **ADRs** → `docs/adr/` — one file per decision
+- **Technical docs** → `docs/technical/`
+- Build: `docker build -f docker/Dockerfile.docs -t bun-boiler-docs .`
+
+### Note format
+
+```markdown
+---
+id: <unix-timestamp>-<4-char-random>
+title: Human Readable Title
+aliases:
+  - Human Readable Title
+tags: []
+---
+```
+
+File name = `id` value + `.md`. Register the vault in Obsidian as **`bun-boiler`** to use `notesmd-cli`.
+
+### When to write docs
+
+- **ADR** — whenever a significant architectural or tooling decision is made
+- **Technical doc** — whenever a non-obvious flow or convention needs more than a README
+
+Use the `adr` agent for both.
+
 ## 🤖 Agent Workflow
 
 After making code changes, always invoke the appropriate agents **in this order** before committing:
@@ -73,6 +102,7 @@ Run the `docs` agent to review and update any READMEs affected by your changes.
 | `backend/db/**`            | `backend-feature` — verify schema, migration, and repository conventions |
 | `backend/features/mail/**` | `nodemailer` — verify email integration follows the opt-in SMTP pattern  |
 | `e2e/**`                   | `e2e-playwright` — verify tests follow project Playwright conventions    |
+| Significant decisions      | `adr` — write an ADR or technical doc in `docs/`                         |
 
 ### 3. Always last — quality gate
 

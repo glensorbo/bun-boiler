@@ -55,5 +55,5 @@
     "builtin": true
   },
   "globals": {},
-  "ignorePatterns": ["/dist", "build.ts"]
+  "ignorePatterns": ["/dist", "build.ts", "quartz.docs.config.ts"]
 }
