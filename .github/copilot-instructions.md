@@ -64,17 +64,15 @@ After making code changes, always invoke the appropriate agents **in this order*
 
 Run the `docs` agent to review and update any READMEs affected by your changes.
 
-- Root `README.md` → advertisement style (why, not how)
-- Sub-level READMEs → reference style (what, rules, tables)
-
 ### 2. Conditionally — specialised agents
 
-| Changed files   | Run agent                                                                |
-| --------------- | ------------------------------------------------------------------------ |
-| `frontend/**`   | `openpanel` — verify analytics integration is documented and correct     |
-| `backend/**`    | `otel` — verify telemetry instrumentation and docs are up to date        |
-| `backend/db/**` | `backend-feature` — verify schema, migration, and repository conventions |
-| `e2e/**`        | `e2e-playwright` — verify tests follow project Playwright conventions    |
+| Changed files              | Run agent                                                                |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `frontend/**`              | `openpanel` — verify analytics integration is documented and correct     |
+| `backend/**`               | `otel` — verify telemetry instrumentation and docs are up to date        |
+| `backend/db/**`            | `backend-feature` — verify schema, migration, and repository conventions |
+| `backend/features/mail/**` | `nodemailer` — verify email integration follows the opt-in SMTP pattern  |
+| `e2e/**`                   | `e2e-playwright` — verify tests follow project Playwright conventions    |
 
 ### 3. Always last — quality gate
 
