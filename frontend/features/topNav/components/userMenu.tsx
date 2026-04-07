@@ -1,3 +1,4 @@
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -5,16 +6,18 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { decodeJwt } from 'jose';
 import React, { useState } from 'react';
@@ -24,6 +27,11 @@ import { useLogout } from '../hooks/useLogout';
 import { ChangePasswordModal } from './changePasswordModal';
 import { SetPasswordModal } from './setPasswordModal';
 import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+import {
+  selectUserEmail,
+  selectUserName,
+  selectUserRole,
+} from '@frontend/features/login/state/authSlice';
 import { setThemeMode } from '@frontend/redux/slices/themeSlice';
 
 import type { AppDispatch, RootState } from '@frontend/redux/store';
@@ -44,11 +52,21 @@ const THEME_OPTIONS: {
   { value: 'dark', label: 'Dark', icon: <DarkModeIcon fontSize="small" /> },
 ];
 
+const dicebearUrl = (email: string) =>
+  `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(email)}`;
+
+const ROLE_CHIP_COLORS: Record<string, 'error' | 'default'> = {
+  admin: 'error',
+};
+
 export const UserMenu = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { logout } = useLogout();
   const themeMode = useSelector((state: RootState) => state.theme.mode);
   const token = useSelector((state: RootState) => state.auth.token);
+  const displayName = useSelector(selectUserName);
+  const email = useSelector(selectUserEmail);
+  const role = useSelector(selectUserRole);
   const { trackEvent } = useAnalytics();
 
   const isSignupToken =
@@ -64,19 +82,21 @@ export const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [setPasswordOpen, setSetPasswordOpen] = useState(false);
-  const [themeAccordionOpen, setThemeAccordionOpen] = useState(false);
 
   const menuOpen = Boolean(anchorEl);
 
   const openMenu = (e: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(e.currentTarget);
 
-  const closeMenu = () => {
-    setAnchorEl(null);
-    setThemeAccordionOpen(false);
-  };
+  const closeMenu = () => setAnchorEl(null);
 
-  const handleThemeModeSelect = (mode: ThemeMode) => {
+  const handleThemeModeSelect = (
+    _: React.MouseEvent<HTMLElement>,
+    mode: ThemeMode | null,
+  ) => {
+    if (!mode) {
+      return;
+    }
     trackEvent('theme_changed', { mode });
     dispatch(setThemeMode(mode));
   };
@@ -95,11 +115,52 @@ export const UserMenu = () => {
     logout();
   };
 
+  const avatarSrc = email ? dicebearUrl(email) : undefined;
+
   return (
     <>
-      <IconButton onClick={openMenu} aria-label="Open user menu" size="small">
-        <Avatar sx={{ width: 34, height: 34 }} />
-      </IconButton>
+      {/* ── Pill trigger button ── */}
+      <ButtonBase
+        onClick={openMenu}
+        aria-label="Open user menu"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          px: 1.5,
+          py: 0.75,
+          borderRadius: 99,
+          border: '1px solid',
+          borderColor: 'divider',
+          backdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(255,255,255,0.06)',
+          transition: 'background-color 0.2s',
+          '&:hover': { backgroundColor: 'rgba(255,255,255,0.12)' },
+        }}
+      >
+        <Avatar src={avatarSrc} sx={{ width: 28, height: 28 }}>
+          <AccountCircleIcon fontSize="small" />
+        </Avatar>
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 500,
+            display: { xs: 'none', sm: 'block' },
+            maxWidth: 120,
+          }}
+          noWrap
+        >
+          {displayName ?? email ?? ''}
+        </Typography>
+        <ExpandMoreIcon
+          fontSize="small"
+          sx={{
+            color: 'text.secondary',
+            transition: 'transform 0.2s',
+            transform: menuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          }}
+        />
+      </ButtonBase>
 
       <Menu
         anchorEl={anchorEl}
@@ -107,48 +168,77 @@ export const UserMenu = () => {
         onClose={closeMenu}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        slotProps={{ paper: { sx: { minWidth: 230, mt: 0.5 } } }}
+        slotProps={{ paper: { sx: { minWidth: 260, mt: 0.5 } } }}
       >
-        {/* ── Theme accordion ── */}
-        <Accordion
-          disableGutters
-          elevation={0}
-          expanded={themeAccordionOpen}
-          onChange={(_, expanded) => setThemeAccordionOpen(expanded)}
+        {/* ── Profile header ── */}
+        <Box
           sx={{
-            '&::before': { display: 'none' },
-            background: 'transparent',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1.5,
+            px: 2,
+            py: 1.5,
           }}
         >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            sx={{
-              px: 2,
-              minHeight: 42,
-              '& .MuiAccordionSummary-content': { my: 0 },
-            }}
-          >
-            <Typography variant="body2">Change theme</Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ p: 0 }}>
-            {THEME_OPTIONS.map(({ value, label, icon }) => (
-              <MenuItem
-                key={value}
-                selected={themeMode === value}
-                onClick={() => handleThemeModeSelect(value)}
-                sx={{ pl: 3 }}
+          <Avatar src={avatarSrc} sx={{ width: 44, height: 44 }}>
+            <AccountCircleIcon />
+          </Avatar>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" sx={{ fontWeight: 700 }} noWrap>
+              {displayName ?? email ?? ''}
+            </Typography>
+            {email && (
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: 'block' }}
+                noWrap
               >
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText
-                  primary={label}
-                  slotProps={{ primary: { variant: 'body2' } }}
-                />
-              </MenuItem>
-            ))}
-          </AccordionDetails>
-        </Accordion>
+                {email}
+              </Typography>
+            )}
+            {role && (
+              <Chip
+                label={role}
+                size="small"
+                color={ROLE_CHIP_COLORS[role] ?? 'default'}
+                sx={{ mt: 0.5, height: 18, fontSize: '0.65rem' }}
+              />
+            )}
+          </Box>
+        </Box>
 
-        {/* ── Password action (context-sensitive) ── */}
+        <Divider />
+
+        {/* ── Inline theme toggle ── */}
+        <Box sx={{ px: 2, py: 1.25 }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: 'block', mb: 0.75 }}
+          >
+            Theme
+          </Typography>
+          <ToggleButtonGroup
+            value={themeMode}
+            exclusive
+            onChange={handleThemeModeSelect}
+            size="small"
+            fullWidth
+          >
+            {THEME_OPTIONS.map(({ value, label, icon }) => (
+              <Tooltip key={value} title={label}>
+                <ToggleButton value={value} aria-label={label}>
+                  {icon}
+                </ToggleButton>
+              </Tooltip>
+            ))}
+          </ToggleButtonGroup>
+        </Box>
+
+        <Divider />
+
+        {/* ── Password action ── */}
         <MenuItem onClick={handlePasswordAction}>
           <ListItemIcon>
             {isSignupToken ? (
@@ -165,13 +255,13 @@ export const UserMenu = () => {
 
         <Divider />
 
-        {/* ── Logout ── */}
-        <MenuItem onClick={handleLogout}>
+        {/* ── Sign out (red-tinted) ── */}
+        <MenuItem onClick={handleLogout} sx={{ color: 'error.main' }}>
           <ListItemIcon>
-            <LogoutIcon fontSize="small" />
+            <LogoutIcon fontSize="small" color="error" />
           </ListItemIcon>
           <ListItemText
-            primary="Logout"
+            primary="Sign out"
             slotProps={{ primary: { variant: 'body2' } }}
           />
         </MenuItem>

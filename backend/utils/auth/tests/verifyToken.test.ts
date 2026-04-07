@@ -20,34 +20,50 @@ describe('verifyToken', () => {
   });
 
   test('returns typed payload for a valid signup token', async () => {
-    const token = await signSignupToken('user-1', 'test@example.com');
+    const token = await signSignupToken(
+      'user-1',
+      'test@example.com',
+      'Test User',
+    );
     const result = await verifyToken(token);
     expect(result.data).not.toBeNull();
   });
 
   test('returns typed payload for a valid auth token', async () => {
-    const token = await signAuthToken('user-1', 'test@example.com', 'user');
+    const token = await signAuthToken(
+      'user-1',
+      'test@example.com',
+      'user',
+      'Test User',
+    );
     const result = await verifyToken(token);
     expect(result.data).not.toBeNull();
   });
 
-  test('returned payload has correct sub, email, tokenType for signup', async () => {
-    const token = await signSignupToken('user-7', 'verify@example.com');
+  test('returned payload has correct sub, email, name, tokenType for signup', async () => {
+    const token = await signSignupToken(
+      'user-7',
+      'verify@example.com',
+      'Verify User',
+    );
     const result = await verifyToken(token);
     expect(result.data?.sub).toBe('user-7');
     expect(result.data?.email).toBe('verify@example.com');
+    expect(result.data?.name).toBe('Verify User');
     expect(result.data?.tokenType).toBe('signup');
   });
 
-  test('returned payload has correct sub, email, tokenType for auth', async () => {
+  test('returned payload has correct sub, email, name, tokenType for auth', async () => {
     const token = await signAuthToken(
       'user-8',
       'auth-verify@example.com',
       'admin',
+      'Auth Admin',
     );
     const result = await verifyToken(token);
     expect(result.data?.sub).toBe('user-8');
     expect(result.data?.email).toBe('auth-verify@example.com');
+    expect(result.data?.name).toBe('Auth Admin');
     expect(result.data?.tokenType).toBe('auth');
   });
 });
