@@ -20,7 +20,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
   >
     <Box sx={{ width: 'min(100%, 560px)' }}>
       <SurfaceCard tone="accent" title="Something went wrong 😕">
-        <Stack spacing={2} alignItems="flex-start">
+        <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
           <Typography variant="body2" color="text.secondary">
             {(error as Error).message}
           </Typography>

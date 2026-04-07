@@ -21,9 +21,7 @@ export const ProgressList = ({ items }: ProgressListProps) => (
       <Stack key={label} spacing={0.75}>
         <Stack
           direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          gap={2}
+          sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 2 }}
         >
           <Typography variant="body2">{label}</Typography>
           <Typography variant="body2" color="text.secondary">

@@ -22,8 +22,8 @@ export const EmptyState = ({
 }: EmptyStateProps) => (
   <Stack
     spacing={1.5}
-    alignItems="flex-start"
     sx={{
+      alignItems: 'flex-start',
       borderRadius: 4,
       border: '1px dashed',
       borderColor: 'border.strong',

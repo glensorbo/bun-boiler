@@ -66,7 +66,7 @@ export const ListSkeleton = ({ rows = 5 }: { rows?: number }) => (
         }}
       >
         <MuiSkeleton variant="circular" width={40} height={40} />
-        <Stack flex={1} spacing={0.5}>
+        <Stack sx={{ flex: 1 }} spacing={0.5}>
           <MuiSkeleton variant="text" width="60%" height={20} />
           <MuiSkeleton variant="text" width="40%" height={16} />
         </Stack>

@@ -78,7 +78,7 @@ export const HomePage = () => (
     title="Build beautiful product dashboards from day one"
     description="This template now ships with a richer visual language, reusable dashboard primitives, and a polished shell so future features can plug into a system instead of starting from scratch."
     actions={
-      <Stack direction="row" gap={1}>
+      <Stack direction="row" sx={{ gap: 1 }}>
         <Button variant="contained">Create workspace</Button>
         <Button variant="outlined">View patterns</Button>
       </Stack>
@@ -103,8 +103,7 @@ export const HomePage = () => (
         <Stack spacing={3}>
           <Stack
             direction={{ xs: 'column', md: 'row' }}
-            gap={3}
-            alignItems={{ md: 'center' }}
+            sx={{ gap: 3, alignItems: { md: 'center' } }}
           >
             <Box sx={{ flex: 1 }}>
               <Typography variant="h4" sx={{ maxWidth: 560 }}>
@@ -283,7 +282,7 @@ export const HomePage = () => (
             The next feature teams should focus on reusable table patterns,
             detail side panels, and dashboard filters.
           </Typography>
-          <Stack direction="row" gap={1} flexWrap="wrap">
+          <Stack direction="row" sx={{ gap: 1, flexWrap: 'wrap' }}>
             <Chip icon={<AutoGraphIcon />} label="Charts" variant="outlined" />
             <Chip
               icon={<PeopleAltIcon />}
