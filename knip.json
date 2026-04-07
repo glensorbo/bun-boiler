@@ -10,5 +10,6 @@
     "frontend/shared/hooks/*.ts"
   ],
   "project": ["backend/**/*.ts", "frontend/**/*.{ts,tsx}"],
-  "ignoreDependencies": ["@babel/preset-react", "@babel/preset-typescript"]
+  "ignoreDependencies": ["@babel/preset-react", "@babel/preset-typescript"],
+  "ignoreBinaries": ["gh"]
 }
