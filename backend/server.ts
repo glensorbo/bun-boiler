@@ -3,6 +3,7 @@ import { serve } from 'bun';
 import index from '../public/index.html';
 import { pingDb } from './db/client';
 import { authRoutes } from './routes/authRoutes';
+import { integrationsRoutes } from './routes/integrationsRoutes';
 import { telemetryRoutes } from './routes/telemetryRoutes';
 import { userRoutes } from './routes/userRoutes';
 import { wsRoutes } from './routes/wsRoutes';
@@ -30,6 +31,7 @@ const server = serve({
 
     ...userRoutes,
     ...authRoutes,
+    ...integrationsRoutes,
     ...telemetryRoutes,
     ...wsRoutes,
 

@@ -157,6 +157,18 @@ logger.debug('Cache hit', { key: 'user:42' });
 
 ---
 
+## Runtime Check
+
+```ts
+import { isTelemetryEnabled } from '@backend/features/telemetry';
+
+if (isTelemetryEnabled()) { ... }
+```
+
+Returns `true` after `initTelemetry()` has registered providers (i.e. `OTEL_ENDPOINT` is set), `false` otherwise. Safe to call at any time.
+
+---
+
 ## Adding Custom Spans
 
 Span creation helpers must live in `backend/features/telemetry/index.ts` and be exported from `@backend/features/telemetry`.

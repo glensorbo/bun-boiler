@@ -1,5 +1,6 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import ExtensionIcon from '@mui/icons-material/Extension';
 import InsightsIcon from '@mui/icons-material/Insights';
 import LayersIcon from '@mui/icons-material/Layers';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -16,14 +17,24 @@ import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
 
+import { selectUserRole } from '@frontend/features/login/state/authSlice';
 import { DRAWER_WIDTH } from '@frontend/layout/constants';
 
 const navItems = [
   { label: 'Overview', icon: <DashboardIcon fontSize="small" />, to: '/' },
   { label: 'Insights', icon: <InsightsIcon fontSize="small" />, to: '/' },
   { label: 'Foundations', icon: <LayersIcon fontSize="small" />, to: '/' },
+] as const;
+
+const adminNavItems = [
+  {
+    label: 'Integrations',
+    icon: <ExtensionIcon fontSize="small" />,
+    to: '/integrations',
+  },
 ] as const;
 
 interface LeftNavProps {
@@ -35,6 +46,7 @@ const LeftNavContent = () => {
   const location = useLocation();
   const items = useMemo(() => navItems, []);
   const theme = useTheme();
+  const userRole = useSelector(selectUserRole);
 
   return (
     <Stack sx={{ height: '100%', p: 2, gap: 2 }}>
@@ -103,6 +115,43 @@ const LeftNavContent = () => {
           ))}
         </List>
       </Box>
+
+      <Divider sx={{ borderColor: 'border.subtle' }} />
+
+      {userRole === 'admin' ? (
+        <Box>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: 'sidebar.muted',
+              px: 1.5,
+              mb: 1,
+              textTransform: 'uppercase',
+            }}
+          >
+            Admin
+          </Typography>
+          <List sx={{ display: 'grid', gap: 0.75 }}>
+            {adminNavItems.map((item) => (
+              <ListItem key={item.label} disablePadding>
+                <ListItemButton
+                  component={Link}
+                  to={item.to}
+                  selected={location.pathname === item.to}
+                >
+                  <ListItemIcon sx={{ minWidth: 34, color: 'inherit' }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.label}
+                    slotProps={{ primary: { sx: { fontWeight: 600 } } }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      ) : null}
 
       <Divider sx={{ borderColor: 'border.subtle' }} />
 

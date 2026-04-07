@@ -65,6 +65,15 @@ const authApi = baseApi.injectEndpoints({
       transformResponse: (response: ApiSuccessResponse<{ message: string }>) =>
         response.data,
     }),
+
+    refreshToken: build.mutation<{ token: string }, void>({
+      query: () => ({
+        url: 'auth/refresh',
+        method: 'POST',
+      }),
+      transformResponse: (response: ApiSuccessResponse<{ token: string }>) =>
+        response.data,
+    }),
   }),
 });
 
@@ -73,4 +82,5 @@ export const {
   useLogoutMutation,
   useSetPasswordMutation,
   useChangePasswordMutation,
+  useRefreshTokenMutation,
 } = authApi;

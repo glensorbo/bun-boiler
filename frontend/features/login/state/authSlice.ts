@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { loadSliceState } from '@frontend/redux/middleware/localStorageMiddleware';
 
+import type { UserRole } from '@backend/types/appJwtPayload';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
@@ -34,3 +35,19 @@ export const { setToken, clearToken, setRememberedEmail } = authSlice.actions;
 
 export const selectIsAuthenticated = (state: { auth: AuthState }) =>
   state.auth.token !== null;
+
+export const selectUserRole = (state: { auth: AuthState }): UserRole | null => {
+  if (!state.auth.token) {
+    return null;
+  }
+  try {
+    const payload = JSON.parse(
+      atob(
+        state.auth.token.split('.')[1]!.replace(/-/g, '+').replace(/_/g, '/'),
+      ),
+    ) as { role: UserRole };
+    return payload.role;
+  } catch {
+    return null;
+  }
+};
