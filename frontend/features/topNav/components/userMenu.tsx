@@ -152,15 +152,6 @@ export const UserMenu = () => {
         >
           {displayName ?? email ?? ''}
         </Typography>
-        {role && (
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ display: { xs: 'none', md: 'block' } }}
-          >
-            {role}
-          </Typography>
-        )}
         <ExpandMoreIcon
           fontSize="small"
           sx={{
