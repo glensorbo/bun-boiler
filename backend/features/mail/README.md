@@ -68,6 +68,8 @@ SMTP_SECURE=false
 
 ## Usage
 
+### `sendMail`
+
 ```ts
 import { sendMail } from '@backend/mail';
 
@@ -81,8 +83,24 @@ await sendMail({
 
 `sendMail` is always safe to call — if `SMTP_HOST` is not configured it returns immediately without error.
 
+- `sendMail` throws `Error('sendMail: subject is required')` if `subject` is falsy at runtime.
+- `sendMail` throws `Error('sendMail: at least one of html or text is required')` if both `html` and `text` are absent.
+- `sendMail` logs a `logger.warn` with the rejected addresses if the SMTP server rejects any recipients (partial send). The call does not throw in that case.
+
+### `checkMailHealth`
+
+```ts
+import { checkMailHealth } from '@backend/features/mail';
+
+const ok = await checkMailHealth(); // false when SMTP_HOST is not set
+```
+
+Returns `true` if the transporter can reach the SMTP server, `false` if mail is disabled or the probe fails. Times out after **3 s** and returns `false` on timeout — safe to call from health-check endpoints.
+
 ---
 
 ## Initialisation Order
 
 `initMail()` **must be called after `initTelemetry()`**, so the logger is available when it logs the startup message. It is called in `backend/server.ts` immediately after `initTelemetry()`.
+
+`initMail()` fires a `transporter.verify()` call asynchronously on startup. If verification fails (e.g. wrong host, bad credentials), a `logger.warn` is logged but the server continues to start — SMTP misconfiguration is non-fatal.

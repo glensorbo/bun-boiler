@@ -6,8 +6,9 @@ The controller layer is the HTTP boundary of the application. Controllers receiv
 
 ```
 controllers/
-├── userController.ts   # GET /api/user, GET /api/user/:id
-├── authController.ts   # POST /api/auth/login, /create-user, /set-password, /refresh, /logout
+├── userController.ts          # GET /api/user, GET /api/user/:id
+├── authController.ts          # POST /api/auth/login, /create-user, /set-password, /refresh, /logout
+├── integrationsController.ts  # GET /api/integrations, POST /api/integrations/mail/test
 └── tests/
     ├── userController.test.ts
     └── authController.test.ts
@@ -72,6 +73,31 @@ Always use the helpers from `@backend/utils/response/` — never construct `Resp
 | `validationErrorResponse(msg, errors[])` | 400    | Input validation failed                 |
 | `serviceErrorResponse(errors[])`         | varies | Maps service-layer `AppError[]` to HTTP |
 | `unauthorizedError(msg, details?)`       | 401    | Auth check failed                       |
+
+## Integrations Controller
+
+`getStatus()` is **async** and runs live health checks on every call — results are not cached. Each probe applies a **3 s timeout** and resolves to one of three statuses.
+
+```ts
+type IntegrationStatus = 'disabled' | 'healthy' | 'degraded';
+
+type Integration = {
+  id: string;
+  name: string;
+  description: string;
+  status: IntegrationStatus; // not `enabled: boolean`
+  config: Record<string, string> | null;
+};
+```
+
+| Integration | `'disabled'` when                        | `'degraded'` when         |
+| ----------- | ---------------------------------------- | ------------------------- |
+| `smtp`      | `SMTP_HOST` not set                      | `checkMailHealth()` fails |
+| `otel`      | `OTEL_ENDPOINT` not set                  | endpoint unreachable      |
+| `openpanel` | `BUN_PUBLIC_OPENPANEL_CLIENT_ID` not set | API unreachable           |
+| `websocket` | never                                    | never                     |
+
+The `websocket` integration is always `'healthy'`; its `config.connectedClients` reflects the live count via `getConnectedClientCount()`.
 
 ## 🧪 Testing
 

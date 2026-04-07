@@ -7,7 +7,8 @@
     "backend/ws/*.ts",
     "frontend/shared/components/skeleton.tsx",
     "frontend/shared/services/*.ts",
-    "frontend/shared/hooks/*.ts"
+    "frontend/shared/hooks/*.ts",
+    "frontend/features/websocket/hooks/*.ts"
   ],
   "project": ["backend/**/*.ts", "frontend/**/*.{ts,tsx}"],
   "ignoreDependencies": ["@babel/preset-react", "@babel/preset-typescript"],

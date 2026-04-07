@@ -4,11 +4,12 @@ RTK Query API definitions. One file per backend controller.
 
 ## Structure
 
-| File          | Endpoints                                                   | Exported hooks                                    |
-| ------------- | ----------------------------------------------------------- | ------------------------------------------------- |
-| `baseApi.ts`  | —                                                           | —                                                 |
-| `authApi.ts`  | `POST /api/auth/create-user`, `POST /api/auth/set-password` | `useCreateUserMutation`, `useSetPasswordMutation` |
-| `usersApi.ts` | `GET /api/user`, `GET /api/user/:id`                        | `useGetUsersQuery`, `useGetUserByIdQuery`         |
+| File                 | Endpoints                                                   | Exported hooks                                        |
+| -------------------- | ----------------------------------------------------------- | ----------------------------------------------------- |
+| `baseApi.ts`         | —                                                           | —                                                     |
+| `authApi.ts`         | `POST /api/auth/create-user`, `POST /api/auth/set-password` | `useCreateUserMutation`, `useSetPasswordMutation`     |
+| `usersApi.ts`        | `GET /api/user`, `GET /api/user/:id`                        | `useGetUsersQuery`, `useGetUserByIdQuery`             |
+| `integrationsApi.ts` | `GET /api/integrations`, `POST /api/integrations/mail/test` | `useGetIntegrationsQuery`, `useSendTestEmailMutation` |
 
 ## Architecture
 

@@ -3,13 +3,20 @@ import { verifyToken } from '@backend/utils/auth';
 
 import type { Server, ServerWebSocket } from 'bun';
 
+export type WsMessage<T = unknown> = {
+  type: string;
+  payload?: T;
+};
+
 type WsData = {
   userId: string;
 };
 
 const clients = new Set<ServerWebSocket<WsData>>();
 
-export function broadcast(message: unknown): void {
+export const getConnectedClientCount = (): number => clients.size;
+
+export function broadcast<T = unknown>(message: WsMessage<T>): void {
   const msg = JSON.stringify(message);
   for (const client of clients) {
     client.send(msg);

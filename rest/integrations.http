@@ -1,0 +1,14 @@
+### Get Integration Status
+# Returns the status and config of all opt-in integrations (SMTP, OpenTelemetry, OpenPanel).
+# Requires a valid Bearer JWT (admin role) in Authorization header.
+GET {{BASE_URL}}/api/integrations
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+### Send Test Email
+# Sends a test email to the authenticated admin's email address.
+# Requires SMTP to be enabled (SMTP_HOST env var must be set).
+# Requires a valid Bearer JWT (admin role) in Authorization header.
+POST {{BASE_URL}}/api/integrations/mail/test
+Authorization: Bearer {{JWT_TOKEN}}
