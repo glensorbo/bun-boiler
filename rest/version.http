@@ -1,0 +1,2 @@
+### GET /api/version — public, no auth required
+GET {{BASE_URL}}/api/version

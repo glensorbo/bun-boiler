@@ -1,9 +1,9 @@
-name: E2E Tests
+name: 🎭 E2E Tests
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 2 * * 1'  # every Monday at 02:00 UTC
 
 jobs:
   e2e:

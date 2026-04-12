@@ -1,6 +1,7 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import { BarChart } from '@mui/x-charts/BarChart';
+
+import type { Theme } from '@mui/material/styles';
 
 interface MiniTrendProps {
   points: number[];
@@ -9,50 +10,50 @@ interface MiniTrendProps {
   labels?: string[];
 }
 
+const resolveColor = (color: string | undefined, theme: Theme): string => {
+  if (!color) {
+    return theme.palette.primary.main;
+  }
+  const [palette, variant] = color.split('.');
+  if (palette && variant) {
+    const entry = theme.palette[palette as keyof typeof theme.palette];
+    if (entry && typeof entry === 'object' && variant in entry) {
+      return (entry as Record<string, string>)[variant] ?? color;
+    }
+  }
+  return color;
+};
+
 export const MiniTrend = ({
   points,
   height = 132,
-  color = 'primary.main',
+  color,
   labels,
 }: MiniTrendProps) => {
-  const max = Math.max(...points, 1);
+  const theme = useTheme();
+  const resolvedColor = resolveColor(color, theme);
 
   return (
-    <Stack spacing={1.5}>
-      <Stack direction="row" sx={{ alignItems: 'end', gap: 1, height }}>
-        {points.map((point, index) => (
-          <Box
-            key={`${point}-${index}`}
-            sx={{ flex: 1, height: '100%', display: 'flex', alignItems: 'end' }}
-          >
-            <Box
-              data-slot="mini-trend-bar"
-              sx={{
-                width: '100%',
-                height: `${(point / max) * 100}%`,
-                minHeight: 14,
-                borderRadius: 999,
-                backgroundColor: color,
-                opacity: 0.32 + index / Math.max(points.length * 1.5, 1),
-              }}
-            />
-          </Box>
-        ))}
-      </Stack>
-      {labels?.length ? (
-        <Stack direction="row" sx={{ gap: 1 }}>
-          {labels.map((label) => (
-            <Typography
-              key={label}
-              variant="caption"
-              color="text.secondary"
-              sx={{ flex: 1 }}
-            >
-              {label}
-            </Typography>
-          ))}
-        </Stack>
-      ) : null}
-    </Stack>
+    <BarChart
+      series={[{ data: points, color: resolvedColor }]}
+      xAxis={[
+        {
+          data: labels ?? points.map((_, i) => String(i + 1)),
+          scaleType: 'band',
+          disableLine: true,
+          disableTicks: true,
+          tickLabelStyle: labels ? { fontSize: 11 } : { display: 'none' },
+        },
+      ]}
+      yAxis={[
+        {
+          disableLine: true,
+          disableTicks: true,
+          tickLabelStyle: { display: 'none' },
+        },
+      ]}
+      height={height}
+      margin={{ top: 4, bottom: labels ? 28 : 4, left: 4, right: 4 }}
+    />
   );
 };

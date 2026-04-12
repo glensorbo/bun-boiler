@@ -10,6 +10,7 @@ import { NotFoundPage } from './pages/notFoundPage';
 import { ProtectedRoute } from './shared/components/protectedRoute';
 
 const IntegrationsPage = lazy(() => import('./pages/integrationsPage'));
+const UsersPage = lazy(() => import('./pages/usersPage'));
 
 /**
  * Application router.
@@ -31,6 +32,14 @@ export const AppRouter = () => (
               element={
                 <Suspense fallback={null}>
                   <IntegrationsPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <Suspense fallback={null}>
+                  <UsersPage />
                 </Suspense>
               }
             />

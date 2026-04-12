@@ -66,8 +66,12 @@ declare module 'bun' {
     BUN_PUBLIC_OPENPANEL_API_URL?: string; // e.g. http://localhost:3001 for a self-hosted instance
 
     // Frontend OpenTelemetry — optional, only active when BUN_PUBLIC_OTEL_SERVICE_NAME is set
-    // BUN_PUBLIC_ prefix exposes this to frontend code at build time
+    // BUN_PUBLIC_ prefix exposes these to frontend code at build time
     BUN_PUBLIC_OTEL_SERVICE_NAME?: string; // e.g. "bun-boiler-frontend"
+
+    // App version and environment — injected by CI before deploy
+    BUN_PUBLIC_APP_VERSION?: string; // e.g. "1.2.3" or "dev"
+    BUN_PUBLIC_APP_ENV?: string; // e.g. "dev" | "test" | "prod"
 
     // SMTP Mail — optional, only active when SMTP_HOST is set
     SMTP_HOST?: string; // e.g. smtp.example.com
@@ -94,6 +98,10 @@ interface ImportMetaEnv {
 
   // Frontend OpenTelemetry — mirrors the Bun.env declarations above
   BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
+
+  // App version and environment — mirrors the Bun.env declarations above
+  BUN_PUBLIC_APP_VERSION?: string;
+  BUN_PUBLIC_APP_ENV?: string;
 }
 
 /**

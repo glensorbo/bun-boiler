@@ -1,22 +1,26 @@
 #!/usr/bin/env bun
 
-// Unset placeholder env vars so gh reads the real token from its keychain/config
+// Bun auto-loads .env which may have a placeholder GH_TOKEN. Unset it first
+// so gh reads the real token from its config, then inject it back for Bun.$.
 const { stdout: tokenRaw } =
   await Bun.$`bash -c 'unset GH_TOKEN GITHUB_TOKEN; gh auth token'`.quiet();
 const ghToken = tokenRaw.toString().trim();
+if (!ghToken) {
+  console.error('❌ Not authenticated with gh. Run `gh auth login` first.');
+  process.exit(1);
+}
 
-// Detect repo from git remote to avoid gh CLI detection failures inside Bun.$
-const { stdout: remoteRaw } = await Bun.$`git remote get-url origin`.quiet();
+// Create a $ shell that has GH_TOKEN injected alongside the full process env.
+const $ = Bun.$.env({ ...process.env, GH_TOKEN: ghToken });
+
+const { stdout: remoteRaw } = await $`git remote get-url origin`.quiet();
 const remote = remoteRaw.toString().trim();
 const repoMatch = remote.match(/github\.com[:/](.+?)(?:\.git)?$/);
-if (!repoMatch) {
-  console.error('❌ Could not detect GitHub repo from git remote.');
+if (!repoMatch?.[1]) {
+  console.error('❌ Could not determine GitHub repo from git remote.');
   process.exit(1);
 }
 const repo = repoMatch[1];
-
-// Scoped shell with the real GH_TOKEN injected
-const $ = Bun.$.env({ ...process.env, GH_TOKEN: ghToken });
 
 const { stdout: tagsRaw } = await $`git tag --sort=-version:refname`.quiet();
 const allTags = tagsRaw.toString().trim().split('\n').filter(Boolean);

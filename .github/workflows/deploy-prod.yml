@@ -9,7 +9,18 @@ jobs:
     name: Trigger Coolify prod deployment
     runs-on: ubuntu-latest
     steps:
+      - name: Set version env vars in Coolify
+        run: |
+          curl -sf -X PATCH "${{ secrets.COOLIFY_API_BASE_URL }}/api/v1/applications/${{ secrets.COOLIFY_PROD_UUID }}/envs" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"key\":\"BUN_PUBLIC_APP_VERSION\",\"value\":\"${{ github.ref_name }}\",\"is_literal\":true,\"is_preview\":false}"
+          curl -sf -X PATCH "${{ secrets.COOLIFY_API_BASE_URL }}/api/v1/applications/${{ secrets.COOLIFY_PROD_UUID }}/envs" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"key":"BUN_PUBLIC_APP_ENV","value":"prod","is_literal":true,"is_preview":false}'
+
       - name: Deploy
         run: |
-          curl -X GET "${{ secrets.COOLIFY_URL }}?uuid=${{ secrets.COOLIFY_PROD_UUID }}&force=false" \
+          curl -X GET "${{ secrets.COOLIFY_API_BASE_URL }}/api/v1/deploy?uuid=${{ secrets.COOLIFY_PROD_UUID }}&force=false" \
             -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}"

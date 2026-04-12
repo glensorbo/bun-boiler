@@ -1,0 +1,27 @@
+name: 🔧 Deploy to Dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-dev:
+    name: Trigger Coolify dev deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set version env vars in Coolify
+        run: |
+          curl -sf -X PATCH "${{ secrets.COOLIFY_API_BASE_URL }}/api/v1/applications/${{ secrets.COOLIFY_DEV_UUID }}/envs" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"key\":\"BUN_PUBLIC_APP_VERSION\",\"value\":\"${{ github.run_number }}\",\"is_literal\":true,\"is_preview\":false}"
+          curl -sf -X PATCH "${{ secrets.COOLIFY_API_BASE_URL }}/api/v1/applications/${{ secrets.COOLIFY_DEV_UUID }}/envs" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"key":"BUN_PUBLIC_APP_ENV","value":"dev","is_literal":true,"is_preview":false}'
+
+      - name: Deploy
+        run: |
+          curl -X GET "${{ secrets.COOLIFY_API_BASE_URL }}/api/v1/deploy?uuid=${{ secrets.COOLIFY_DEV_UUID }}&force=false" \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}"

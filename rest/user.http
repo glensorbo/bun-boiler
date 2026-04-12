@@ -12,3 +12,26 @@ Authorization: Bearer {{JWT_TOKEN}}
 # Requires a valid Bearer JWT in Authorization header.
 GET {{BASE_URL}}/api/user/{{USER_ID}}
 Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+### Delete User (admin only)
+DELETE {{BASE_URL}}/api/user/{{USER_ID}}
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+### Update User Role (admin only)
+PATCH {{BASE_URL}}/api/user/{{USER_ID}}/role
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "role": "user"
+}
+
+###
+
+### Reset User Password (admin only)
+POST {{BASE_URL}}/api/user/{{USER_ID}}/reset-password
+Authorization: Bearer {{JWT_TOKEN}}

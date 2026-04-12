@@ -6,6 +6,7 @@ import { authRoutes } from './routes/authRoutes';
 import { integrationsRoutes } from './routes/integrationsRoutes';
 import { telemetryRoutes } from './routes/telemetryRoutes';
 import { userRoutes } from './routes/userRoutes';
+import { versionRoutes } from './routes/versionRoutes';
 import { wsRoutes } from './routes/wsRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
@@ -31,6 +32,7 @@ const server = serve({
 
     ...userRoutes,
     ...authRoutes,
+    ...versionRoutes,
     ...integrationsRoutes,
     ...telemetryRoutes,
     ...wsRoutes,
