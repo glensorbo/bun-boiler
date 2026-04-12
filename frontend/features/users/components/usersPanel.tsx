@@ -100,7 +100,16 @@ export const UsersPanel = () => {
                   return (
                     <TableRow key={user.id} hover>
                       <TableCell>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          sx={{
+                            fontWeight: 500,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                          }}
+                        >
                           {user.name}
                           {isSelf ? (
                             <Chip
