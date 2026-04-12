@@ -40,4 +40,12 @@ export const mockUserRepository = {
   ): Promise<void> => {
     return;
   },
+
+  updateRole: async (_id: string, _role: 'admin' | 'user'): Promise<void> => {
+    return;
+  },
+
+  deleteById: async (_id: string): Promise<void> => {
+    return;
+  },
 };

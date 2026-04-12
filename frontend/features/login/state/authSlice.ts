@@ -57,31 +57,13 @@ export const selectUserRole = (state: { auth: AuthState }): UserRole | null => {
   }
 };
 
-export const selectUserName = (state: { auth: AuthState }): string | null => {
+export const selectUserId = (state: { auth: AuthState }): string | null => {
   if (!state.auth.token) {
     return null;
   }
   try {
     const payload = decodePayload(state.auth.token);
-    if (payload.name) {
-      return payload.name as string;
-    }
-    if (payload.email) {
-      return (payload.email as string).split('@')[0] ?? null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-};
-
-export const selectUserEmail = (state: { auth: AuthState }): string | null => {
-  if (!state.auth.token) {
-    return null;
-  }
-  try {
-    const payload = decodePayload(state.auth.token);
-    return (payload.email as string) ?? null;
+    return (payload.sub as string) ?? null;
   } catch {
     return null;
   }

@@ -4,10 +4,11 @@ import { Outlet } from 'react-router';
 
 import { LeftNav } from '../features/leftNav/components/leftNav';
 import { TopNav } from '../features/topNav/components/topNav';
-import { DRAWER_WIDTH } from './constants';
+import { COLLAPSED_DRAWER_WIDTH, DRAWER_WIDTH } from './constants';
 
 export const PageLayout = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   return (
     <Box
@@ -20,12 +21,17 @@ export const PageLayout = () => {
       <LeftNav
         mobileOpen={mobileNavOpen}
         onCloseNav={() => setMobileNavOpen(false)}
+        collapsed={navCollapsed}
+        onToggleCollapse={() => setNavCollapsed((c) => !c)}
       />
       <Box
         sx={{
           flexGrow: 1,
           minWidth: 0,
-          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+          width: {
+            lg: `calc(100% - ${navCollapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH}px)`,
+          },
+          transition: 'width 0.2s ease',
         }}
       >
         <TopNav onOpenNav={() => setMobileNavOpen(true)} />

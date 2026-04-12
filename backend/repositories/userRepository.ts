@@ -77,4 +77,26 @@ export const userRepository = {
       .set({ password: hashedPassword, updatedAt: dayjs().toISOString() })
       .where(eq(users.id, id));
   },
+
+  /**
+   * Update a user's role
+   * @param id - User ID (UUID)
+   * @param role - New role
+   */
+  async updateRole(id: string, role: 'admin' | 'user'): Promise<void> {
+    const db = getDb();
+    await db
+      .update(users)
+      .set({ role, updatedAt: dayjs().toISOString() })
+      .where(eq(users.id, id));
+  },
+
+  /**
+   * Delete a user by ID
+   * @param id - User ID (UUID)
+   */
+  async deleteById(id: string): Promise<void> {
+    const db = getDb();
+    await db.delete(users).where(eq(users.id, id));
+  },
 };
