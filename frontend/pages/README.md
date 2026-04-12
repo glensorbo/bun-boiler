@@ -5,6 +5,7 @@ Route files that compose features and shared dashboard primitives.
 | File               | Route    | Purpose                                                       |
 | ------------------ | -------- | ------------------------------------------------------------- |
 | `homePage.tsx`     | `/`      | Showcase dashboard and reference composition for future pages |
+| `usersPage.tsx`    | `/users` | Admin user management: list, invite, role change, delete      |
 | `loginPage.tsx`    | `/login` | Authentication entry route                                    |
 | `notFoundPage.tsx` | `*`      | Fallback route for unknown paths                              |
 
