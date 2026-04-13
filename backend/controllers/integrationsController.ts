@@ -1,4 +1,4 @@
-import { checkMailHealth } from '@backend/features/mail';
+import { mailHealthCheck } from '@backend/features/mail/mailHealthCheck';
 import { sendMail } from '@backend/features/mail/sendMail';
 import { userRepository } from '@backend/repositories/userRepository';
 import { notFoundError, successResponse } from '@backend/utils/response';
@@ -18,7 +18,7 @@ type Integration = {
 };
 
 type Deps = {
-  checkMailHealth: () => Promise<boolean>;
+  mailHealthCheck: () => Promise<boolean>;
   sendMail: (options: MailOptions) => Promise<void>;
   userRepository: {
     getById: (id: string) => Promise<{ email: string } | undefined>;
@@ -60,7 +60,7 @@ export const createIntegrationsController = (deps: Deps) => {
     if (!Bun.env.SMTP_HOST) {
       return 'disabled';
     }
-    const ok = await deps.checkMailHealth();
+    const ok = await deps.mailHealthCheck();
     return ok ? 'healthy' : 'degraded';
   };
 
@@ -169,7 +169,7 @@ export const createIntegrationsController = (deps: Deps) => {
 };
 
 export const integrationsController = createIntegrationsController({
-  checkMailHealth,
+  mailHealthCheck: mailHealthCheck,
   sendMail,
   userRepository,
   getConnectedClientCount,

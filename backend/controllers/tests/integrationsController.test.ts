@@ -5,14 +5,14 @@ import { createIntegrationsController } from '@backend/controllers/integrationsC
 import type { MailOptions } from '@backend/features/mail/types/MainOptions';
 
 const makeDeps = (overrides?: {
-  checkMailHealth?: () => Promise<boolean>;
+  mailHealthCheck?: () => Promise<boolean>;
   sendMail?: (options: MailOptions) => Promise<void>;
   userRepository?: {
     getById: (id: string) => Promise<{ email: string } | undefined>;
   };
   getConnectedClientCount?: () => number;
 }) => ({
-  checkMailHealth: overrides?.checkMailHealth ?? (async () => false),
+  mailHealthCheck: overrides?.mailHealthCheck ?? (async () => false),
   sendMail: overrides?.sendMail ?? (async () => {}),
   userRepository: overrides?.userRepository ?? {
     getById: async () => undefined,
@@ -115,10 +115,10 @@ describe('IntegrationsController', () => {
       expect(smtp?.config).toBeNull();
     });
 
-    test('smtp is "healthy" when SMTP_HOST is set and checkMailHealth returns true', async () => {
+    test('smtp is "healthy" when SMTP_HOST is set and mailHealthCheck returns true', async () => {
       Bun.env.SMTP_HOST = 'smtp.example.com';
       const ctrl = createIntegrationsController(
-        makeDeps({ checkMailHealth: async () => true }),
+        makeDeps({ mailHealthCheck: async () => true }),
       );
       const response = await ctrl.getStatus();
       const body = (await response.json()) as {
@@ -128,10 +128,10 @@ describe('IntegrationsController', () => {
       expect(smtp?.status).toBe('healthy');
     });
 
-    test('smtp is "degraded" when SMTP_HOST is set but checkMailHealth returns false', async () => {
+    test('smtp is "degraded" when SMTP_HOST is set but mailHealthCheck returns false', async () => {
       Bun.env.SMTP_HOST = 'smtp.example.com';
       const ctrl = createIntegrationsController(
-        makeDeps({ checkMailHealth: async () => false }),
+        makeDeps({ mailHealthCheck: async () => false }),
       );
       const response = await ctrl.getStatus();
       const body = (await response.json()) as {
