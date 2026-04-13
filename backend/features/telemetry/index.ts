@@ -28,40 +28,10 @@ import {
   ATTR_URL_PATH,
 } from '@opentelemetry/semantic-conventions';
 
-import type { Counter, Histogram } from '@opentelemetry/api';
-import type {
-  AnyValueMap,
-  Logger as OtelLogger,
-} from '@opentelemetry/api-logs';
+import { otelConfig } from './otelConfig';
 
-type LogAttrs = AnyValueMap;
-
-/** Opaque handle returned by startHttpSpan — call finish() when the response is ready. */
-type SpanHandle = {
-  /** Records the response status code, sets the span status, and ends the span. */
-  finish: (statusCode: number) => void;
-};
-
-// ---------------------------------------------------------------------------
-// Internal state — set by initTelemetry()
-// ---------------------------------------------------------------------------
-const SERVICE_NAME = 'bun-boiler';
-
-/** True once initTelemetry() has registered providers. */
-let _enabled = false;
-
-/** OTel logger for structured log shipping. */
-let otelLogger: OtelLogger | null = null;
-
-/** HTTP request duration histogram (ms). Null when OTel is disabled. */
-let _reqDuration: Histogram | null = null;
-
-/** HTTP request count counter. Null when OTel is disabled. */
-let _reqCount: Counter | null = null;
-
-// ---------------------------------------------------------------------------
-// Init
-// ---------------------------------------------------------------------------
+import type { LogAttrs } from './types/LogAttrs';
+import type { SpanHandle } from './types/SpanHandle';
 
 export const initTelemetry = (): void => {
   const endpoint = Bun.env.OTEL_ENDPOINT;
@@ -69,7 +39,7 @@ export const initTelemetry = (): void => {
     return;
   }
 
-  const serviceName = Bun.env.OTEL_SERVICE_NAME ?? SERVICE_NAME;
+  const serviceName = Bun.env.OTEL_SERVICE_NAME ?? otelConfig.serviceName;
 
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: serviceName,
@@ -101,11 +71,14 @@ export const initTelemetry = (): void => {
 
   // Pre-build instruments — cheap to keep around.
   const meter = meterProvider.getMeter(serviceName);
-  _reqDuration = meter.createHistogram('http.server.request.duration', {
-    description: 'Duration of inbound HTTP requests in milliseconds.',
-    unit: 'ms',
-  });
-  _reqCount = meter.createCounter('http.server.request.count', {
+  otelConfig.reqDuration = meter.createHistogram(
+    'http.server.request.duration',
+    {
+      description: 'Duration of inbound HTTP requests in milliseconds.',
+      unit: 'ms',
+    },
+  );
+  otelConfig.reqCount = meter.createCounter('http.server.request.count', {
     description: 'Total number of inbound HTTP requests.',
   });
 
@@ -119,8 +92,8 @@ export const initTelemetry = (): void => {
     ],
   });
 
-  otelLogger = loggerProvider.getLogger(serviceName);
-  _enabled = true;
+  otelConfig.logger = loggerProvider.getLogger(serviceName);
+  otelConfig.enabled = true;
 
   console.log(
     `🔭 OpenTelemetry enabled → ${endpoint} (service: ${serviceName})`,
@@ -152,7 +125,7 @@ export const startHttpSpan = (
   path: string,
   getHeader: (name: string) => string | null,
 ): SpanHandle | null => {
-  if (!_enabled) {
+  if (!otelConfig.enabled) {
     return null;
   }
 
@@ -170,7 +143,7 @@ export const startHttpSpan = (
   const parentCtx = propagation.extract(context.active(), carrier);
 
   const spanName = `${method} ${route}`;
-  const tracer = trace.getTracer(SERVICE_NAME);
+  const tracer = trace.getTracer(otelConfig.serviceName);
 
   const span = tracer.startSpan(
     spanName,
@@ -206,8 +179,8 @@ export const startHttpSpan = (
         [ATTR_HTTP_ROUTE]: route,
         [ATTR_HTTP_RESPONSE_STATUS_CODE]: statusCode,
       };
-      _reqDuration?.record(durationMs, labels);
-      _reqCount?.add(1, labels);
+      otelConfig.reqDuration?.record(durationMs, labels);
+      otelConfig.reqCount?.add(1, labels);
     },
   };
 };
@@ -218,10 +191,10 @@ const emit = (
   message: string,
   attrs?: LogAttrs,
 ): void => {
-  if (!otelLogger) {
+  if (!otelConfig.logger) {
     return;
   }
-  otelLogger.emit({
+  otelConfig.logger.emit({
     severityNumber: severity,
     severityText,
     body: message,
