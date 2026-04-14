@@ -30,11 +30,44 @@ frontend/features/<feature-name>/
 ├── components/   → React components for this feature
 ├── hooks/        → Custom hooks
 ├── logic/        → Pure logic, helpers
-├── state/        → Redux slices specific to this feature
+├── state/        → Redux slices tightly coupled to this feature
+├── types/        → TypeScript types for this feature
 └── tests/        → Unit tests for this feature
 ```
 
 Shared/cross-feature code goes in `frontend/shared/`.
+
+## File & Export Conventions
+
+**One export per file. The filename must match what it exports.**
+
+```
+loginForm.tsx        → exports LoginForm
+useLogin.ts          → exports useLogin
+validateLoginForm.ts → exports validateLoginForm
+loginSchema.ts       → exports loginSchema
+```
+
+- Every file exports exactly **one** thing — a component, hook, function, or constant
+- The file name is always the `camelCase` version of the export name
+- **Always use arrow functions** — never `function` declarations for components or hooks:
+
+```tsx
+// ✅ Arrow function component
+export const LoginForm = () => {
+  return <form>...</form>;
+};
+
+// ✅ Arrow function hook
+export const useLogin = () => {
+  return { submit };
+};
+
+// ❌ Never use function declarations
+export function LoginForm() { ... }
+```
+
+- React class methods (inside a `class`) may still use method syntax — this rule applies to standalone functions and components
 
 ## Environment Variables
 
@@ -68,10 +101,10 @@ Never access server-side env vars from frontend code.
 
 **Always prefer skeleton loaders over spinners for data loading states.**
 
-- Use MUI's `Skeleton` component from `@mui/material/Skeleton` — or the ready-made patterns in `frontend/shared/components/skeleton.tsx`:
-  - `TableSkeleton` — for tabular data
-  - `ListSkeleton` — for vertically stacked lists
-  - `CardSkeleton` — for card grids
+- Use MUI's `Skeleton` component from `@mui/material/Skeleton` — or the ready-made skeleton components in `frontend/shared/components/`:
+  - `tableSkeleton.tsx` (`TableSkeleton`) — for tabular data
+  - `listSkeleton.tsx` (`ListSkeleton`) — for vertically stacked lists
+  - `cardSkeleton.tsx` (`CardSkeleton`) — for card grids
 - Skeleton layouts should **match the shape** of the content they're replacing so the UI doesn't jump on load
 - Button loading states (via MUI's `loading` prop) are still appropriate for form submissions and mutations — skeletons are for data fetches
 

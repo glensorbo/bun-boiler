@@ -1,9 +1,7 @@
 import { describe, test, expect, beforeEach } from 'bun:test';
 
-import {
-  loadSliceState,
-  localStorageMiddleware,
-} from '../localStorageMiddleware';
+import { loadSliceState } from '../loadSliceState';
+import { localStorageMiddleware } from '../localStorageMiddleware';
 
 const STORAGE_KEY = 'redux_state';
 

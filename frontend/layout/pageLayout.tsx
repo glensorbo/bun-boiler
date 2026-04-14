@@ -4,7 +4,8 @@ import { Outlet } from 'react-router';
 
 import { LeftNav } from '../features/leftNav/components/leftNav';
 import { TopNav } from '../features/topNav/components/topNav';
-import { COLLAPSED_DRAWER_WIDTH, DRAWER_WIDTH } from './constants';
+import { COLLAPSED_DRAWER_WIDTH } from './collapsedDrawerWidth';
+import { DRAWER_WIDTH } from './drawerWidth';
 
 export const PageLayout = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);

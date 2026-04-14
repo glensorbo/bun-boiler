@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import { buildTheme } from './theme';
-import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
 
 import type { RootState } from '@frontend/redux/store';
 import type { PaletteMode } from '@mui/material';

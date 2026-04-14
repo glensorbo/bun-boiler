@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
 import { ChangePasswordModal } from './changePasswordModal';
 import { SetPasswordModal } from './setPasswordModal';
-import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
 import { setThemeMode } from '@frontend/redux/slices/themeSlice';
 import { UserAvatar } from '@frontend/shared/components/userAvatar';
 

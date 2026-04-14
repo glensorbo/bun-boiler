@@ -12,7 +12,7 @@ import {
   useSendTestEmailMutation,
 } from '@frontend/redux/api/integrationsApi';
 import { DashboardPage } from '@frontend/shared/components/dashboardPage';
-import { ListSkeleton } from '@frontend/shared/components/skeleton';
+import { ListSkeleton } from '@frontend/shared/components/listSkeleton';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
 
 import type { Integration } from '@frontend/redux/api/integrationsApi';

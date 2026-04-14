@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { setRememberedEmail, setToken } from '../state/authSlice';
 import { clearLoginForm } from '../state/loginFormSlice';
-import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
 import { useLoginMutation } from '@frontend/redux/api/authApi';
 
 import type { LoginFormValues } from '../logic/loginSchema';

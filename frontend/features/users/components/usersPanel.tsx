@@ -28,8 +28,8 @@ import { DeleteUserDialog } from './deleteUserDialog';
 import { InviteUserDialog } from './inviteUserDialog';
 import { SignupLinkDialog } from './signupLinkDialog';
 import { selectUserId } from '@frontend/features/login/state/authSlice';
-import { TableSkeleton } from '@frontend/shared/components/skeleton';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
+import { TableSkeleton } from '@frontend/shared/components/tableSkeleton';
 
 import type { User } from '@backend/types/user';
 

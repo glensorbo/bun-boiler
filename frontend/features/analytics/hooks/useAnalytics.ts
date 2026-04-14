@@ -1,4 +1,4 @@
-import { op } from '@frontend/features/analytics/analyticsProvider';
+import { op } from '../op';
 
 /**
  * Hook for tracking custom analytics events.
