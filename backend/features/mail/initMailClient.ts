@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
+import { logger } from '../telemetry/logger';
 import { mailConfig } from './mailConfig';
-import { logger } from '@backend/features/telemetry';
 
 export const initMailClient = (): void => {
   if (!mailConfig.host) {

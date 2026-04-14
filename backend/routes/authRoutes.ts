@@ -1,7 +1,7 @@
 import { authController } from '@backend/controllers/authController';
 import { withMiddleware } from '@backend/middleware';
 import { authMiddleware } from '@backend/middleware/authMiddleware';
-import { authRateLimit } from '@backend/middleware/rateLimitMiddleware';
+import { authRateLimit } from '@backend/middleware/authRateLimit';
 import { signupTokenMiddleware } from '@backend/middleware/signupTokenMiddleware';
 
 export const authRoutes = {

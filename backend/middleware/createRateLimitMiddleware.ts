@@ -1,6 +1,6 @@
 import { tooManyRequestsError } from '@backend/utils/response';
 
-import type { MiddlewareFn } from '.';
+import type { MiddlewareFn } from './types/MiddlewareFn';
 
 interface RateLimitEntry {
   count: number;
@@ -63,9 +63,3 @@ export const createRateLimitMiddleware = (
     return Promise.resolve(null);
   };
 };
-
-/** 10 requests per minute — applied to public auth endpoints. */
-export const authRateLimit = createRateLimitMiddleware({
-  max: 10,
-  windowMs: 60_000,
-});

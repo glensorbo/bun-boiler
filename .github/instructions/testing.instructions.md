@@ -56,6 +56,7 @@ Frontend tests run in **happy-dom** — no browser needed. `bunfig.toml` preload
 ## File Placement
 
 - Unit tests live **colocated** in a `tests/` subdirectory next to the source file
+- For feature modules (`backend/features/<feature>/`), `tests/` is a sibling to `types/`
 - E2E tests live under `e2e/api/` (API-only, no browser) or `e2e/frontend/` (browser)
 - Use the `e2e-playwright` agent for writing E2E tests
 

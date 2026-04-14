@@ -1,9 +1,4 @@
-export type AppErrorType =
-  | 'not_found'
-  | 'validation'
-  | 'conflict'
-  | 'unauthorized'
-  | 'forbidden';
+import type { AppErrorType } from './appErrorType';
 
 export type AppError = {
   type: AppErrorType;

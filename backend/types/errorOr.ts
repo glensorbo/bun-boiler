@@ -19,10 +19,7 @@
  */
 
 import type { AppError } from './appError';
-
-export type ErrorOr<T> =
-  | { data: T; error: null }
-  | { data: null; error: AppError[] };
+import type { ErrorOr } from './errorOrType';
 
 export function errorOr<T>(data: T): ErrorOr<T>;
 export function errorOr<T>(data: null, errors: AppError[]): ErrorOr<T>;

@@ -10,7 +10,8 @@ afterEach(() => {
   }
 });
 
-import { applyCorsHeaders, corsPreflightResponse } from '../cors';
+import { applyCorsHeaders } from '../cors/applyCorsHeaders';
+import { corsPreflightResponse } from '../cors/corsPreflightResponse';
 
 // Bun's Request constructor treats 'Origin' as a forbidden header and strips it.
 // Both cors utils only call req.headers.get('Origin'), so a minimal stub is enough.

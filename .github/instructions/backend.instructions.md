@@ -83,7 +83,7 @@ The `ApiErrorResponse` shape:
 
 ## Validation
 
-- Use **Zod schemas** in `backend/validation/schemas/` for all request body and param validation
+- Use **Zod schemas** in `backend/features/validation/schemas/` for all request body and param validation — one schema per file
 - Use `validateRequest(schema, body)` for request bodies
 - Use `validateParam(schema, value)` for path parameters
 - Validation belongs in the **controller**, not the service

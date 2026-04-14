@@ -2,9 +2,9 @@ import { mailHealthCheck } from '@backend/features/mail/mailHealthCheck';
 import { sendMail } from '@backend/features/mail/sendMail';
 import { userRepository } from '@backend/repositories/userRepository';
 import { notFoundError, successResponse } from '@backend/utils/response';
-import { getConnectedClientCount } from '@backend/ws/wsServer';
+import { getConnectedClientCount } from '@backend/ws/getConnectedClientCount';
 
-import type { MailOptions } from '@backend/features/mail/types/MainOptions';
+import type { MailOptions } from '@backend/features/mail/types/mailOptions';
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 type IntegrationStatus = 'disabled' | 'healthy' | 'degraded';

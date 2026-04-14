@@ -1,13 +1,4 @@
-import type { Counter, Histogram } from '@opentelemetry/api';
-import type { Logger as OtelLogger } from '@opentelemetry/api-logs';
-
-type OtelConfig = {
-  serviceName: string;
-  enabled: boolean;
-  logger: OtelLogger | null;
-  reqDuration: Histogram | null;
-  reqCount: Counter | null;
-};
+import type { OtelConfig } from './types/OtelConfig';
 
 /** Internal state — set by initTelemetry() **/
 export const otelConfig: OtelConfig = {

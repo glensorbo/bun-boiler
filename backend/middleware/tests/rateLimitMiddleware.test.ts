@@ -1,6 +1,6 @@
 import { describe, test, expect, afterEach } from 'bun:test';
 
-import { createRateLimitMiddleware } from '@backend/middleware/rateLimitMiddleware';
+import { createRateLimitMiddleware } from '@backend/middleware/createRateLimitMiddleware';
 
 import type { BunRequest, Ctx } from '@backend/middleware';
 

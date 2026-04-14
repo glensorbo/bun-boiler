@@ -1,11 +1,11 @@
 import { sendMail } from '@backend/features/mail/sendMail';
-import { logger } from '@backend/features/telemetry';
+import { logger } from '@backend/features/telemetry/logger';
 import { userRepository } from '@backend/repositories/userRepository';
 import { errorOr } from '@backend/types/errorOr';
 import { generatePassphrase, signSignupToken } from '@backend/utils/auth';
 
 import type { userRepository as UserRepositoryType } from '@backend/repositories/userRepository';
-import type { ErrorOr } from '@backend/types/errorOr';
+import type { ErrorOr } from '@backend/types/errorOrType';
 import type { User } from '@backend/types/user';
 
 /**

@@ -1,11 +1,9 @@
 import { describe, test, expect } from 'bun:test';
 
-import {
-  changePasswordSchema,
-  createUserSchema,
-  loginSchema,
-  setPasswordSchema,
-} from '../auth';
+import { changePasswordSchema } from '../changePasswordSchema';
+import { createUserSchema } from '../createUserSchema';
+import { loginSchema } from '../loginSchema';
+import { setPasswordSchema } from '../setPasswordSchema';
 
 describe('createUserSchema', () => {
   test('accepts valid email and name', () => {

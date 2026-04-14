@@ -99,6 +99,24 @@ Returns `true` if the transporter can reach the SMTP server, `false` if mail is 
 
 ---
 
+## Types
+
+| File                   | Exports                                        |
+| ---------------------- | ---------------------------------------------- |
+| `types/MailConfig.ts`  | `MailConfig` — transporter configuration shape |
+| `types/mailOptions.ts` | `MailOptions` — `sendMail()` argument shape    |
+
+---
+
+## Tests
+
+| File                            | Covers              |
+| ------------------------------- | ------------------- |
+| `tests/sendMail.test.ts`        | `sendMail()`        |
+| `tests/mailHealthCheck.test.ts` | `checkMailHealth()` |
+
+---
+
 ## Initialisation Order
 
 `initMail()` **must be called after `initTelemetry()`**, so the logger is available when it logs the startup message. It is called in `backend/server.ts` immediately after `initTelemetry()`.

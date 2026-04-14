@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { loadSliceState } from '@frontend/redux/middleware/localStorageMiddleware';
 
-import type { UserRole } from '@backend/types/appJwtPayload';
+import type { UserRole } from '@backend/types/userRole';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
