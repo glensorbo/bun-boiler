@@ -27,6 +27,15 @@ ENV BUN_PUBLIC_OPENPANEL_API_URL=${BUN_PUBLIC_OPENPANEL_API_URL}
 ENV BUN_PUBLIC_OTEL_SERVICE_NAME=${BUN_PUBLIC_OTEL_SERVICE_NAME}
 ENV BUN_PUBLIC_ENABLE_SIGNUP=${BUN_PUBLIC_ENABLE_SIGNUP}
 
+# Write a .env so Bun sees the vars at build time and substitutes
+# process.env.BUN_PUBLIC_* into the bundle rather than leaving bare
+# `process` references that crash in the browser.
+RUN printf 'BUN_PUBLIC_OPENPANEL_CLIENT_ID=%s\nBUN_PUBLIC_OPENPANEL_API_URL=%s\nBUN_PUBLIC_OTEL_SERVICE_NAME=%s\nBUN_PUBLIC_ENABLE_SIGNUP=%s\n' \
+    "${BUN_PUBLIC_OPENPANEL_CLIENT_ID}" \
+    "${BUN_PUBLIC_OPENPANEL_API_URL}" \
+    "${BUN_PUBLIC_OTEL_SERVICE_NAME}" \
+    "${BUN_PUBLIC_ENABLE_SIGNUP}" > .env
+
 RUN bun run build
 
 # ---- Runner stage ----
