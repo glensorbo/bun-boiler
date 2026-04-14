@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { generatePassphrase } from '../passphrase';
 
 describe('generatePassphrase', () => {

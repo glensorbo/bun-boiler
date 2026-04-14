@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { signSignupToken } from '../signSignupToken';
 import { verifyToken } from '../verifyToken';
 

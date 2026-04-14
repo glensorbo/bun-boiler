@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-
 import { wsManager } from '../wsManager';
-
 import type { WsStatus } from '../wsManager';
 
 export const useWsStatus = (): WsStatus => {

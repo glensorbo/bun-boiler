@@ -5,9 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { toast } from 'react-toastify';
-
 import { useDeleteUserMutation } from '../state/usersApi';
-
 import type { User } from '@backend/types/user';
 
 interface DeleteUserDialogProps {

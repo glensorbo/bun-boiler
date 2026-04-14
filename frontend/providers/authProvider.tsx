@@ -1,9 +1,7 @@
 import { decodeJwt } from 'jose';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { clearToken, setToken } from '@frontend/features/login/state/authSlice';
-
 import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
 import type { ReactNode } from 'react';

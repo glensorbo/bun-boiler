@@ -9,7 +9,6 @@ import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { z } from 'zod/v4';
-
 import { useInviteUserMutation } from '../state/usersApi';
 import { SignupLinkDialog } from './signupLinkDialog';
 

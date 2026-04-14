@@ -15,7 +15,6 @@ import {
   unauthorizedError,
   validationErrorResponse,
 } from '@backend/utils/response';
-
 import type { BunRequest, Ctx } from '@backend/middleware';
 import type { authService as AuthServiceType } from '@backend/services/authService';
 import type { AppJwtPayload } from '@backend/types/appJwtPayload';

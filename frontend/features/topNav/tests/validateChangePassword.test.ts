@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { validateChangePassword } from '../logic/validateChangePassword';
 
 const valid = {

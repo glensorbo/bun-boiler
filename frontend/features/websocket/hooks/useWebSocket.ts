@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-
 import { wsManager } from '../wsManager';
 
 export const useWebSocket = (

@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
-
 import type { Theme } from '@mui/material/styles';
 
 interface MiniTrendProps {

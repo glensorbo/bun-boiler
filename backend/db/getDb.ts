@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-
 import { refreshTokens } from './schemas/refreshTokens';
 import { users } from './schemas/users';
 import { logger } from '@backend/features/telemetry/logger';

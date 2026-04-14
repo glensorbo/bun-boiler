@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { hashRefreshToken } from '../hashRefreshToken';
 
 describe('hashRefreshToken', () => {

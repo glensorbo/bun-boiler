@@ -4,11 +4,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router';
-
 import { LoginForm } from '@frontend/features/login/components/loginForm';
 import { selectIsAuthenticated } from '@frontend/features/login/state/authSlice';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
-
 import type { RootState } from '@frontend/redux/store';
 
 export const LoginPage = () => {

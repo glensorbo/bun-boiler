@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import { Outlet } from 'react-router';
-
 import { LeftNav } from '../features/leftNav/components/leftNav';
 import { TopNav } from '../features/topNav/components/topNav';
 import { COLLAPSED_DRAWER_WIDTH } from './collapsedDrawerWidth';

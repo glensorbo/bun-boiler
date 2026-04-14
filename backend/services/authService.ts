@@ -10,7 +10,6 @@ import {
   signAuthToken,
   signSignupToken,
 } from '@backend/utils/auth';
-
 import type { refreshTokenRepository as RefreshTokenRepositoryType } from '@backend/repositories/refreshTokenRepository';
 import type { userRepository as UserRepositoryType } from '@backend/repositories/userRepository';
 import type { ErrorOr } from '@backend/types/errorOrType';

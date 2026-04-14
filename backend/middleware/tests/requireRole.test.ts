@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { requireRole } from '@backend/middleware/requireRole';
-
 import type { BunRequest, Ctx } from '@backend/middleware';
 import type { AppJwtPayload } from '@backend/types/appJwtPayload';
 

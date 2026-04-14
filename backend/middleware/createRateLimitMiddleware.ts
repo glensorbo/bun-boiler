@@ -1,5 +1,4 @@
 import { tooManyRequestsError } from '@backend/utils/response';
-
 import type { MiddlewareFn } from './types/MiddlewareFn';
 
 interface RateLimitEntry {

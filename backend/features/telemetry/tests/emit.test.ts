@@ -1,5 +1,4 @@
 import { describe, test, expect, afterEach } from 'bun:test';
-
 import { emit } from '../emit';
 import { otelConfig } from '../otelConfig';
 

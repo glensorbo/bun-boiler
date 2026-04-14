@@ -1,5 +1,4 @@
 import { OpenPanel } from '@openpanel/web';
-
 import { config } from '@frontend/config';
 
 const { clientId, apiUrl } = config.openpanel;

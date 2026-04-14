@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { changePasswordSchema } from '../changePasswordSchema';
 import { createUserSchema } from '../createUserSchema';
 import { loginSchema } from '../loginSchema';

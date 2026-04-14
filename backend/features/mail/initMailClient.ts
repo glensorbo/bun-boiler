@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-
 import { logger } from '../telemetry/logger';
 import { mailConfig } from './mailConfig';
 

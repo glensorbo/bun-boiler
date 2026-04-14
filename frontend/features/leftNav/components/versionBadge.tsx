@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography';
-
 import { useGetVersionQuery } from '@frontend/redux/api/versionApi';
 
 export const VersionBadge = () => {

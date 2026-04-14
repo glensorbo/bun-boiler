@@ -25,7 +25,6 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { WebTracerProvider } from '@opentelemetry/sdk-trace-web';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
-
 import { config } from '@frontend/config';
 
 // The OTLP HTTP exporter is imported lazily inside the function to ensure the

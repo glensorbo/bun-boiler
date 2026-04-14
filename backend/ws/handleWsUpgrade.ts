@@ -1,6 +1,5 @@
 import { logger } from '@backend/features/telemetry/logger';
 import { verifyToken } from '@backend/utils/auth';
-
 import type { WsData } from './types/WsData';
 import type { Server } from 'bun';
 

@@ -1,5 +1,4 @@
 import { describe, test, expect, afterEach } from 'bun:test';
-
 import { applyCorsHeaders } from '../applyCorsHeaders';
 import { corsPreflightResponse } from '../corsPreflightResponse';
 

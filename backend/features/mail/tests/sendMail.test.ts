@@ -1,5 +1,4 @@
 import { describe, test, expect, afterEach } from 'bun:test';
-
 import { mailConfig } from '../mailConfig';
 import { sendMail } from '../sendMail';
 

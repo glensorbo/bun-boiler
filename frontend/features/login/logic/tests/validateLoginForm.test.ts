@@ -1,7 +1,5 @@
 import { describe, test, expect, mock } from 'bun:test';
-
 import { validateLoginForm } from '../validateLoginForm';
-
 import type { AppDispatch } from '@frontend/redux/store';
 
 const makeDispatch = () => mock(() => {}) as unknown as AppDispatch;

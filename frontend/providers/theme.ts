@@ -1,5 +1,4 @@
 import { alpha, createTheme, darken, lighten } from '@mui/material/styles';
-
 import type { PaletteMode, Shadows, Theme } from '@mui/material/styles';
 
 const FONT_STACK = [

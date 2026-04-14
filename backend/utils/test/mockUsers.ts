@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-
 import type { NewUser } from '@backend/types/newUser';
 
 export const mockUsers: NewUser[] = [

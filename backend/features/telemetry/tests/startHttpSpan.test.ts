@@ -1,5 +1,4 @@
 import { describe, test, expect, afterEach } from 'bun:test';
-
 import { otelConfig } from '../otelConfig';
 import { startHttpSpan } from '../startHttpSpan';
 

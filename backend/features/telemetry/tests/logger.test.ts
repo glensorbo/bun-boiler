@@ -1,5 +1,4 @@
 import { describe, test, expect, spyOn, afterEach } from 'bun:test';
-
 import { logger } from '../logger';
 import { otelConfig } from '../otelConfig';
 

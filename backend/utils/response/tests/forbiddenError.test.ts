@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { forbiddenError } from '../forbiddenError';
-
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('forbiddenError', () => {

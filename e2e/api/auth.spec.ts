@@ -1,5 +1,4 @@
 import { test as publicTest } from '@playwright/test';
-
 import { test, expect } from '../fixtures';
 import { E2E_EMAIL, E2E_PASSWORD } from '../global-setup';
 

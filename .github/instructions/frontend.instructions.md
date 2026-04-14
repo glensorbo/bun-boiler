@@ -11,6 +11,7 @@ applyTo: 'frontend/**/*'
 - **MUI v6+** for UI components
 - **MUI X Charts** (`@mui/x-charts`) for data visualisation — use this unless a chart type is impossible with it
 - **MUI X Data Grid** (`@mui/x-data-grid`) for tabular data — use this unless the data or UX clearly calls for a simpler/custom table
+- **dayjs** for all date/time formatting — always import from `@frontend/shared/utils/dayjs` (not directly from `dayjs`) to get plugins pre-loaded
 - **React Router** for client-side routing
 - **HMR** in development via `import.meta.hot`
 
@@ -123,6 +124,25 @@ if (isLoading) return <TableSkeleton rows={5} cols={3} />;
 // ❌ Don't use a spinner for data fetches
 if (isLoading) return <CircularProgress />;
 ```
+
+## Date & Time Formatting
+
+Always use the shared dayjs instance — never import `dayjs` directly from the package:
+
+```ts
+import { dayjs } from '@frontend/shared/utils/dayjs';
+```
+
+The shared instance has these plugins pre-loaded: `relativeTime`, `localizedFormat`, `utc`, `timezone`, `duration`, `customParseFormat`.
+
+**Standard formats:**
+
+| Use case    | Format             | Example            |
+| ----------- | ------------------ | ------------------ |
+| Date only   | `YYYY-MM-DD`       | `2024-03-15`       |
+| Date + time | `YYYY-MM-DD HH:mm` | `2024-03-15 14:30` |
+| Time only   | `HH:mm`            | `14:30`            |
+| Relative    | `.fromNow()`       | `2 hours ago`      |
 
 ## Error Boundaries
 

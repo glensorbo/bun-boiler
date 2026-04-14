@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
-
 import { mockUsers } from './mockUsers';
-
 import type { NewUser } from '@backend/types/newUser';
 
 export const mockUserRepository = {

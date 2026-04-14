@@ -20,7 +20,6 @@ import Typography from '@mui/material/Typography';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
-
 import { VersionBadge } from './versionBadge';
 import { selectUserRole } from '@frontend/features/login/state/authSlice';
 import { COLLAPSED_DRAWER_WIDTH } from '@frontend/layout/collapsedDrawerWidth';

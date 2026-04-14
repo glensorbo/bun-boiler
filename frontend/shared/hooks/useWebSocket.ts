@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
 import { wsManager } from '@frontend/shared/services/wsManager';
-
 import type { RootState } from '@frontend/redux/store';
 
 type UseWebSocketResult = {

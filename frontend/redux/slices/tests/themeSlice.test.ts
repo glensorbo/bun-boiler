@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { themeSlice, setThemeMode } from '../themeSlice';
 
 const { reducer } = themeSlice;

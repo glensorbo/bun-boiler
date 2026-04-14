@@ -10,9 +10,7 @@ import {
   ATTR_HTTP_ROUTE,
   ATTR_URL_PATH,
 } from '@opentelemetry/semantic-conventions';
-
 import { otelConfig } from './otelConfig';
-
 import type { SpanHandle } from './types/SpanHandle';
 /**
  * Starts an HTTP server span for an inbound request.

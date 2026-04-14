@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { withMiddleware } from '../index';
-
 import type { BunRequest, Ctx, MiddlewareFn } from '../index';
 
 const makeRequest = (

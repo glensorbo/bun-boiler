@@ -2,7 +2,6 @@
 import { existsSync } from 'fs';
 import { rm } from 'fs/promises';
 import path from 'path';
-
 import type { BunPlugin } from 'bun';
 
 // React Compiler plugin for Bun

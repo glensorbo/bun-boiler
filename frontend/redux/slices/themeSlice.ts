@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 import { loadSliceState } from '../middleware/loadSliceState';
-
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 type ThemeMode = 'system' | 'light' | 'dark';

@@ -14,7 +14,6 @@ import {
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
-
 import { otelConfig } from './otelConfig';
 
 export const initTelemetry = (): void => {

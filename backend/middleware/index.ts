@@ -3,7 +3,6 @@ import { logRequest } from './logRequest';
 import { startHttpSpan } from '@backend/features/telemetry/startHttpSpan';
 import { applyCorsHeaders } from '@backend/utils/cors/applyCorsHeaders';
 import { corsPreflightResponse } from '@backend/utils/cors/corsPreflightResponse';
-
 import type { BunRequest } from './types/BunRequest';
 import type { Ctx } from './types/Ctx';
 import type { MiddlewareFn } from './types/MiddlewareFn';

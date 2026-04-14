@@ -2,7 +2,6 @@ import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { describe, expect, test } from 'bun:test';
-
 import { DashboardPage } from '../dashboardPage';
 import { DashboardTable } from '../dashboardTable';
 import { EmptyState } from '../emptyState';

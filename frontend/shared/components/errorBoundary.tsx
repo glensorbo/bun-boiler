@@ -3,9 +3,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-
 import { SurfaceCard } from './surfaceCard';
-
 import type { ReactNode } from 'react';
 import type { FallbackProps } from 'react-error-boundary';
 

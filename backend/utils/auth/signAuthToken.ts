@@ -1,5 +1,4 @@
 import { SignJWT } from 'jose';
-
 import type { UserRole } from '@backend/types/userRole';
 
 const getSecret = () => new TextEncoder().encode(Bun.env.JWT_SECRET ?? '');

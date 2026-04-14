@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { unauthorizedError } from '../unauthorizedError';
-
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('unauthorizedError', () => {

@@ -1,9 +1,7 @@
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
-
 import { getDb } from '../db/getDb';
 import { users } from '../db/schemas/users';
-
 import type { NewUser } from '@backend/types/newUser';
 
 /**
