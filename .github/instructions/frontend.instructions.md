@@ -9,6 +9,8 @@ applyTo: 'frontend/**/*'
 - **React 19** with StrictMode
 - **Redux Toolkit** + RTK Query for server state
 - **MUI v6+** for UI components
+- **MUI X Charts** (`@mui/x-charts`) for data visualisation — use this unless a chart type is impossible with it
+- **MUI X Data Grid** (`@mui/x-data-grid`) for tabular data — use this unless the data or UX clearly calls for a simpler/custom table
 - **React Router** for client-side routing
 - **HMR** in development via `import.meta.hot`
 
