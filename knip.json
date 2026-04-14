@@ -13,6 +13,10 @@
     "frontend/features/websocket/hooks/*.ts"
   ],
   "project": ["backend/**/*.ts", "frontend/**/*.{ts,tsx}"],
-  "ignoreDependencies": ["@babel/preset-react", "@babel/preset-typescript"],
+  "ignoreDependencies": [
+    "@babel/preset-react",
+    "@babel/preset-typescript",
+    "@mui/x-data-grid"
+  ],
   "ignoreBinaries": ["gh"]
 }
