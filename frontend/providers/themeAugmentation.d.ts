@@ -23,6 +23,11 @@ declare module '@mui/material/styles' {
       accent: string;
     };
     chart: string[];
+    DataGrid: {
+      bg: string;
+      pinnedBg: string;
+      headerBg: string;
+    };
   }
 
   interface PaletteOptions {
@@ -46,6 +51,11 @@ declare module '@mui/material/styles' {
       accent: string;
     };
     chart?: string[];
+    DataGrid?: {
+      bg?: string;
+      pinnedBg?: string;
+      headerBg?: string;
+    };
   }
 }
 
