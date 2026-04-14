@@ -396,6 +396,7 @@ export const buildTheme = (mode: PaletteMode) => {
             border: 'none',
             backgroundColor: theme.palette.surface.sunken,
             borderRadius: theme.shape.borderRadius,
+            '--DataGrid-t-header-background-base': theme.palette.surface.sunken,
             '& .MuiDataGrid-row': {
               backgroundColor: theme.palette.surface.sunken,
               '&:hover': {
@@ -405,9 +406,6 @@ export const buildTheme = (mode: PaletteMode) => {
                     : alpha(theme.palette.primary.main, 0.05),
               },
             },
-          }),
-          columnHeaders: ({ theme }: { theme: Theme }) => ({
-            backgroundColor: theme.palette.surface.sunken,
           }),
         },
       },
