@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { buildRuntimeConfigScript } from './utils/runtimeConfig';
 
 // BUN_PUBLIC_* vars are inlined by Bun's bundler at build time, which means
 // they're empty when the image is built without them (e.g. Coolify supplies
@@ -6,16 +7,7 @@ import { join } from 'path';
 // <script> block into every HTML response that writes the live values from
 // Bun.env into window.__APP_CONFIG__.  frontend/config.ts prefers this object
 // over import.meta.env, so runtime values always win.
-const runtimeConfigScript = (() => {
-  const cfg = {
-    BUN_PUBLIC_OPENPANEL_CLIENT_ID:
-      Bun.env.BUN_PUBLIC_OPENPANEL_CLIENT_ID ?? '',
-    BUN_PUBLIC_OPENPANEL_API_URL: Bun.env.BUN_PUBLIC_OPENPANEL_API_URL ?? '',
-    BUN_PUBLIC_OTEL_SERVICE_NAME: Bun.env.BUN_PUBLIC_OTEL_SERVICE_NAME ?? '',
-    BUN_PUBLIC_ENABLE_SIGNUP: Bun.env.BUN_PUBLIC_ENABLE_SIGNUP ?? '',
-  };
-  return `<script>window.__APP_CONFIG__=${JSON.stringify(cfg)};</script>`;
-})();
+const runtimeConfigScript = buildRuntimeConfigScript();
 
 const serveHtml = async (
   file: ReturnType<typeof Bun.file>,

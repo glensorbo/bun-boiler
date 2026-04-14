@@ -35,45 +35,50 @@ export const LoginPage = () => {
         bgcolor: 'background.default',
       }}
     >
-      <SurfaceCard tone="accent">
-        <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
-          <Box>
-            <Chip label="bun-boiler dashboard starter" color="primary" />
-            <Typography variant="h2" sx={{ mt: 3, maxWidth: 640 }}>
-              Build a premium dashboard product without designing every screen
-              from scratch.
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{ mt: 2, maxWidth: 560 }}
-            >
-              The new theme foundation ships with layered surfaces, modern
-              navigation, and reusable dashboard primitives ready for new
-              features.
-            </Typography>
-          </Box>
-          <Stack direction={{ xs: 'column', md: 'row' }} sx={{ gap: 2, mt: 4 }}>
-            <SurfaceCard
-              title="Reusable UI"
-              description="Shared components cover cards, stats, tables, trends, and empty states."
-            >
-              <Typography variant="body2" color="text.secondary">
-                Build faster while keeping pages visually consistent.
+      <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
+        <SurfaceCard tone="accent">
+          <Stack sx={{ justifyContent: 'space-between', height: '100%' }}>
+            <Box>
+              <Chip label="bun-boiler dashboard starter" color="primary" />
+              <Typography variant="h2" sx={{ mt: 3, maxWidth: 640 }}>
+                Build a premium dashboard product without designing every screen
+                from scratch.
               </Typography>
-            </SurfaceCard>
-            <SurfaceCard
-              title="Token-driven theme"
-              description="Light and dark schemes are tuned for dense product dashboards."
-            >
-              <Typography variant="body2" color="text.secondary">
-                Future features inherit the same spacing, color, and surface
-                system.
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ mt: 2, maxWidth: 560 }}
+              >
+                The new theme foundation ships with layered surfaces, modern
+                navigation, and reusable dashboard primitives ready for new
+                features.
               </Typography>
-            </SurfaceCard>
+            </Box>
+            <Stack
+              direction={{ xs: 'column', md: 'row' }}
+              sx={{ gap: 2, mt: 4 }}
+            >
+              <SurfaceCard
+                title="Reusable UI"
+                description="Shared components cover cards, stats, tables, trends, and empty states."
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Build faster while keeping pages visually consistent.
+                </Typography>
+              </SurfaceCard>
+              <SurfaceCard
+                title="Token-driven theme"
+                description="Light and dark schemes are tuned for dense product dashboards."
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Future features inherit the same spacing, color, and surface
+                  system.
+                </Typography>
+              </SurfaceCard>
+            </Stack>
           </Stack>
-        </Stack>
-      </SurfaceCard>
+        </SurfaceCard>
+      </Box>
 
       <SurfaceCard
         title="Welcome back"

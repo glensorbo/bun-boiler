@@ -1,5 +1,4 @@
 import { serve } from 'bun';
-import index from '../public/index.html';
 import { pingDb } from './db/pingDb';
 import { initMailClient } from './features/mail/initMailClient.ts';
 import { initTelemetry } from './features/telemetry/initTelemetry.ts';
@@ -12,6 +11,7 @@ import { versionRoutes } from './routes/versionRoutes';
 import { wsRoutes } from './routes/wsRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
+import { buildRuntimeConfigScript } from './utils/runtimeConfig.ts';
 import { wsHandlers } from './ws/wsHandlers';
 
 initTelemetry();
@@ -22,6 +22,16 @@ await pingDb();
 
 const isProduction = process.env.NODE_ENV === 'production';
 const port = Number(Bun.env.PORT ?? '3210');
+
+// In dev mode, inject window.__APP_CONFIG__ just like production so
+// BUN_PUBLIC_* env vars are available at runtime without a rebuild.
+const devIndexHtml = isProduction
+  ? null
+  : await Bun.file('./public/index.html')
+      .text()
+      .then((html) =>
+        html.replace('</head>', `${buildRuntimeConfigScript()}</head>`),
+      );
 
 const server = serve({
   port,
@@ -39,7 +49,10 @@ const server = serve({
 
     '/*': isProduction
       ? async (req) => serveProdBuild(new URL(req.url).pathname)
-      : index,
+      : () =>
+          new Response(devIndexHtml!, {
+            headers: { 'Content-Type': 'text/html' },
+          }),
   },
 
   websocket: wsHandlers,
