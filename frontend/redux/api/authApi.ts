@@ -3,6 +3,25 @@ import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    signup: build.mutation<
+      { token: string },
+      {
+        name: string;
+        email: string;
+        password: string;
+        confirmPassword: string;
+        website: string;
+      }
+    >({
+      query: (body) => ({
+        url: 'auth/signup',
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (response: ApiSuccessResponse<{ token: string }>) =>
+        response.data,
+    }),
+
     login: build.mutation<
       { token: string },
       { email: string; password: string }
@@ -77,6 +96,7 @@ const authApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useSignupMutation,
   useLoginMutation,
   useLogoutMutation,
   useSetPasswordMutation,

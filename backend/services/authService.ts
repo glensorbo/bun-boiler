@@ -69,6 +69,43 @@ export const createAuthService = (
   },
 
   /**
+   * Self-service signup. Creates a new user account and immediately issues
+   * access + refresh tokens so the user is logged in straight away.
+   * Only active when ENABLE_SIGNUP=true.
+   */
+  async signup(
+    name: string,
+    email: string,
+    password: string,
+  ): Promise<ErrorOr<{ token: string; refreshToken: string }>> {
+    const existing = await repo.getByEmail(email);
+    if (existing) {
+      return errorOr<{ token: string; refreshToken: string }>(null, [
+        {
+          type: 'conflict',
+          message: 'An account with this email already exists',
+          field: 'email',
+        },
+      ]);
+    }
+
+    const hashedPassword = await Bun.password.hash(password);
+    const user = await repo.create(email, name, hashedPassword);
+
+    const token = await signAuthToken(
+      user.id!,
+      user.email,
+      user.role,
+      user.name,
+    );
+    const refreshToken = generateRefreshToken();
+    const tokenHash = await hashRefreshToken(refreshToken);
+    await refreshRepo.create(user.id!, tokenHash);
+
+    return errorOr({ token, refreshToken });
+  },
+
+  /**
    * Verify email + password and return a short-lived access token plus a
    * raw refresh token. The refresh token should be set as an HttpOnly cookie
    * by the controller — only the access token goes in the response body.

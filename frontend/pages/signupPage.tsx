@@ -4,18 +4,23 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router';
-import { LoginForm } from '@frontend/features/login/components/loginForm';
+import { config } from '@frontend/config';
 import { selectIsAuthenticated } from '@frontend/features/login/state/authSlice';
+import { SignupForm } from '@frontend/features/signup/components/signupForm';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
 import type { RootState } from '@frontend/redux/store';
 
-export const LoginPage = () => {
+export const SignupPage = () => {
   const isAuthenticated = useSelector((state: RootState) =>
     selectIsAuthenticated(state),
   );
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
+  }
+
+  if (!config.enableSignup) {
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -81,8 +86,8 @@ export const LoginPage = () => {
       </Box>
 
       <SurfaceCard
-        title="Welcome back"
-        description="Sign in to continue building from the new dashboard foundation."
+        title="Join bun-boiler"
+        description="Create your account to start building."
       >
         <Box
           sx={{
@@ -92,7 +97,7 @@ export const LoginPage = () => {
             py: { xs: 1, md: 4 },
           }}
         >
-          <LoginForm />
+          <SignupForm />
         </Box>
       </SurfaceCard>
     </Box>

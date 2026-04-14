@@ -7,14 +7,17 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router';
 import { useLogin } from '../hooks/useLogin';
 import { validateLoginForm } from '../logic/validateLoginForm';
 import { setLoginFormField, setLoginFormErrors } from '../state/loginFormSlice';
+import { config } from '@frontend/config';
 import type { LoginFormFields } from '../state/loginFormSlice';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
 import type { ChangeEvent } from 'react';
@@ -131,6 +134,19 @@ export const LoginForm = () => {
       >
         Sign in
       </Button>
+
+      {config.enableSignup && (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ textAlign: 'center' }}
+        >
+          Don&apos;t have an account?{' '}
+          <Link component={RouterLink} to="/signup">
+            Create account
+          </Link>
+        </Typography>
+      )}
     </Box>
   );
 };

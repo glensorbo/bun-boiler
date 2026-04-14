@@ -2,6 +2,7 @@ import { changePasswordSchema } from '@backend/features/validation/schemas/chang
 import { createUserSchema } from '@backend/features/validation/schemas/createUserSchema';
 import { loginSchema } from '@backend/features/validation/schemas/loginSchema';
 import { setPasswordSchema } from '@backend/features/validation/schemas/setPasswordSchema';
+import { signupSchema } from '@backend/features/validation/schemas/signupSchema';
 import { validateRequest } from '@backend/features/validation/utils/validateRequest';
 import { authService } from '@backend/services/authService';
 import {
@@ -10,6 +11,7 @@ import {
   readRefreshCookie,
 } from '@backend/utils/auth';
 import {
+  notFoundError,
   serviceErrorResponse,
   successResponse,
   unauthorizedError,
@@ -24,6 +26,43 @@ import type { AppJwtPayload } from '@backend/types/appJwtPayload';
  * Accepts service as dependency for testability.
  */
 export const createAuthController = (service: typeof AuthServiceType) => ({
+  /**
+   * POST /api/auth/signup
+   * Public endpoint — self-service registration.
+   * Only available when ENABLE_SIGNUP=true. Honeypot field silently discards
+   * bot submissions without revealing the trap.
+   */
+  async signup(req: BunRequest): Promise<Response> {
+    if (Bun.env.ENABLE_SIGNUP !== 'true') {
+      return notFoundError('Not found');
+    }
+
+    const validation = await validateRequest(signupSchema, req);
+    if (validation.errors) {
+      return validationErrorResponse('Validation failed', validation.errors);
+    }
+
+    // Honeypot — bots fill hidden fields; silently return fake success
+    if (validation.data.website) {
+      return successResponse({ token: '' });
+    }
+
+    const result = await service.signup(
+      validation.data.name,
+      validation.data.email,
+      validation.data.password,
+    );
+
+    if (result.error) {
+      return serviceErrorResponse(result.error);
+    }
+
+    const { token, refreshToken } = result.data;
+    const response = successResponse({ token }, 201);
+    response.headers.set('Set-Cookie', buildRefreshCookie(refreshToken));
+    return response;
+  },
+
   /**
    * POST /api/auth/create-user
    * Authenticated users create a new user by email + name.

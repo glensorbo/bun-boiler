@@ -7,7 +7,7 @@ The service layer contains all business logic. Services sit between controllers 
 ```
 services/
 ├── userService.ts    # Business logic for user CRUD and admin operations (delete, role update, password reset)
-├── authService.ts    # User creation, password onboarding, welcome email via mail module
+├── authService.ts    # Self-service signup, user creation, password onboarding, welcome email via mail module
 └── tests/
     ├── userService.test.ts
     └── authService.test.ts

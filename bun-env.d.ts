@@ -46,6 +46,11 @@ declare module 'bun' {
     // Rate limiting — set to "true" to disable (e.g. in e2e test environments)
     DISABLE_RATE_LIMIT?: string;
 
+    // Signup — set to "true" to allow users to register themselves
+    // By default signup is disabled; users can only be created by admins via the invite flow
+    ENABLE_SIGNUP?: string;
+    BUN_PUBLIC_ENABLE_SIGNUP?: string;
+
     // Seed
     SEED_ADMIN_EMAIL?: string;
     SEED_ADMIN_PASSWORD?: string;
@@ -81,38 +86,4 @@ declare module 'bun' {
     SMTP_FROM?: string; // e.g. "My App <no-reply@example.com>"
     SMTP_SECURE?: string; // "true" for TLS (port 465), defaults to "false"
   }
-}
-
-/**
- * Augment import.meta.env so BUN_PUBLIC_* variables are named and typed
- * when accessed via import.meta.env in frontend (bundled) code.
- *
- * The base ImportMetaEnv interface in bun-types uses an index signature
- * ([key: string]: string | undefined), which accepts any key. This augmentation
- * adds explicit named properties so IDEs autocomplete and document them.
- */
-interface ImportMetaEnv {
-  // OpenPanel Analytics — mirrors the Bun.env declarations above
-  BUN_PUBLIC_OPENPANEL_CLIENT_ID?: string;
-  BUN_PUBLIC_OPENPANEL_API_URL?: string;
-
-  // Frontend OpenTelemetry — mirrors the Bun.env declarations above
-  BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
-
-  // App version and environment — mirrors the Bun.env declarations above
-  BUN_PUBLIC_APP_VERSION?: string;
-  BUN_PUBLIC_APP_ENV?: string;
-}
-
-/**
- * Runtime config injected into HTML by the server (backend/serveProdBuild.ts).
- * Allows deployments that supply env vars at runtime (e.g. Coolify) to work
- * correctly even when the Docker image was built without those vars.
- */
-interface Window {
-  __APP_CONFIG__?: {
-    BUN_PUBLIC_OPENPANEL_CLIENT_ID?: string;
-    BUN_PUBLIC_OPENPANEL_API_URL?: string;
-    BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
-  };
 }
