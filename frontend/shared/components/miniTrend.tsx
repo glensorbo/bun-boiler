@@ -53,6 +53,7 @@ export const MiniTrend = ({
       ]}
       height={height}
       margin={{ top: 4, bottom: labels ? 28 : 4, left: 4, right: 4 }}
+      slotProps={{ tooltip: { container: document.body } }}
     />
   );
 };
