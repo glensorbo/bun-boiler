@@ -1,4 +1,5 @@
 import type {} from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 declare module '@mui/material/styles' {
   interface Palette {

@@ -390,6 +390,27 @@ export const buildTheme = (mode: PaletteMode) => {
           }),
         },
       },
+      MuiDataGrid: {
+        styleOverrides: {
+          root: ({ theme }: { theme: Theme }) => ({
+            border: 'none',
+            backgroundColor: theme.palette.surface.sunken,
+            borderRadius: theme.shape.borderRadius,
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: theme.palette.surface.sunken,
+            },
+            '& .MuiDataGrid-row': {
+              backgroundColor: theme.palette.surface.sunken,
+              '&:hover': {
+                backgroundColor:
+                  theme.palette.mode === 'dark'
+                    ? alpha(theme.palette.primary.main, 0.08)
+                    : alpha(theme.palette.primary.main, 0.05),
+              },
+            },
+          }),
+        },
+      },
     },
   });
 };

@@ -209,7 +209,6 @@ export const UsersPanel = () => {
           getRowId={(row) => row.id!}
           disableRowSelectionOnClick
           hideFooter
-          sx={{ border: 'none' }}
         />
       </SurfaceCard>
 
