@@ -4,7 +4,6 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { alpha, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
 import type { ReactNode } from 'react';
 
 type StatTone = 'default' | 'accent' | 'positive' | 'warning' | 'danger';

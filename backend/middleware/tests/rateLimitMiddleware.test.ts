@@ -1,7 +1,5 @@
 import { describe, test, expect, afterEach } from 'bun:test';
-
 import { createRateLimitMiddleware } from '@backend/middleware/createRateLimitMiddleware';
-
 import type { BunRequest, Ctx } from '@backend/middleware';
 
 const originalDisable = Bun.env.DISABLE_RATE_LIMIT;

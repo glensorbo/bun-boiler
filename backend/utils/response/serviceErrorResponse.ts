@@ -1,7 +1,6 @@
 import { notFoundError } from './notFoundError';
 import { unauthorizedError } from './unauthorizedError';
 import { validationErrorResponse } from './validationErrorResponse';
-
 import type { AppError } from '@backend/types/appError';
 
 /**

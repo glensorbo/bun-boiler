@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router';
-
 import { wsManager } from './wsManager';
 import { setToken } from '@frontend/features/login/state/authSlice';
 import { useRefreshTokenMutation } from '@frontend/redux/api/authApi';
-
 import type { AppDispatch, RootState } from '@frontend/redux/store';
 
 const REFRESH_BEFORE_MS = 2 * 60 * 1000;

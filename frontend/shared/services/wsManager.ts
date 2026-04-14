@@ -128,4 +128,3 @@ class WsManager<TMessage> {
 }
 
 export const wsManager = new WsManager<Record<string, unknown>>('/api/ws');
-export { WsManager };

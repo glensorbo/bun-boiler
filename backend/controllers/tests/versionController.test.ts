@@ -1,5 +1,4 @@
 import { describe, test, expect, afterEach } from 'bun:test';
-
 import { versionController } from '@backend/controllers/versionController';
 
 const originalVersion = Bun.env.BUN_PUBLIC_APP_VERSION;

@@ -10,7 +10,6 @@ import {
   mockUserRepository,
   mockUsers,
 } from '@backend/utils/test';
-
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 const VALID_PASSWORD = 'correctpass123';

@@ -7,18 +7,12 @@ import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import dayjs from 'dayjs';
-import { useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-
 import {
   useGetUsersQuery,
   useResetUserPasswordMutation,
@@ -28,10 +22,10 @@ import { DeleteUserDialog } from './deleteUserDialog';
 import { InviteUserDialog } from './inviteUserDialog';
 import { SignupLinkDialog } from './signupLinkDialog';
 import { selectUserId } from '@frontend/features/login/state/authSlice';
-import { TableSkeleton } from '@frontend/shared/components/skeleton';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
-
+import { dayjs } from '@frontend/shared/utils/dayjs';
 import type { User } from '@backend/types/user';
+import type { GridColDef } from '@mui/x-data-grid';
 
 export const UsersPanel = () => {
   const currentUserId = useSelector(selectUserId);
@@ -44,26 +38,154 @@ export const UsersPanel = () => {
   const [resetLink, setResetLink] = useState<string | null>(null);
   const [resetingId, setResetingId] = useState<string | null>(null);
 
-  const handleRoleChange = async (user: User, role: 'admin' | 'user') => {
-    try {
-      await updateRole({ id: user.id!, role }).unwrap();
-      toast.success(`${user.name}'s role updated to ${role}.`);
-    } catch {
-      toast.error('Failed to update role.');
-    }
-  };
+  const handleRoleChange = useCallback(
+    async (user: User, role: 'admin' | 'user') => {
+      try {
+        await updateRole({ id: user.id!, role }).unwrap();
+        toast.success(`${user.name}'s role updated to ${role}.`);
+      } catch {
+        toast.error('Failed to update role.');
+      }
+    },
+    [updateRole],
+  );
 
-  const handleResetPassword = async (user: User) => {
-    setResetingId(user.id!);
-    try {
-      const data = await resetPassword(user.id!).unwrap();
-      setResetLink(data.signupLink);
-    } catch {
-      toast.error('Failed to reset password.');
-    } finally {
-      setResetingId(null);
-    }
-  };
+  const handleResetPassword = useCallback(
+    async (user: User) => {
+      setResetingId(user.id!);
+      try {
+        const data = await resetPassword(user.id!).unwrap();
+        setResetLink(data.signupLink);
+      } catch {
+        toast.error('Failed to reset password.');
+      } finally {
+        setResetingId(null);
+      }
+    },
+    [resetPassword],
+  );
+
+  const columns = useMemo<GridColDef<User>[]>(
+    () => [
+      {
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        renderCell: (params) => (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%',
+              gap: 1,
+            }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+              {params.row.name}
+            </Typography>
+            {params.row.id === currentUserId && (
+              <Chip
+                label="you"
+                size="small"
+                sx={{ height: 18, fontSize: 11 }}
+              />
+            )}
+          </Box>
+        ),
+      },
+      {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1.5,
+        renderCell: (params) => (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              {params.row.email}
+            </Typography>
+          </Box>
+        ),
+      },
+      {
+        field: 'role',
+        headerName: 'Role',
+        width: 140,
+        sortable: false,
+        renderCell: (params) => {
+          const isSelf = params.row.id === currentUserId;
+          return (
+            <Select
+              value={params.row.role}
+              size="small"
+              disabled={isSelf}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) =>
+                handleRoleChange(params.row, e.target.value as 'admin' | 'user')
+              }
+              sx={{ minWidth: 100 }}
+            >
+              <MenuItem value="admin">admin</MenuItem>
+              <MenuItem value="user">user</MenuItem>
+            </Select>
+          );
+        },
+      },
+      {
+        field: 'createdAt',
+        headerName: 'Joined',
+        width: 120,
+        valueFormatter: (value: string) => dayjs(value).format('YYYY-MM-DD'),
+      },
+      {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 100,
+        sortable: false,
+        align: 'right',
+        headerAlign: 'right',
+        renderCell: (params) => {
+          const isSelf = params.row.id === currentUserId;
+          return (
+            <>
+              <Tooltip title="Reset password">
+                <span>
+                  <IconButton
+                    size="small"
+                    disabled={resetingId === params.row.id}
+                    onClick={() => handleResetPassword(params.row)}
+                  >
+                    <LockResetIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip
+                title={
+                  isSelf ? 'Cannot delete your own account' : 'Delete user'
+                }
+              >
+                <span>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    disabled={isSelf}
+                    onClick={() => setDeleteTarget(params.row)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </>
+          );
+        },
+      },
+    ],
+    [currentUserId, resetingId, handleRoleChange, handleResetPassword],
+  );
 
   return (
     <>
@@ -80,111 +202,14 @@ export const UsersPanel = () => {
           </Button>
         }
       >
-        {isLoading ? (
-          <TableSkeleton rows={4} cols={4} />
-        ) : (
-          <Box sx={{ overflowX: 'auto' }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Role</TableCell>
-                  <TableCell>Joined</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users?.map((user) => {
-                  const isSelf = user.id === currentUserId;
-                  return (
-                    <TableRow key={user.id} hover>
-                      <TableCell>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          sx={{
-                            fontWeight: 500,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 0.5,
-                          }}
-                        >
-                          {user.name}
-                          {isSelf ? (
-                            <Chip
-                              label="you"
-                              size="small"
-                              sx={{ ml: 1, height: 18, fontSize: 11 }}
-                            />
-                          ) : null}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" color="text.secondary">
-                          {user.email}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Select
-                          value={user.role}
-                          size="small"
-                          disabled={isSelf}
-                          onChange={(e) =>
-                            handleRoleChange(
-                              user,
-                              e.target.value as 'admin' | 'user',
-                            )
-                          }
-                          sx={{ minWidth: 100 }}
-                        >
-                          <MenuItem value="admin">admin</MenuItem>
-                          <MenuItem value="user">user</MenuItem>
-                        </Select>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" color="text.secondary">
-                          {dayjs(user.createdAt).format('D MMM YYYY')}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Tooltip title="Reset password">
-                          <span>
-                            <IconButton
-                              size="small"
-                              disabled={resetingId === user.id}
-                              onClick={() => handleResetPassword(user)}
-                            >
-                              <LockResetIcon fontSize="small" />
-                            </IconButton>
-                          </span>
-                        </Tooltip>
-                        <Tooltip
-                          title={
-                            isSelf
-                              ? 'Cannot delete your own account'
-                              : 'Delete user'
-                          }
-                        >
-                          <span>
-                            <IconButton
-                              size="small"
-                              color="error"
-                              disabled={isSelf}
-                              onClick={() => setDeleteTarget(user)}
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </span>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </Box>
-        )}
+        <DataGrid
+          rows={users ?? []}
+          columns={columns}
+          loading={isLoading}
+          getRowId={(row) => row.id!}
+          disableRowSelectionOnClick
+          hideFooter
+        />
       </SurfaceCard>
 
       <InviteUserDialog

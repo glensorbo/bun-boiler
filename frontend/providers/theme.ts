@@ -1,5 +1,4 @@
 import { alpha, createTheme, darken, lighten } from '@mui/material/styles';
-
 import type { PaletteMode, Shadows, Theme } from '@mui/material/styles';
 
 const FONT_STACK = [
@@ -40,6 +39,7 @@ export const buildTheme = (mode: PaletteMode) => {
   const backgroundDefault = isDark ? '#080b14' : '#f4f7fb';
   const backgroundPaper = isDark ? '#111827' : '#ffffff';
   const surfaceSunken = isDark ? '#0f172a' : '#eef2ff';
+  const surfaceSunkenDeep = isDark ? '#080e1a' : '#e4eaf8';
   const surfaceRaised = isDark ? '#111827' : '#ffffff';
   const surfaceOverlay = isDark
     ? alpha('#1f2937', 0.72)
@@ -140,6 +140,11 @@ export const buildTheme = (mode: PaletteMode) => {
         accent: accentGradient,
       },
       chart: [primary, secondary, success, warning, error],
+      DataGrid: {
+        bg: surfaceSunken,
+        pinnedBg: surfaceSunkenDeep,
+        headerBg: surfaceSunken,
+      },
     },
     components: {
       MuiCssBaseline: {
@@ -388,6 +393,20 @@ export const buildTheme = (mode: PaletteMode) => {
               theme.palette.text.primary,
               theme.palette.mode === 'dark' ? 0.14 : 0.08,
             ),
+          }),
+        },
+      },
+      MuiDataGrid: {
+        styleOverrides: {
+          root: ({ theme }: { theme: Theme }) => ({
+            border: 'none',
+            borderRadius: theme.shape.borderRadius,
+            '& .MuiDataGrid-row:hover': {
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.primary.main, 0.08)
+                  : alpha(theme.palette.primary.main, 0.05),
+            },
           }),
         },
       },

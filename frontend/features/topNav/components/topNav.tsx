@@ -9,7 +9,6 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
 import { UserMenu } from './userMenu';
 
 interface TopNavProps {

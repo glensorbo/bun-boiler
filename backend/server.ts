@@ -1,5 +1,4 @@
 import { serve } from 'bun';
-
 import index from '../public/index.html';
 import { pingDb } from './db/pingDb';
 import { initMailClient } from './features/mail/initMailClient.ts';

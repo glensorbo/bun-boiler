@@ -3,7 +3,6 @@ import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
-
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
 
 export const NotFoundPage = () => {

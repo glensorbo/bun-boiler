@@ -4,7 +4,6 @@ process.env.JWT_SECRET = 'test-secret';
 
 import { signupTokenMiddleware } from '@backend/middleware/signupTokenMiddleware';
 import { signAuthToken, signSignupToken } from '@backend/utils/auth';
-
 import type { BunRequest, Ctx } from '@backend/middleware';
 
 const makeRequest = (authHeader: string | null): BunRequest => {

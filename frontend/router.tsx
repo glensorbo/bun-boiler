@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router';
-
 import { AnalyticsProvider } from './features/analytics/analyticsProvider';
 import { WsProvider } from './features/websocket/wsProvider';
 import { PageLayout } from './layout/pageLayout';

@@ -1,8 +1,6 @@
 import { test as base, expect } from '@playwright/test';
 import { readFileSync } from 'fs';
-
 import { AUTH_FILE } from '../global-setup';
-
 import type { APIRequestContext } from '@playwright/test';
 
 type AuthState = {

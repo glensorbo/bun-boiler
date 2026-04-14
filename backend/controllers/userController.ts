@@ -8,7 +8,6 @@ import {
   successResponse,
   validationErrorResponse,
 } from '@backend/utils/response';
-
 import type { userService as UserServiceType } from '@backend/services/userService';
 
 /**

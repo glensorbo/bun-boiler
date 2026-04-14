@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { serviceErrorResponse } from '../serviceErrorResponse';
-
 import type { AppError } from '@backend/types/appError';
 
 describe('serviceErrorResponse', () => {

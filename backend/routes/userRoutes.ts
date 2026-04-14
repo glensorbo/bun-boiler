@@ -3,7 +3,6 @@ import { withMiddleware } from '@backend/middleware';
 import { authMiddleware } from '@backend/middleware/authMiddleware';
 import { requireRole } from '@backend/middleware/requireRole';
 import { userService } from '@backend/services/userService';
-
 import type { AppJwtPayload } from '@backend/types/appJwtPayload';
 
 const userController = createUserController(userService);

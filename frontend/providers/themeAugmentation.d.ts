@@ -1,4 +1,5 @@
 import type {} from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -22,6 +23,11 @@ declare module '@mui/material/styles' {
       accent: string;
     };
     chart: string[];
+    DataGrid: {
+      bg: string;
+      pinnedBg: string;
+      headerBg: string;
+    };
   }
 
   interface PaletteOptions {
@@ -45,6 +51,11 @@ declare module '@mui/material/styles' {
       accent: string;
     };
     chart?: string[];
+    DataGrid?: {
+      bg?: string;
+      pinnedBg?: string;
+      headerBg?: string;
+    };
   }
 }
 

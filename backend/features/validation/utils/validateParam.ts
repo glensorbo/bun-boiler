@@ -1,7 +1,5 @@
 import { z } from 'zod';
-
 import { mapValidationErrors } from './mapValidationErrors';
-
 import type { ValidationResult } from '@backend/types/validationResult';
 
 export const validateParam = <T>(

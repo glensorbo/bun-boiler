@@ -1,6 +1,5 @@
 import { wsClients } from './wsClients';
 import { logger } from '@backend/features/telemetry/logger';
-
 import type { WsMessage } from './types/WsMessage';
 
 export function broadcast<T = unknown>(message: WsMessage<T>): void {

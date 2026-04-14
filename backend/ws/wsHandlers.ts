@@ -1,6 +1,5 @@
 import { wsClients } from './wsClients';
 import { logger } from '@backend/features/telemetry/logger';
-
 import type { WsData } from './types/WsData';
 import type { ServerWebSocket } from 'bun';
 

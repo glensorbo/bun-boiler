@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-
 import { E2E_EMAIL, E2E_PASSWORD } from '../global-setup';
 
 /**

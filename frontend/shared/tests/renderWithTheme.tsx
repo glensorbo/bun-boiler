@@ -1,8 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { renderToString } from 'react-dom/server';
-
 import { buildTheme } from '@frontend/providers/theme';
-
 import type { PaletteMode } from '@mui/material/styles';
 import type { ReactElement } from 'react';
 

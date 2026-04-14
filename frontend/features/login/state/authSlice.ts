@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-import { loadSliceState } from '@frontend/redux/middleware/localStorageMiddleware';
-
+import { loadSliceState } from '@frontend/redux/middleware/loadSliceState';
 import type { UserRole } from '@backend/types/userRole';
 import type { PayloadAction } from '@reduxjs/toolkit';
 

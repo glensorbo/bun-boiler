@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { createUserService } from '../userService';
 import { mockUserRepository, mockUsers } from '@backend/utils/test';
 

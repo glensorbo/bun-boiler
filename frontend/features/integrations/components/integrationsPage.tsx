@@ -6,15 +6,13 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
 import {
   useGetIntegrationsQuery,
   useSendTestEmailMutation,
 } from '@frontend/redux/api/integrationsApi';
 import { DashboardPage } from '@frontend/shared/components/dashboardPage';
-import { ListSkeleton } from '@frontend/shared/components/skeleton';
+import { ListSkeleton } from '@frontend/shared/components/listSkeleton';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
-
 import type { Integration } from '@frontend/redux/api/integrationsApi';
 
 const statusChip = (status: Integration['status']) => {

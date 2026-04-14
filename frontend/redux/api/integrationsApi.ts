@@ -1,5 +1,4 @@
 import { baseApi } from './baseApi';
-
 import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 
 export type Integration = {

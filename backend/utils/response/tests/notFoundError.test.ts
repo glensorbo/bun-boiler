@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { notFoundError } from '../notFoundError';
-
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('notFoundError', () => {

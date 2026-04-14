@@ -1,5 +1,4 @@
 import { describe, test, expect } from 'bun:test';
-
 import { buildRefreshCookie } from '../buildRefreshCookie';
 import { clearRefreshCookie } from '../clearRefreshCookie';
 import { readRefreshCookie } from '../readRefreshCookie';

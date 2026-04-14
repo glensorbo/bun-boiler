@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { getRouteTemplate } from '../getRouteTemplate';
-
 import type { BunRequest } from '../types/BunRequest';
 
 const makeRequest = (

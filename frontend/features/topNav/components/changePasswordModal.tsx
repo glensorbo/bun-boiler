@@ -10,7 +10,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import React, { useState } from 'react';
-
 import { useChangePassword } from '../hooks/useChangePassword';
 
 interface Props {

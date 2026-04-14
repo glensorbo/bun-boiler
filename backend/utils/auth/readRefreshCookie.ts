@@ -1,5 +1,4 @@
 import { refreshTokenConfig } from './refreshTokenConfig';
-
 import type { BunRequest } from '@backend/middleware';
 
 /**

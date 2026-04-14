@@ -1,7 +1,5 @@
 import { SeverityNumber } from '@opentelemetry/api-logs';
-
 import { otelConfig } from './otelConfig';
-
 import type { LogAttrs } from './types/LogAttrs';
 
 export const emit = (

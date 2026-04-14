@@ -2,7 +2,6 @@ import { integrationsController } from '@backend/controllers/integrationsControl
 import { withMiddleware } from '@backend/middleware';
 import { authMiddleware } from '@backend/middleware/authMiddleware';
 import { requireRole } from '@backend/middleware/requireRole';
-
 import type { BunRequest, Ctx } from '@backend/middleware';
 import type { AppJwtPayload } from '@backend/types/appJwtPayload';
 

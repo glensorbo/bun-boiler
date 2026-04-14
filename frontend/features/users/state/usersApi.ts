@@ -1,5 +1,4 @@
 import { baseApi } from '@frontend/redux/api/baseApi';
-
 import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 import type { User } from '@backend/types/user';
 

@@ -1,7 +1,6 @@
 import { execSync } from 'child_process';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
-
 import type { FullConfig } from '@playwright/test';
 
 /**

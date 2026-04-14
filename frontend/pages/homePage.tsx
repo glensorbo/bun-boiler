@@ -12,7 +12,6 @@ import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-
 import { DashboardPage } from '@frontend/shared/components/dashboardPage';
 import { DashboardTable } from '@frontend/shared/components/dashboardTable';
 import { EmptyState } from '@frontend/shared/components/emptyState';

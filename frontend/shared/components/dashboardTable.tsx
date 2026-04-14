@@ -5,9 +5,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Children } from 'react';
-
 import { SurfaceCard } from './surfaceCard';
-
 import type { ReactNode } from 'react';
 
 interface DashboardTableProps {

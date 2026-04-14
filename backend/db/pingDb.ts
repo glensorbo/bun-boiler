@@ -1,5 +1,4 @@
 import { sql } from 'drizzle-orm';
-
 import { getDb } from './getDb';
 import { logger } from '@backend/features/telemetry/logger';
 

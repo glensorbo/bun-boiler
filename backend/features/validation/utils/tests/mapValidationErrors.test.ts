@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'bun:test';
 import { z } from 'zod';
-
 import { mapValidationErrors } from '../mapValidationErrors';
 
 describe('mapValidatioErrors', () => {

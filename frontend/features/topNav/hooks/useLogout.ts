@@ -1,11 +1,9 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-
-import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
 import { clearToken } from '@frontend/features/login/state/authSlice';
 import { useLogoutMutation } from '@frontend/redux/api/authApi';
-
 import type { AppDispatch } from '@frontend/redux/store';
 
 export const useLogout = () => {

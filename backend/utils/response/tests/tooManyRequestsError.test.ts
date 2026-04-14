@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { tooManyRequestsError } from '../tooManyRequestsError';
-
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('tooManyRequestsError', () => {

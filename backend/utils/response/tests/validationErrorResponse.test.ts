@@ -1,7 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-
 import { validationErrorResponse } from '../validationErrorResponse';
-
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 
 describe('validationErrorResponse', () => {

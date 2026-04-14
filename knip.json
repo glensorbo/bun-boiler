@@ -5,7 +5,9 @@
     "backend/**/*.test.ts",
     "backend/middleware/*.ts",
     "backend/ws/*.ts",
-    "frontend/shared/components/skeleton.tsx",
+    "frontend/shared/components/tableSkeleton.tsx",
+    "frontend/shared/components/listSkeleton.tsx",
+    "frontend/shared/components/cardSkeleton.tsx",
     "frontend/shared/services/*.ts",
     "frontend/shared/hooks/*.ts",
     "frontend/features/websocket/hooks/*.ts"

@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'bun:test';
 import { z } from 'zod';
-
 import { validateRequest } from '../validateRequest';
 
 const schema = z.object({

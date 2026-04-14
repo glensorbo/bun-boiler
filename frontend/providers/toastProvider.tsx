@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-
 import type { RootState } from '@frontend/redux/store';
 import type { ReactNode } from 'react';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 interface Props {

@@ -9,13 +9,9 @@
     "internalPattern": ["@frontend/", "@backend/", "./", "../"],
     "groups": [
       ["value-external", "value-builtin"],
-      { "newlinesBetween": true },
       ["value-internal", "value-parent", "value-sibling", "value-index"],
-      { "newlinesBetween": true },
       "type",
-      { "newlinesBetween": true },
       ["style", "side_effect_style"],
-      { "newlinesBetween": true },
       "side_effect"
     ]
   },

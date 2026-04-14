@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'bun:test';
 import { getTableName } from 'drizzle-orm';
-
 import { refreshTokens } from '../refreshTokens';
 
 describe('refreshTokens schema', () => {

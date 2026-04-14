@@ -1,10 +1,8 @@
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
-
 import { getDb } from '../db/getDb';
 import { refreshTokens } from '../db/schemas/refreshTokens';
 import { refreshTokenConfig } from '../utils/auth';
-
 import type { RefreshToken } from '@backend/types/refreshToken';
 
 /**
