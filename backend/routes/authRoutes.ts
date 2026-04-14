@@ -5,6 +5,9 @@ import { authRateLimit } from '@backend/middleware/authRateLimit';
 import { signupTokenMiddleware } from '@backend/middleware/signupTokenMiddleware';
 
 export const authRoutes = {
+  '/api/auth/signup': {
+    POST: withMiddleware(authRateLimit)((req) => authController.signup(req)),
+  },
   '/api/auth/login': {
     POST: withMiddleware(authRateLimit)((req) => authController.login(req)),
   },

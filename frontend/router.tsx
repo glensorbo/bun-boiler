@@ -6,6 +6,7 @@ import { PageLayout } from './layout/pageLayout';
 import { HomePage } from './pages/homePage';
 import { LoginPage } from './pages/loginPage';
 import { NotFoundPage } from './pages/notFoundPage';
+import { SignupPage } from './pages/signupPage';
 import { ProtectedRoute } from './shared/components/protectedRoute';
 
 const IntegrationsPage = lazy(() => import('./pages/integrationsPage'));
@@ -22,6 +23,7 @@ export const AppRouter = () => (
     <AnalyticsProvider />
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<WsProvider />}>
           <Route element={<PageLayout />}>

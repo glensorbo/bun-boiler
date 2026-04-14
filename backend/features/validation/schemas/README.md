@@ -4,10 +4,11 @@ Zod v4 schemas for validating incoming request bodies, grouped by domain.
 
 ## Files
 
-| File      | Schemas                                 |
-| --------- | --------------------------------------- |
-| `auth.ts` | `createUserSchema`, `setPasswordSchema` |
-| `user.ts` | `uuidSchema`                            |
+| File              | Schemas                                                            |
+| ----------------- | ------------------------------------------------------------------ |
+| `auth.ts`         | `createUserSchema`, `setPasswordSchema`                            |
+| `signupSchema.ts` | `signupSchema` — name, email, password, confirmPassword + honeypot |
+| `user.ts`         | `uuidSchema`                                                       |
 
 ## Conventions
 

@@ -1,3 +1,20 @@
+### Signup
+# Self-service registration. Creates a new user account and returns an access token.
+# Only available when ENABLE_SIGNUP=true on the server.
+# The `website` field is a honeypot — leave it empty (bots fill it and are silently rejected).
+POST {{BASE_URL}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "mysecurepassword123",
+  "confirmPassword": "mysecurepassword123",
+  "website": ""
+}
+
+###
+
 ### Login
 # Authenticates a user and returns a short-lived access token (15 min).
 # Also sets an HttpOnly refresh token cookie (7 days) for silent re-auth.

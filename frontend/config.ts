@@ -35,4 +35,8 @@ export const config = {
       env?.BUN_PUBLIC_OTEL_SERVICE_NAME ||
       null,
   },
+  /** Whether self-service signup is enabled. Set BUN_PUBLIC_ENABLE_SIGNUP=true to enable. */
+  enableSignup:
+    (runtimeConfig?.BUN_PUBLIC_ENABLE_SIGNUP ||
+      env?.BUN_PUBLIC_ENABLE_SIGNUP) === 'true',
 } as const;

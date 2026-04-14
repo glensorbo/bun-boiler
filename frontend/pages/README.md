@@ -2,12 +2,13 @@
 
 Route files that compose features and shared dashboard primitives.
 
-| File               | Route    | Purpose                                                       |
-| ------------------ | -------- | ------------------------------------------------------------- |
-| `homePage.tsx`     | `/`      | Showcase dashboard and reference composition for future pages |
-| `usersPage.tsx`    | `/users` | Admin user management: list, invite, role change, delete      |
-| `loginPage.tsx`    | `/login` | Authentication entry route                                    |
-| `notFoundPage.tsx` | `*`      | Fallback route for unknown paths                              |
+| File               | Route     | Purpose                                                                       |
+| ------------------ | --------- | ----------------------------------------------------------------------------- |
+| `homePage.tsx`     | `/`       | Showcase dashboard and reference composition for future pages                 |
+| `usersPage.tsx`    | `/users`  | Admin user management: list, invite, role change, delete                      |
+| `loginPage.tsx`    | `/login`  | Authentication entry route                                                    |
+| `signupPage.tsx`   | `/signup` | Self-service account creation — redirects to `/login` when signup is disabled |
+| `notFoundPage.tsx` | `*`       | Fallback route for unknown paths                                              |
 
 ## Rules
 

@@ -46,6 +46,11 @@ declare module 'bun' {
     // Rate limiting — set to "true" to disable (e.g. in e2e test environments)
     DISABLE_RATE_LIMIT?: string;
 
+    // Signup — set to "true" to allow users to register themselves
+    // By default signup is disabled; users can only be created by admins via the invite flow
+    ENABLE_SIGNUP?: string;
+    BUN_PUBLIC_ENABLE_SIGNUP?: string;
+
     // Seed
     SEED_ADMIN_EMAIL?: string;
     SEED_ADMIN_PASSWORD?: string;
@@ -102,6 +107,9 @@ interface ImportMetaEnv {
   // App version and environment — mirrors the Bun.env declarations above
   BUN_PUBLIC_APP_VERSION?: string;
   BUN_PUBLIC_APP_ENV?: string;
+
+  // Signup — mirrors the Bun.env declaration above
+  BUN_PUBLIC_ENABLE_SIGNUP?: string;
 }
 
 /**
@@ -114,5 +122,6 @@ interface Window {
     BUN_PUBLIC_OPENPANEL_CLIENT_ID?: string;
     BUN_PUBLIC_OPENPANEL_API_URL?: string;
     BUN_PUBLIC_OTEL_SERVICE_NAME?: string;
+    BUN_PUBLIC_ENABLE_SIGNUP?: string;
   };
 }
