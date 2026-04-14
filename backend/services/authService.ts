@@ -1,4 +1,4 @@
-import { sendMail } from '@backend/features/mail';
+import { sendMail } from '@backend/features/mail/sendMail';
 import { logger } from '@backend/features/telemetry';
 import { refreshTokenRepository } from '@backend/repositories/refreshTokenRepository';
 import { userRepository } from '@backend/repositories/userRepository';
