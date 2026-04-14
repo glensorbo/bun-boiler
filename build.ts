@@ -174,7 +174,7 @@ const result = await Bun.build({
   // disable itself in production.  The dev server handles this automatically
   // via [serve.static] env = "BUN_PUBLIC_*" in bunfig.toml; this option
   // brings the production build into parity.
-  env: 'inline',
+  env: 'BUN_PUBLIC_*',
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
   },
