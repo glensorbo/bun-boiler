@@ -72,7 +72,14 @@ export const UsersPanel = () => {
         headerName: 'Name',
         flex: 1,
         renderCell: (params) => (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%',
+              gap: 1,
+            }}
+          >
             <Typography variant="body2" sx={{ fontWeight: 500 }}>
               {params.row.name}
             </Typography>
@@ -91,9 +98,17 @@ export const UsersPanel = () => {
         headerName: 'Email',
         flex: 1.5,
         renderCell: (params) => (
-          <Typography variant="body2" color="text.secondary">
-            {params.row.email}
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%',
+            }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              {params.row.email}
+            </Typography>
+          </Box>
         ),
       },
       {
