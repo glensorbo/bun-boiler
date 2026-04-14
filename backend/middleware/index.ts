@@ -1,4 +1,5 @@
-import { logger } from '@backend/features/telemetry/logger';
+import { getRouteTemplate } from './getRouteTemplate';
+import { logRequest } from './logRequest';
 import { startHttpSpan } from '@backend/features/telemetry/startHttpSpan';
 import { applyCorsHeaders } from '@backend/utils/cors/applyCorsHeaders';
 import { corsPreflightResponse } from '@backend/utils/cors/corsPreflightResponse';
@@ -30,34 +31,6 @@ export type { MiddlewareFn } from './types/MiddlewareFn';
 type HandlerFn = (req: BunRequest, ctx: Ctx) => Response | Promise<Response>;
 
 type BunHandler = (req: BunRequest) => Response | Promise<Response>;
-
-const logRequest = (req: Request, res: Response, durationMs: number): void => {
-  const ts = new Date().toISOString();
-  const path = new URL(req.url).pathname;
-  logger.info(
-    `[${ts}] ${req.method} ${path} → ${res.status} (${Math.round(durationMs)}ms)`,
-  );
-};
-
-/**
- * Rebuilds the route template from the actual URL path by replacing dynamic
- * segment *values* with their `:key` placeholder names.
- *
- * @example
- * // req.url = "http://localhost/api/user/42", req.params = { id: "42" }
- * getRouteTemplate(req) // → "/api/user/:id"
- *
- * // req.url = "http://localhost/api/auth/login", req.params = {}
- * getRouteTemplate(req) // → "/api/auth/login"
- */
-const getRouteTemplate = (req: BunRequest): string => {
-  const path = new URL(req.url).pathname;
-  let template = path;
-  for (const [key, value] of Object.entries(req.params)) {
-    template = template.replace(value, `:${key}`);
-  }
-  return template;
-};
 
 /**
  * Compose middleware functions before a route handler.

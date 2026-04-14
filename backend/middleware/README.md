@@ -8,7 +8,23 @@ All handlers wrapped with `withMiddleware` automatically receive:
 - **OPTIONS preflight** handling (204 with correct Access-Control headers)
 - **Request/response logging** (`METHOD /path → STATUS (Xms)`)
 
-## Core Types (`index.ts`)
+## Files
+
+| File                           | Purpose                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `index.ts`                     | `withMiddleware` composer — re-exports all types, applies CORS/logging  |
+| `getRouteTemplate.ts`          | Pure fn: replaces param values in the URL path with `:key` placeholders |
+| `logRequest.ts`                | Logs each request/response: method, path, status, duration              |
+| `authMiddleware.ts`            | Verifies Bearer JWT; attaches decoded payload to `ctx.user`             |
+| `signupTokenMiddleware.ts`     | Same as `authMiddleware` but accepts only `tokenType: 'signup'`         |
+| `requireRole.ts`               | Factory middleware; guards on `ctx.user.role`                           |
+| `createRateLimitMiddleware.ts` | In-memory rate limiter factory                                          |
+| `authRateLimit.ts`             | Pre-configured rate limit (10 req/min/IP) for auth endpoints            |
+| `types/BunRequest.ts`          | `BunRequest` — `Request` extended with Bun's `params`                   |
+| `types/Ctx.ts`                 | `Ctx` — shared context object passed through the chain                  |
+| `types/MiddlewareFn.ts`        | `MiddlewareFn` — returns `null` to continue or `Response` to stop       |
+
+## Core Types (`types/`)
 
 ```ts
 // A request augmented with Bun's route params
