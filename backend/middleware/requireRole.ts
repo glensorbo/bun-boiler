@@ -1,7 +1,8 @@
 import { forbiddenError, unauthorizedError } from '@backend/utils/response';
 
 import type { MiddlewareFn } from '.';
-import type { AppJwtPayload, UserRole } from '@backend/types/appJwtPayload';
+import type { AppJwtPayload } from '@backend/types/appJwtPayload';
+import type { UserRole } from '@backend/types/userRole';
 
 /**
  * Role-based access control middleware factory.

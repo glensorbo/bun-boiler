@@ -1,4 +1,4 @@
-import { handleWsUpgrade } from '@backend/ws/wsServer';
+import { handleWsUpgrade } from '@backend/ws/handleWsUpgrade';
 
 export const wsRoutes = {
   '/api/ws': {

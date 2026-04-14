@@ -1,4 +1,4 @@
-import { logger } from '@backend/features/telemetry';
+import { logger } from '@backend/features/telemetry/logger';
 
 /**
  * Telemetry Controller

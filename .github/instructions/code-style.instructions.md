@@ -37,6 +37,22 @@ applyTo: '**/*.{ts,tsx}'
 - Relative imports are fine within the same layer/feature directory
 - Group imports: external packages first, then path aliases, then relative
 
+## Exports & File Structure
+
+- **One export per file** — every source file exports exactly one thing (function, constant, or type)
+- **One function per file** where possible — if a file defines helper logic, extract it to its own file
+- **Types in `types/` folders** — inline type definitions belong in a dedicated `types/` subdirectory, not inline in the file that uses them
+- **Tests in `tests/` folders** — test files live in a `tests/` subdirectory as a sibling to `types/`
+
+```
+backend/features/<feature>/
+├── doSomething.ts      ← one export
+├── types/
+│   └── SomethingOptions.ts
+└── tests/
+    └── doSomething.test.ts
+```
+
 ## Functions & Objects
 
 - Prefer plain **functions and objects** over classes

@@ -1,7 +1,7 @@
+import { logger } from '../telemetry/logger';
 import { mailConfig } from './mailConfig';
-import { logger } from '@backend/features/telemetry';
 
-import type { MailOptions } from './types/MainOptions';
+import type { MailOptions } from './types/mailOptions';
 
 export const sendMail = async (options: MailOptions): Promise<void> => {
   if (!mailConfig.transporter) {

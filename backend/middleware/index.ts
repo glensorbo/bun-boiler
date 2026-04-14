@@ -1,5 +1,15 @@
-import { logger, startHttpSpan } from '@backend/features/telemetry';
-import { applyCorsHeaders, corsPreflightResponse } from '@backend/utils/cors';
+import { logger } from '@backend/features/telemetry/logger';
+import { startHttpSpan } from '@backend/features/telemetry/startHttpSpan';
+import { applyCorsHeaders } from '@backend/utils/cors/applyCorsHeaders';
+import { corsPreflightResponse } from '@backend/utils/cors/corsPreflightResponse';
+
+import type { BunRequest } from './types/BunRequest';
+import type { Ctx } from './types/Ctx';
+import type { MiddlewareFn } from './types/MiddlewareFn';
+
+export type { BunRequest } from './types/BunRequest';
+export type { Ctx } from './types/Ctx';
+export type { MiddlewareFn } from './types/MiddlewareFn';
 
 /**
  * Middleware System
@@ -17,31 +27,8 @@ import { applyCorsHeaders, corsPreflightResponse } from '@backend/utils/cors';
  *   withMiddleware(auth, rateLimit)((req, ctx) => controller.doSomething(req, ctx))
  */
 
-export type BunRequest = Request & { params: Record<string, string> };
-
-/**
- * Shared context passed through the middleware chain.
- * Middleware can attach typed data (e.g. ctx.user) for downstream handlers.
- */
-export type Ctx = Record<string, unknown>;
-
-/**
- * A middleware function.
- * Return null to continue the chain, or a Response to short-circuit.
- */
-export type MiddlewareFn = (
-  req: BunRequest,
-  ctx: Ctx,
-) => Response | null | Promise<Response | null>;
-
-/**
- * A route handler that receives the request and populated context.
- */
 type HandlerFn = (req: BunRequest, ctx: Ctx) => Response | Promise<Response>;
 
-/**
- * A standard Bun.serve() route handler (no ctx — compatible with routes object).
- */
 type BunHandler = (req: BunRequest) => Response | Promise<Response>;
 
 const logRequest = (req: Request, res: Response, durationMs: number): void => {
@@ -92,12 +79,10 @@ export const withMiddleware =
     const path = new URL(req.url).pathname;
     const route = getRouteTemplate(req);
 
-    // Start an HTTP span (no-op when OTEL_ENDPOINT is not set).
     const span = startHttpSpan(req.method, route, path, (name) =>
       req.headers.get(name),
     );
 
-    /** Finalises the request: apply CORS, log, finish span, return response. */
     const finalize = (res: Response): Response => {
       const corsRes = applyCorsHeaders(req, res);
       logRequest(req, corsRes, performance.now() - start);

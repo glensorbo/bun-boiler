@@ -2,7 +2,7 @@ import { describe, test, expect, afterEach } from 'bun:test';
 
 import { createIntegrationsController } from '@backend/controllers/integrationsController';
 
-import type { MailOptions } from '@backend/features/mail/types/MainOptions';
+import type { MailOptions } from '@backend/features/mail/types/mailOptions';
 
 const makeDeps = (overrides?: {
   mailHealthCheck?: () => Promise<boolean>;

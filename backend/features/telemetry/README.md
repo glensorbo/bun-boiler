@@ -185,6 +185,26 @@ const tracer = trace.getTracer('bun-boiler');
 
 ---
 
+## Types
+
+| File                  | Exports                                             |
+| --------------------- | --------------------------------------------------- |
+| `types/OtelConfig.ts` | `OtelConfig` — SDK configuration shape              |
+| `types/LogAttrs.ts`   | `LogAttrs` — structured log attribute map           |
+| `types/SpanHandle.ts` | `SpanHandle` — handle returned by `startHttpSpan()` |
+
+---
+
+## Tests
+
+| File                          | Covers            |
+| ----------------------------- | ----------------- |
+| `tests/emit.test.ts`          | `emit()`          |
+| `tests/logger.test.ts`        | `logger`          |
+| `tests/startHttpSpan.test.ts` | `startHttpSpan()` |
+
+---
+
 ## Initialisation Order
 
 `initTelemetry()` **must be called before any module that logs**, so it is invoked at the very top of `backend/server.ts` before `validateEnv()` and `pingDb()`.

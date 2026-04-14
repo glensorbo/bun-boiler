@@ -1,6 +1,7 @@
 import { describe, test, expect } from 'bun:test';
 
-import { updateRoleSchema, uuidSchema } from '../user';
+import { updateRoleSchema } from '../updateRoleSchema';
+import { uuidSchema } from '../uuidSchema';
 
 describe('uuidSchema', () => {
   test('accepts a valid UUID', () => {

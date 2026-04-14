@@ -1,9 +1,7 @@
-import {
-  setPasswordSchema,
-  changePasswordSchema,
-  createUserSchema,
-  loginSchema,
-} from '@backend/features/validation/schemas/auth';
+import { changePasswordSchema } from '@backend/features/validation/schemas/changePasswordSchema';
+import { createUserSchema } from '@backend/features/validation/schemas/createUserSchema';
+import { loginSchema } from '@backend/features/validation/schemas/loginSchema';
+import { setPasswordSchema } from '@backend/features/validation/schemas/setPasswordSchema';
 import { validateRequest } from '@backend/features/validation/utils/validateRequest';
 import { authService } from '@backend/services/authService';
 import {

@@ -1,5 +1,5 @@
 import { sendMail } from '@backend/features/mail/sendMail';
-import { logger } from '@backend/features/telemetry';
+import { logger } from '@backend/features/telemetry/logger';
 import { refreshTokenRepository } from '@backend/repositories/refreshTokenRepository';
 import { userRepository } from '@backend/repositories/userRepository';
 import { errorOr } from '@backend/types/errorOr';
@@ -13,7 +13,7 @@ import {
 
 import type { refreshTokenRepository as RefreshTokenRepositoryType } from '@backend/repositories/refreshTokenRepository';
 import type { userRepository as UserRepositoryType } from '@backend/repositories/userRepository';
-import type { ErrorOr } from '@backend/types/errorOr';
+import type { ErrorOr } from '@backend/types/errorOrType';
 
 /**
  * Auth Service Factory

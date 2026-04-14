@@ -2,12 +2,10 @@ import { jwtVerify } from 'jose';
 
 import { errorOr } from '@backend/types/errorOr';
 
-import type {
-  AppJwtPayload,
-  TokenType,
-  UserRole,
-} from '@backend/types/appJwtPayload';
-import type { ErrorOr } from '@backend/types/errorOr';
+import type { AppJwtPayload } from '@backend/types/appJwtPayload';
+import type { ErrorOr } from '@backend/types/errorOrType';
+import type { TokenType } from '@backend/types/tokenType';
+import type { UserRole } from '@backend/types/userRole';
 
 const getSecret = () => new TextEncoder().encode(Bun.env.JWT_SECRET ?? '');
 

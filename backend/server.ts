@@ -1,8 +1,10 @@
 import { serve } from 'bun';
 
 import index from '../public/index.html';
-import { pingDb } from './db/client';
+import { pingDb } from './db/pingDb';
 import { initMailClient } from './features/mail/initMailClient.ts';
+import { initTelemetry } from './features/telemetry/initTelemetry.ts';
+import { logger } from './features/telemetry/logger.ts';
 import { authRoutes } from './routes/authRoutes';
 import { integrationsRoutes } from './routes/integrationsRoutes';
 import { telemetryRoutes } from './routes/telemetryRoutes';
@@ -11,8 +13,7 @@ import { versionRoutes } from './routes/versionRoutes';
 import { wsRoutes } from './routes/wsRoutes';
 import { serveProdBuild } from './serveProdBuild.ts';
 import { validateEnv } from './utils/env';
-import { wsHandlers } from './ws/wsServer';
-import { initTelemetry, logger } from '@backend/features/telemetry';
+import { wsHandlers } from './ws/wsHandlers';
 
 initTelemetry();
 initMailClient();

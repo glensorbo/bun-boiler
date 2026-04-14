@@ -1,7 +1,5 @@
-import {
-  uuidSchema,
-  updateRoleSchema,
-} from '@backend/features/validation/schemas/user';
+import { updateRoleSchema } from '@backend/features/validation/schemas/updateRoleSchema';
+import { uuidSchema } from '@backend/features/validation/schemas/uuidSchema';
 import { validateParam } from '@backend/features/validation/utils/validateParam';
 import { validateRequest } from '@backend/features/validation/utils/validateRequest';
 import {

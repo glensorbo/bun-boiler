@@ -1,5 +1,5 @@
-export type TokenType = 'signup' | 'auth';
-export type UserRole = 'admin' | 'user';
+import type { TokenType } from './tokenType';
+import type { UserRole } from './userRole';
 
 export type AppJwtPayload = {
   sub: string;
