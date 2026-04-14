@@ -4,7 +4,6 @@ import { pingDb } from './db/pingDb';
 import { initMailClient } from './features/mail/initMailClient.ts';
 import { initTelemetry } from './features/telemetry/initTelemetry.ts';
 import { logger } from './features/telemetry/logger.ts';
-import { appConfigRoutes } from './routes/appConfigRoutes';
 import { authRoutes } from './routes/authRoutes';
 import { integrationsRoutes } from './routes/integrationsRoutes';
 import { telemetryRoutes } from './routes/telemetryRoutes';
@@ -33,7 +32,6 @@ const server = serve({
 
     ...userRoutes,
     ...authRoutes,
-    ...appConfigRoutes,
     ...versionRoutes,
     ...integrationsRoutes,
     ...telemetryRoutes,
