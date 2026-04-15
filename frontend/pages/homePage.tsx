@@ -71,7 +71,7 @@ const statusTone = {
   Scoping: 'default',
 } as const;
 
-export const HomePage = () => (
+const HomePage = () => (
   <DashboardPage
     eyebrow="Modern dashboard starter"
     title="Build beautiful product dashboards from day one"
@@ -312,3 +312,6 @@ export const HomePage = () => (
     </Box>
   </DashboardPage>
 );
+
+export { HomePage };
+export default HomePage;

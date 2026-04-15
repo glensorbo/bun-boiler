@@ -10,7 +10,7 @@ import { SignupForm } from '@frontend/features/signup/components/signupForm';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
 import type { RootState } from '@frontend/redux/store';
 
-export const SignupPage = () => {
+const SignupPage = () => {
   const isAuthenticated = useSelector((state: RootState) =>
     selectIsAuthenticated(state),
   );
@@ -103,3 +103,6 @@ export const SignupPage = () => {
     </Box>
   );
 };
+
+export { SignupPage };
+export default SignupPage;

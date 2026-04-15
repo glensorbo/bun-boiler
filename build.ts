@@ -167,6 +167,9 @@ const result = await Bun.build({
   // Sourcemaps disabled by default for production (no source files in dev tools)
   // To enable for debugging, use: bun run build --sourcemap=linked
   sourcemap: 'none',
+  // Emit separate chunks for dynamic import() / React.lazy() boundaries so
+  // each page is only downloaded when the user first navigates to it.
+  splitting: true,
   // Inline BUN_PUBLIC_* env vars so they are available via import.meta.env
   // in the browser bundle.  Without this, Bun.build() leaves them as
   // literal `import.meta.env.*` expressions which evaluate to undefined at

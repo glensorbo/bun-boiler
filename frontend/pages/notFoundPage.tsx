@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { Link } from 'react-router';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
 
-export const NotFoundPage = () => {
+const NotFoundPage = () => {
   const theme = useTheme();
 
   return (
@@ -62,3 +62,6 @@ export const NotFoundPage = () => {
     </SurfaceCard>
   );
 };
+
+export { NotFoundPage };
+export default NotFoundPage;
