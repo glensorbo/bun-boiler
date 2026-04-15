@@ -4,13 +4,32 @@ import { AnalyticsProvider } from './features/analytics/analyticsProvider';
 import { WsProvider } from './features/websocket/wsProvider';
 import { PageLayout } from './layout/pageLayout';
 import { ProtectedRoute } from './shared/components/protectedRoute';
+import type React from 'react';
 
-const HomePage = lazy(() => import('./pages/homePage'));
-const LoginPage = lazy(() => import('./pages/loginPage'));
-const NotFoundPage = lazy(() => import('./pages/notFoundPage'));
-const SignupPage = lazy(() => import('./pages/signupPage'));
-const IntegrationsPage = lazy(() => import('./pages/integrationsPage'));
-const UsersPage = lazy(() => import('./pages/usersPage'));
+const HomePage = lazy(() =>
+  import('./pages/homePage').then((m) => ({ default: m.HomePage })),
+);
+const LoginPage = lazy(() =>
+  import('./pages/loginPage').then((m) => ({ default: m.LoginPage })),
+);
+const NotFoundPage = lazy(() =>
+  import('./pages/notFoundPage').then((m) => ({ default: m.NotFoundPage })),
+);
+const SignupPage = lazy(() =>
+  import('./pages/signupPage').then((m) => ({ default: m.SignupPage })),
+);
+const IntegrationsPage = lazy(() =>
+  import('./pages/integrationsPage').then((m) => ({
+    default: m.IntegrationsPage,
+  })),
+);
+const UsersPage = lazy(() =>
+  import('./pages/usersPage').then((m) => ({ default: m.UsersPage })),
+);
+
+const withSuspense = (element: React.ReactNode) => (
+  <Suspense fallback={null}>{element}</Suspense>
+);
 
 /**
  * Application router.
@@ -22,21 +41,22 @@ const UsersPage = lazy(() => import('./pages/usersPage'));
 export const AppRouter = () => (
   <BrowserRouter>
     <AnalyticsProvider />
-    <Suspense fallback={null}>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route element={<ProtectedRoute />}>
-          <Route element={<WsProvider />}>
-            <Route element={<PageLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="integrations" element={<IntegrationsPage />} />
-              <Route path="users" element={<UsersPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
+    <Routes>
+      <Route path="/login" element={withSuspense(<LoginPage />)} />
+      <Route path="/signup" element={withSuspense(<SignupPage />)} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<WsProvider />}>
+          <Route element={<PageLayout />}>
+            <Route index element={withSuspense(<HomePage />)} />
+            <Route
+              path="integrations"
+              element={withSuspense(<IntegrationsPage />)}
+            />
+            <Route path="users" element={withSuspense(<UsersPage />)} />
+            <Route path="*" element={withSuspense(<NotFoundPage />)} />
           </Route>
         </Route>
-      </Routes>
-    </Suspense>
+      </Route>
+    </Routes>
   </BrowserRouter>
 );

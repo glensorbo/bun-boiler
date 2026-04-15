@@ -9,7 +9,7 @@ import { selectIsAuthenticated } from '@frontend/features/login/state/authSlice'
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
 import type { RootState } from '@frontend/redux/store';
 
-const LoginPage = () => {
+export const LoginPage = () => {
   const isAuthenticated = useSelector((state: RootState) =>
     selectIsAuthenticated(state),
   );
@@ -98,6 +98,3 @@ const LoginPage = () => {
     </Box>
   );
 };
-
-export { LoginPage };
-export default LoginPage;
