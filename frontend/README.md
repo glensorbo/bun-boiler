@@ -41,6 +41,24 @@ if (import.meta.hot) {
 
 `bun run build` runs `build.ts`, which scans `frontend/` for all `.html` files, runs them through Bun's bundler with the React Compiler plugin, and outputs minified assets to `dist/`. The backend then serves from `dist/` with SPA fallback.
 
+## ⚡ Code Splitting
+
+`build.ts` runs with `splitting: true`, which tells Bun's bundler to emit a separate JS chunk for each lazy boundary.
+
+All 6 route pages are lazy-loaded via `React.lazy()` in `router.tsx`:
+
+```ts
+const HomePage = React.lazy(() => import('@frontend/pages/homePage'));
+```
+
+A single `<Suspense fallback={null}>` at the router level covers every lazy page load — there are no per-route wrappers.
+
+**Rules:**
+
+- Must export each page both as a **named export** and a **default export** — `React.lazy()` requires a default export; the named export is used for non-lazy imports (e.g. tests).
+- Must not add per-route `<Suspense>` wrappers — the top-level boundary in `router.tsx` is the only one.
+- Must not import page components directly in `router.tsx` — all pages must go through `React.lazy()` to preserve chunk splitting.
+
 ## 🛡️ Error Handling
 
 `frontend/shared/components/errorBoundary.tsx` wraps the app root. If a component throws during render, the boundary catches it and displays a fallback UI with a **Reset** button. Import and use `<ErrorBoundary>` from `@frontend/shared/components/errorBoundary`.
