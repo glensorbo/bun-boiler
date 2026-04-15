@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { AnalyticsProvider } from './features/analytics/analyticsProvider';
 import { WsProvider } from './features/websocket/wsProvider';
 import { PageLayout } from './layout/pageLayout';
+import { PageFallback } from './shared/components/pageFallback';
 import { ProtectedRoute } from './shared/components/protectedRoute';
 import type React from 'react';
 
@@ -28,7 +29,7 @@ const UsersPage = lazy(() =>
 );
 
 const withSuspense = (element: React.ReactNode) => (
-  <Suspense fallback={null}>{element}</Suspense>
+  <Suspense fallback={<PageFallback />}>{element}</Suspense>
 );
 
 /**
