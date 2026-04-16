@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
 import type { Theme } from '@mui/material/styles';
@@ -33,27 +34,27 @@ export const MiniTrend = ({
   const resolvedColor = resolveColor(color, theme);
 
   return (
-    <BarChart
-      series={[{ data: points, color: resolvedColor }]}
-      xAxis={[
-        {
-          data: labels ?? points.map((_, i) => String(i + 1)),
-          scaleType: 'band',
-          disableLine: true,
-          disableTicks: true,
-          tickLabelStyle: labels ? { fontSize: 11 } : { display: 'none' },
-        },
-      ]}
-      yAxis={[
-        {
-          disableLine: true,
-          disableTicks: true,
-          tickLabelStyle: { display: 'none' },
-        },
-      ]}
-      height={height}
-      margin={{ top: 4, bottom: labels ? 28 : 4, left: 4, right: 4 }}
-      slotProps={{ tooltip: { container: document.body } }}
-    />
+    <Box sx={{ width: '100%', height }}>
+      <BarChart
+        series={[{ data: points, color: resolvedColor }]}
+        xAxis={[
+          {
+            data: labels ?? points.map((_, i) => String(i + 1)),
+            scaleType: 'band',
+            disableLine: true,
+            disableTicks: true,
+            tickLabelStyle: labels ? { fontSize: 11 } : { display: 'none' },
+          },
+        ]}
+        yAxis={[
+          {
+            disableLine: true,
+            disableTicks: true,
+            tickLabelStyle: { display: 'none' },
+          },
+        ]}
+        height={height}
+      />
+    </Box>
   );
 };

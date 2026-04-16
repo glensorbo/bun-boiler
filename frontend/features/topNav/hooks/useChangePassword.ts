@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { validateChangePassword } from '../logic/validateChangePassword';
-import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
-import { setToken } from '@frontend/features/login/state/authSlice';
 import { useChangePasswordMutation } from '@frontend/redux/api/authApi';
+import { setToken } from '@frontend/redux/slices/authSlice';
+import { useAnalytics } from '@frontend/shared/hooks/useAnalytics';
 import type {
   ChangePasswordErrors,
   ChangePasswordValues,

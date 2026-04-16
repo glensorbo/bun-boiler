@@ -23,9 +23,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLogout } from '../hooks/useLogout';
 import { ChangePasswordModal } from './changePasswordModal';
 import { SetPasswordModal } from './setPasswordModal';
-import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
 import { setThemeMode } from '@frontend/redux/slices/themeSlice';
 import { UserAvatar } from '@frontend/shared/components/userAvatar';
+import { useAnalytics } from '@frontend/shared/hooks/useAnalytics';
 import type { AppDispatch, RootState } from '@frontend/redux/store';
 
 type ThemeMode = 'system' | 'light' | 'dark';
@@ -116,7 +116,7 @@ export const UserMenu = () => {
           gap: 1,
           px: 1,
           py: 0.5,
-          borderRadius: 2.5,
+          borderRadius: 1,
           border: '1px solid',
           borderColor: menuOpen
             ? theme.palette.border.strong

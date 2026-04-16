@@ -1,4 +1,4 @@
-import { op } from '../op';
+import { op } from '@frontend/shared/services/analytics';
 
 /**
  * Hook for tracking custom analytics events.

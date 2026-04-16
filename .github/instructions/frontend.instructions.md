@@ -11,7 +11,7 @@ applyTo: 'frontend/**/*'
 - **MUI v6+** for UI components
 - **MUI X Charts** (`@mui/x-charts`) for data visualisation — use this unless a chart type is impossible with it
 - **MUI X Data Grid** (`@mui/x-data-grid`) for tabular data — use this unless the data or UX clearly calls for a simpler/custom table
-- **dayjs** for all date/time formatting — always import from `@frontend/shared/utils/dayjs` (not directly from `dayjs`) to get plugins pre-loaded
+- **dayjs** for all date/time formatting — always import from `@frontend/lib/dayjs` (not directly from `dayjs`) to get plugins pre-loaded
 - **React Router** for client-side routing
 - **HMR** in development via `import.meta.hot`
 
@@ -31,14 +31,17 @@ Organise code by **feature**, not by type:
 ```
 frontend/features/<feature-name>/
 ├── components/   → React components for this feature
+│   └── tests/
 ├── hooks/        → Custom hooks
+│   └── tests/
 ├── logic/        → Pure logic, helpers
+│   └── tests/
 ├── state/        → Redux slices tightly coupled to this feature
-├── types/        → TypeScript types for this feature
-└── tests/        → Unit tests for this feature
+│   └── tests/
+└── types/        → TypeScript types for this feature
 ```
 
-Shared/cross-feature code goes in `frontend/shared/`.
+Shared/cross-feature code goes in `frontend/shared/`. Features must not import from each other — if two features share state, lift it to `redux/slices/`.
 
 ## File & Export Conventions
 
@@ -53,10 +56,11 @@ loginSchema.ts       → exports loginSchema
 
 - Every file exports exactly **one** thing — a component, hook, function, or constant
 - The file name is always the `camelCase` version of the export name
+- **No `export default`** — named exports only, everywhere in the frontend
 - **Always use arrow functions** — never `function` declarations for components or hooks:
 
 ```tsx
-// ✅ Arrow function component
+// ✅ Arrow function component (named export)
 export const LoginForm = () => {
   return <form>...</form>;
 };
@@ -68,19 +72,23 @@ export const useLogin = () => {
 
 // ❌ Never use function declarations
 export function LoginForm() { ... }
-```
 
-- React class methods (inside a `class`) may still use method syntax — this rule applies to standalone functions and components
+// ❌ Never use default exports
+export default LoginForm;
+```
 
 ## Environment Variables
 
-Client-side env vars **must** be prefixed with `BUN_PUBLIC_`:
+All `BUN_PUBLIC_*` vars are read through `frontend/config.ts` — the single source of truth. Never access `import.meta.env` or `process.env` directly outside that file:
 
 ```ts
-const apiUrl = Bun.env.BUN_PUBLIC_API_URL;
-```
+// ✅
+import { config } from '@frontend/config';
+const clientId = config.openpanel.clientId;
 
-Never access server-side env vars from frontend code.
+// ❌
+const clientId = import.meta.env.BUN_PUBLIC_OPENPANEL_CLIENT_ID;
+```
 
 ## State Management
 
@@ -88,6 +96,7 @@ Never access server-side env vars from frontend code.
 - Use Redux slices (`frontend/redux/slices/`) for client-side state that must be shared globally
 - Use local `useState`/`useReducer` for component-local state
 - Auth token lives in Redux and is persisted to `localStorage` via middleware
+- Features must **not** import from each other — lift shared state to `redux/slices/`
 
 ## Routing & Auth
 
@@ -130,7 +139,7 @@ if (isLoading) return <CircularProgress />;
 Always use the shared dayjs instance — never import `dayjs` directly from the package:
 
 ```ts
-import { dayjs } from '@frontend/shared/utils/dayjs';
+import { dayjs } from '@frontend/lib/dayjs';
 ```
 
 The shared instance has these plugins pre-loaded: `relativeTime`, `localizedFormat`, `utc`, `timezone`, `duration`, `customParseFormat`.

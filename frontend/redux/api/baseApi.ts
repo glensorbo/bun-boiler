@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { clearToken, setToken } from '@frontend/features/login/state/authSlice';
+import { clearToken, setToken } from '@frontend/redux/slices/authSlice';
 import type { ApiErrorResponse } from '@backend/types/apiErrorResponse';
 import type { ApiSuccessResponse } from '@backend/types/apiSuccessResponse';
 import type { RootState } from '@frontend/redux/store';

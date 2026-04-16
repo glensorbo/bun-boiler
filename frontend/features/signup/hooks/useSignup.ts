@@ -2,9 +2,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { clearSignupForm } from '../state/signupFormSlice';
-import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
-import { setToken } from '@frontend/features/login/state/authSlice';
 import { useSignupMutation } from '@frontend/redux/api/authApi';
+import { setToken } from '@frontend/redux/slices/authSlice';
+import { useAnalytics } from '@frontend/shared/hooks/useAnalytics';
 import type { SignupFormFields } from '../state/signupFormSlice';
 import type { AppDispatch } from '@frontend/redux/store';
 

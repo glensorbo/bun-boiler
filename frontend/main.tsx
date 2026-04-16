@@ -12,8 +12,8 @@ import { ToastProvider } from './providers/toastProvider';
 import { store } from './redux/store';
 import { AppRouter } from './router';
 import { ErrorBoundary } from './shared/components/errorBoundary';
-import { initFrontendTelemetry } from '@frontend/telemetry/telemetry';
-import './shared/utils/dayjs';
+import { initFrontendTelemetry } from '@frontend/shared/services/telemetry';
+import './lib/dayjs';
 
 // Start browser-side OTel tracing before the app renders.
 // No-op (async import skipped) when BUN_PUBLIC_OTEL_SERVICE_NAME is not set.

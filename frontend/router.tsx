@@ -27,6 +27,9 @@ const IntegrationsPage = lazy(() =>
 const UsersPage = lazy(() =>
   import('./pages/usersPage').then((m) => ({ default: m.UsersPage })),
 );
+const InsightsPage = lazy(() =>
+  import('./pages/insightsPage').then((m) => ({ default: m.InsightsPage })),
+);
 
 const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<PageFallback />}>{element}</Suspense>
@@ -54,6 +57,7 @@ export const AppRouter = () => (
               element={withSuspense(<IntegrationsPage />)}
             />
             <Route path="users" element={withSuspense(<UsersPage />)} />
+            <Route path="insights" element={withSuspense(<InsightsPage />)} />
             <Route path="*" element={withSuspense(<NotFoundPage />)} />
           </Route>
         </Route>

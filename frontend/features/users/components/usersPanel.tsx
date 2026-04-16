@@ -21,9 +21,9 @@ import {
 import { DeleteUserDialog } from './deleteUserDialog';
 import { InviteUserDialog } from './inviteUserDialog';
 import { SignupLinkDialog } from './signupLinkDialog';
-import { selectUserId } from '@frontend/features/login/state/authSlice';
+import { dayjs } from '@frontend/lib/dayjs';
+import { selectUserId } from '@frontend/redux/slices/authSlice';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
-import { dayjs } from '@frontend/shared/utils/dayjs';
 import type { User } from '@backend/types/user';
 import type { GridColDef } from '@mui/x-data-grid';
 

@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
+import { BarChart } from '@mui/x-charts';
 import { DashboardPage } from '@frontend/shared/components/dashboardPage';
 import { DashboardTable } from '@frontend/shared/components/dashboardTable';
 import { EmptyState } from '@frontend/shared/components/emptyState';
@@ -19,6 +20,17 @@ import { MiniTrend } from '@frontend/shared/components/miniTrend';
 import { ProgressList } from '@frontend/shared/components/progressList';
 import { StatCard } from '@frontend/shared/components/statCard';
 import { SurfaceCard } from '@frontend/shared/components/surfaceCard';
+const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+const xLabels = [
+  'Page A',
+  'Page B',
+  'Page C',
+  'Page D',
+  'Page E',
+  'Page F',
+  'Page G',
+];
 
 const pipelineHealth = [
   { label: 'Activation', value: '74%', progress: 74, tone: 'primary' as const },
@@ -156,11 +168,21 @@ export const HomePage = () => (
               overall adoption score across your first-run experience
             </Typography>
           </Box>
-          <MiniTrend
+          <Box sx={{ width: '100%', height: 300 }}>
+            <BarChart
+              series={[
+                { data: pData, label: 'pv', id: 'pvId' },
+                { data: uData, label: 'uv', id: 'uvId' },
+              ]}
+              xAxis={[{ data: xLabels, height: 28 }]}
+              yAxis={[{ width: 50 }]}
+            />
+          </Box>
+          {/*          <MiniTrend
             points={[18, 28, 24, 42, 36, 54, 76, 84]}
             labels={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Now']}
             color="secondary.main"
-          />
+          />*/}
         </Stack>
       </SurfaceCard>
     </Box>
