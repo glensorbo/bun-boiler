@@ -1,10 +1,10 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { setRememberedEmail, setToken } from '../state/authSlice';
 import { clearLoginForm } from '../state/loginFormSlice';
-import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
 import { useLoginMutation } from '@frontend/redux/api/authApi';
+import { setRememberedEmail, setToken } from '@frontend/redux/slices/authSlice';
+import { useAnalytics } from '@frontend/shared/hooks/useAnalytics';
 import type { LoginFormValues } from '../logic/loginSchema';
 import type { AppDispatch } from '@frontend/redux/store';
 

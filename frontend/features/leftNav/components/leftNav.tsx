@@ -21,14 +21,17 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
 import { VersionBadge } from './versionBadge';
-import { selectUserRole } from '@frontend/features/login/state/authSlice';
-import { COLLAPSED_DRAWER_WIDTH } from '@frontend/layout/collapsedDrawerWidth';
-import { DRAWER_WIDTH } from '@frontend/layout/drawerWidth';
+import { drawerConfig } from '@frontend/layout/drawerConfig';
+import { selectUserRole } from '@frontend/redux/slices/authSlice';
 
 const navItems = [
   { label: 'Overview', icon: <DashboardIcon fontSize="small" />, to: '/' },
-  { label: 'Insights', icon: <InsightsIcon fontSize="small" />, to: '/' },
-  { label: 'Foundations', icon: <LayersIcon fontSize="small" />, to: '/' },
+  {
+    label: 'Insights',
+    icon: <InsightsIcon fontSize="small" />,
+    to: '/insights',
+  },
+  { label: 'Foundations', icon: <LayersIcon fontSize="small" />, to: '/#' },
 ] as const;
 
 const adminNavItems = [
@@ -200,7 +203,7 @@ export const LeftNav = ({
       sx={{
         display: { xs: 'block', lg: 'none' },
         '& .MuiDrawer-paper': {
-          width: DRAWER_WIDTH,
+          width: drawerConfig.drawerWidth,
           boxSizing: 'border-box',
         },
       }}
@@ -213,11 +216,15 @@ export const LeftNav = ({
       variant="permanent"
       sx={{
         display: { xs: 'none', lg: 'block' },
-        width: collapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH,
+        width: collapsed
+          ? drawerConfig.collapsedDrawerWidth
+          : drawerConfig.drawerWidth,
         flexShrink: 0,
         transition: 'width 0.2s ease',
         '& .MuiDrawer-paper': {
-          width: collapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH,
+          width: collapsed
+            ? drawerConfig.collapsedDrawerWidth
+            : drawerConfig.drawerWidth,
           boxSizing: 'border-box',
           overflowX: 'hidden',
           transition: 'width 0.2s ease',

@@ -74,7 +74,7 @@ backend/features/<feature>/
 ## React
 
 - **Functional components only** — no class components
-- **Named exports** — avoid `export default` for components; default exports are reserved for page-level files
+- **Named exports only** — no `export default` anywhere in the frontend
 - Use hooks for all state and side effects
 - `React.FC` is optional; prefer inferred types from props interface
 

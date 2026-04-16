@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { buildTheme } from './theme';
-import { useAnalytics } from '@frontend/features/analytics/hooks/useAnalytics';
+import { useAnalytics } from '@frontend/shared/hooks/useAnalytics';
 import type { RootState } from '@frontend/redux/store';
 import type { PaletteMode } from '@mui/material';
 import type { ReactNode } from 'react';

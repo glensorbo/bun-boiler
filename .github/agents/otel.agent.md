@@ -35,11 +35,16 @@ docker compose -f docker-compose.signoz.yml up -d
 ## 🗂️ Telemetry Structure
 
 ```
-backend/telemetry/
-└── telemetry.ts    → initTelemetry(), logger (info/warn/error/debug)
+backend/features/telemetry/   → Server-side OTel: traces, structured logger
+└── initTelemetry.ts          → Registers NodeTracerProvider + LoggerProvider
+└── logger.ts                 → Structured logger (info/warn/error/debug)
+└── ...
+
+frontend/shared/services/
+└── telemetry.ts              → Browser-side OTel: initFrontendTelemetry()
 ```
 
-### `initTelemetry()`
+### `initTelemetry()` (backend)
 
 Called once at server startup in `backend/server.ts` **before** `Bun.serve()`. No-op when `OTEL_ENDPOINT` is unset.
 

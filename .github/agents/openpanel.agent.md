@@ -24,9 +24,14 @@ OpenPanel is a **privacy-first, open-source** web analytics platform with built-
 
 ```
 frontend/features/analytics/
-├── analyticsProvider.tsx   → Initialises OpenPanel SDK with session replay; exports AnalyticsProvider
-├── useAnalytics.ts         → Hook exposing trackEvent(), identify(), and clear()
+├── analyticsProvider.tsx   → Drop-in provider component (renders null); exported as AnalyticsProvider
 └── README.md
+
+frontend/shared/services/
+└── analytics.ts            → Initialises OpenPanel SDK; exports op singleton
+
+frontend/shared/hooks/
+└── useAnalytics.ts         → Hook exposing trackEvent(), identify(), and clear()
 ```
 
 ### Env Vars (opt-in — analytics is a no-op when `BUN_PUBLIC_OPENPANEL_CLIENT_ID` is absent)
@@ -74,7 +79,7 @@ After starting the stack:
 
 ## 📦 SDK Usage
 
-### Initialisation (`analyticsProvider.tsx`)
+### Initialisation (`shared/services/analytics.ts`)
 
 ```ts
 import { OpenPanel } from '@openpanel/web';
@@ -101,7 +106,7 @@ export const op = isEnabled
 ### Custom Events
 
 ```ts
-import { op } from '@frontend/features/analytics/analyticsProvider';
+import { op } from '@frontend/shared/services/analytics';
 
 op?.track('button_clicked', { label: 'Sign In' });
 op?.track('form_submitted', { form: 'change-password' });
@@ -111,7 +116,7 @@ op?.track('error_shown', { code: '404', page: '/not-found' });
 ### Hook Usage (`useAnalytics`)
 
 ```ts
-import { useAnalytics } from '@frontend/features/analytics/useAnalytics';
+import { useAnalytics } from '@frontend/shared/hooks/useAnalytics';
 
 const { trackEvent, identify, clear } = useAnalytics();
 
@@ -159,16 +164,16 @@ When asked to add or modify OpenPanel analytics:
 
 1. **Check** `BUN_PUBLIC_OPENPANEL_CLIENT_ID` is set in `.env`
 2. **Read** `frontend/features/analytics/README.md` for current state
-3. **Implement** changes in `frontend/features/analytics/`
+3. **Implement** changes in `frontend/shared/services/analytics.ts` and `frontend/features/analytics/`
 4. **Use** the `useAnalytics` hook in components — never import `@openpanel/web` directly from components
 5. **Verify** events appear in the OpenPanel dashboard at `http://localhost:8091`
 6. **Run** `bun run cc` — fix every error before finishing
 
 ## 🚫 Don'ts
 
-- Never import `@openpanel/web` directly from UI components — always use the `useAnalytics` hook
+- Never import `@openpanel/web` directly from UI components — always use the `useAnalytics` hook from `@frontend/shared/hooks/useAnalytics`
 - Never throw if OpenPanel is not initialised — `op` is `null` when disabled; use optional chaining (`op?.track(...)`)
 - Never send PII (emails, passwords, names) as event properties — OpenPanel is privacy-first
 - Never add OpenPanel to the backend — it is frontend-only
-- Never import from `@openpanel/web` outside `frontend/features/analytics/` — keep analytics isolated
+- Never import `op` directly from outside `frontend/shared/services/analytics.ts` in UI components — use the hook instead
 - Never use `identify` with an email address or any directly identifying string — use opaque profile IDs only
