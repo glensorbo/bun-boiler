@@ -3,8 +3,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router';
 import { LeftNav } from '../features/leftNav/components/leftNav';
 import { TopNav } from '../features/topNav/components/topNav';
-import { COLLAPSED_DRAWER_WIDTH } from './collapsedDrawerWidth';
-import { DRAWER_WIDTH } from './drawerWidth';
+import { drawerConfig } from './drawerConfig';
 
 export const PageLayout = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -29,7 +28,7 @@ export const PageLayout = () => {
           flexGrow: 1,
           minWidth: 0,
           width: {
-            lg: `calc(100% - ${navCollapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH}px)`,
+            lg: `calc(100% - ${navCollapsed ? drawerConfig.collapsedDrawerWidth : drawerConfig.drawerWidth}px)`,
           },
           transition: 'width 0.2s ease',
         }}

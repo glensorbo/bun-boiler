@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -29,14 +28,17 @@ export const SurfaceCard = ({
       : theme.palette.surface.overlay;
 
   return (
-    <Card
+    <Box
       sx={{
         p: 2.5,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderColor: tone === 'accent' ? 'primary.main' : 'border.subtle',
+        borderRadius: `${theme.shape.borderRadius}px`,
+        border: `1px solid ${tone === 'accent' ? theme.palette.primary.main : theme.palette.border.subtle}`,
         background,
+        backgroundImage: 'none',
+        boxShadow: theme.shadows[2],
       }}
     >
       {title || description || action ? (
@@ -66,6 +68,6 @@ export const SurfaceCard = ({
       ) : null}
       <Box sx={{ flexGrow: 1 }}>{children}</Box>
       {footer ? <Box sx={{ mt: 2.5 }}>{footer}</Box> : null}
-    </Card>
+    </Box>
   );
 };
