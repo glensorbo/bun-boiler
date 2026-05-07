@@ -1,4 +1,4 @@
-FROM node:25-alpine AS docs-build
+FROM node:26-alpine AS docs-build
 
 RUN apk add --no-cache git coreutils
 
